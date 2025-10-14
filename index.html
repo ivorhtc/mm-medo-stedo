@@ -1,40 +1,60 @@
-<!doctype html>
-<html lang="hr">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ime Tvoje Stranice — Početna</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Boolean Rule Evaluator</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input { width: 300px; padding: 6px; }
+    button { margin-left: 10px; padding: 6px 12px; }
+    #result { margin-top: 15px; font-weight: bold; }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="inner">
-      <h1 class="brand">Ime Tvoje Stranice</h1>
-      <nav class="nav">
-        <a href="index.html">Nema</a>
-        <a href="index.html">Tu</a>
-        <a href="index.html">Nista</a>
-      </nav>
-    </div>
-  </header>
 
-  <main class="container">
-    <section class="hero">
-      <h2>Dobrodošli!</h2>
-      <p class="lead">Dobio si svojeg lika, kaj tu trazis?</p>
-      <a class="cta" href="index.html">Saznaj više</a>
-    </section>
+  <h3>Enter numbers (comma separated):</h3>
+  <input id="inputValues" type="text" placeholder="e.g. 1,2,13,5">
+  <button onclick="evaluateInput()">Evaluate</button>
 
-  </main>
-
-  <footer class="site-footer">
-    <div class="inner">
-      <p>&copy; <span id="year"></span> Medo Stedo Murder Mystery — Sva prava pridržana.</p>
-    </div>
-  </footer>
+  <div id="result"></div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    const rules = [
+      { condition: "1 OR 2 AND NOT 3 AND 13 AND 5", output: "010" },
+      { condition: "13", output: "011" },
+      { condition: "13 OR 5", output: "201" }
+    ];
+
+    function evaluateInput() {
+      const inputText = document.getElementById("inputValues").value;
+      const inputs = new Set(inputText.split(",").map(x => x.trim()).filter(x => x !== ""));
+      const outputs = [];
+
+      for (const rule of rules) {
+        if (evaluateCondition(rule.condition, inputs)) {
+          outputs.push(rule.output);
+        }
+      }
+
+      document.getElementById("result").textContent =
+        outputs.length ? outputs.join(", ") : "No match";
+    }
+
+    function evaluateCondition(expr, inputs) {
+      // Convert logical expression into JS-evaluable code
+      let jsExpr = expr
+        .replace(/\bAND\b/g, "&&")
+        .replace(/\bOR\b/g, "||")
+        .replace(/\bNOT\b/g, "!")
+        .replace(/\b(\d+)\b/g, (_, n) => `inputs.has("${n}")`);
+      try {
+        return Function("inputs", `return ${jsExpr}`)(inputs);
+      } catch (e) {
+        console.error("Error evaluating:", expr, e);
+        return false;
+      }
+    }
   </script>
+
 </body>
 </html>
