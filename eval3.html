@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8">
+  <title>Evaluator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #fafafa;
+      margin: 0;
+      padding: 30px;
+      color: #222;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+    input, textarea, button {
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin: 6px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      width: auto;
+      padding: 8px 16px;
+      background: #222;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    button:hover { background: #444; }
+    pre {
+      background: #f6f6f6;
+      padding: 12px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+    }
+    h1 { margin-top: 0; }
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Evaluator</h1>
+
+  <label for="input">Input (comma separated):</label>
+  <input id="input" type="text" placeholder="1,2,13,5">
+
+  <label for="rules">Rules (JSON):</label>
+  <textarea id="rules" rows="6" placeholder='[
+  {"cond": "1 OR 2 AND NOT 3", "out": "010"},
+  {"cond": "13", "out": "011"},
+  {"cond": "13 OR 5", "out": "201"}
+]'></textarea>
+
+  <div class="btn-row">
+    <button onclick="evaluate()">Evaluate</button>
+    <button onclick="saveToURL()">Save URL</button>
+    <button onclick="exportRules()">Export Rules</button>
+    <button onclick="importRules()">Import Rules</button>
+  </div>
+
+  <input type="file" id="fileInput" style="display:none" accept=".json" onchange="handleFileImport(event)">
+
+  <h3>Rezultat:</h3>
+  <pre id="output"></pre>
+</div>
+
+<script>
+function parseInput() {
+  const val = document.getElementById('input').value.trim();
+  if (!val) return [];
+  return val.split(',').map(v => v.trim()).filter(Boolean);
+}
+
+function evaluateCondition(cond, inputVals) {
+  let expr = cond
+    .replace(/\bAND\b/g, '&&')
+    .replace(/\bOR\b/g, '||')
+    .replace(/\bNOT\b/g, '!');
+  for (const val of inputVals) {
+    const regex = new RegExp(`\\b${val}\\b`, 'g');
+    expr = expr.replace(regex, 'true');
+  }
+  expr = expr.replace(/\b\d+\b/g, 'false');
+  try {
+    return eval(expr);
+  } catch {
+    return false;
+  }
+}
+
+function evaluate() {
+  const inputVals = parseInput();
+  let rules;
+  try {
+    rules = JSON.parse(document.getElementById('rules').value);
+  } catch (e) {
+    alert('Rules JSON nije ispravan!');
+    return;
+  }
+
+  const resultMap = new Map();
+
+  for (let i = 1; i <= 7; i++) {
+    const p = 'p' + i;
+    let outputs = [];
+    for (const r of rules) {
+      if (evaluateCondition(r.cond, inputVals)) {
+        outputs.push(r.out);
+      }
+    }
+    if (outputs.length > 0) {
+      const key = JSON.stringify(outputs.sort());
+      if (!resultMap.has(key)) resultMap.set(key, []);
+      resultMap.get(key).push(p);
+    }
+  }
+
+  let text = "";
+  for (const [outputs, players] of resultMap.entries()) {
+    text += `[${players.join(', ')}] → ${JSON.parse(outputs).join(', ')}\n`;
+  }
+  document.getElementById('output').textContent = text || "(nema rezultata)";
+}
+
+function saveToURL() {
+  const input = encodeURIComponent(document.getElementById('input').value);
+  const rules = encodeURIComponent(document.getElementById('rules').value);
+  const url = `${window.location.origin}${window.location.pathname}?in=${input}&rules=${rules}`;
+  navigator.clipboard.writeText(url);
+  alert('Link kopiran u clipboard:\n' + url);
+}
+
+function importFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('in')) {
+    document.getElementById('input').value = params.get('in');
+  }
+  if (params.has('rules')) {
+    document.getElementById('rules').value = params.get('rules');
+  }
+}
+
+function exportRules() {
+  const data = document.getElementById('rules').value;
+  const blob = new Blob([data], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = "rules.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importRules() {
+  document.getElementById('fileInput').click();
+}
+
+function handleFileImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById('rules').value = ev.target.result;
+  };
+  reader.readAsText(file);
+}
+
+importFromURL();
+</script>
+</body>
+</html>
