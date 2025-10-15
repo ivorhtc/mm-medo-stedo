@@ -1,0 +1,302 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Evaluator pravila - Player1..Player7</title>
+      <style>
+         body { font-family: system-ui, Arial; max-width: 900px; margin: 20px auto; }
+         input[type="text"], textarea { width: 100%; box-sizing: border-box; padding: 8px; margin: 6px 0; }
+         .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+         label { font-weight: 600; }
+         .players { display:flex; gap:8px; flex-wrap:wrap; }
+         .out { background:#f4f4f4; padding:8px; border-radius:6px; margin:6px 0; }
+         button { padding:8px 12px; margin-top:8px; }
+         pre { background:#111; color:#fff; padding:12px; border-radius:6px; overflow:auto; }
+      </style>
+   </head>
+   <body>
+      <h2>Evaluator pravila (Player1..Player7)</h2>
+      <div>
+         <h4>Unesi vrijednosti igrača (po jedan broj u polje)</h4>
+         <div class="grid">
+            <div><label>Player1</label><input id="p1" type="text" placeholder="npr. 122"></div>
+            <div><label>Player2</label><input id="p2" type="text" placeholder="npr. 150"></div>
+            <div><label>Player3</label><input id="p3" type="text" placeholder="npr. 122"></div>
+            <div><label>Player4</label><input id="p4" type="text" placeholder="npr. 70"></div>
+            <div><label>Player5</label><input id="p5" type="text" placeholder="npr. 33"></div>
+            <div><label>Player6</label><input id="p6" type="text" placeholder="npr. 33"></div>
+            <div><label>Player7</label><input id="p7" type="text" placeholder="npr. 33"></div>
+         </div>
+         <h4>Globalni brojevi (comma-separated) — pridruže se svakom skupu (po defaultu tretiram kao da svaki player taj broj također ima)</h4>
+         <input id="globalNumbers" placeholder="npr. 10,200">
+         <h4>Pravila (JSON array) — svako pravilo: {"cond":"...","out":"kod"}</h4>
+         <textarea id="rules" rows="8">[
+{"cond":"150","out":"300"},
+{"cond":"min2p AND p1 AND 150","out":"301"},
+{"cond":"min3p AND 150","out":"302"},
+{"cond":"33","out":"401"},
+{"cond":"33 NOT p2","out":"402"}
+]</textarea>
+         <button id="evalBtn">Evaluiraj</button>
+      </div>
+      <h3>Rezultat</h3>
+      <div id="result" class="out">Nema rezultata još.</div>
+      <h4>Detaljan debug (interni skupovi i evaluacije)</h4>
+      <pre id="debug"></pre>
+      <script>
+         (function(){
+         // helperi
+         const getPlayers = () => {
+         const players = [];
+         for (let i=1;i<=7;i++){
+         const v = document.getElementById('p'+i).value.trim();
+         players.push(v === '' ? null : v);
+         }
+         return players;
+         };
+         const parseNumberList = s => {
+         if(!s) return [];
+         return s.split(',').map(x=>x.trim()).filter(x=>x!=='');
+         };
+         
+         // Build map: number -> array of player indices (0-based)
+         function buildNumberMap(players, globalNumbers){
+         const map = {};
+         players.forEach((val, idx) => {
+         if (val === null) return;
+         // allow players to have comma-separated too (if they put e.g. "1,2")
+         const vals = val.toString().split(',').map(x=>x.trim()).filter(x=>x!=='');
+         vals.forEach(v=>{
+         if(!map[v]) map[v] = new Set();
+         map[v].add(idx);
+         });
+         });
+         // Add global numbers: treat as if every player also has them
+         globalNumbers.forEach(g=>{
+         if(!map[g]) map[g] = new Set();
+         for(let i=0;i<players.length;i++){
+         if(players[i] !== null) map[g].add(i);
+         }
+         });
+         // convert sets to arrays
+         const out = {};
+         for(const k in map) out[k] = Array.from(map[k]);
+         return out;
+         }
+         
+         // Create evaluator for a single rule cond string
+         function makeEvaluator(condString) {
+         // Normalize
+         let s = condString.replace(/\s+/g,' ').trim();
+         // We'll parse tokens: numbers, p# tokens, minNp/maxNp, NOT/AND/OR
+         // Extract numeric tokens
+         const numTokens = Array.from(new Set((s.match(/\b\d+\b/g) || [])));
+         const playerTokens = Array.from(new Set((s.match(/\bp\d+\b/ig) || []).map(t=>t.toLowerCase())));
+         // Extract min/max tokens: e.g., min2p, max3p
+         const minMaxTokens = Array.from(new Set((s.match(/\b(min|max)\d+p\b/ig) || []).map(t=>t.toLowerCase())));
+         
+         return function evaluate(context){
+         // context: { players (array), numberMap: {num: [playerIdx..]}, playerCount:7 }
+         const playersCount = context.players.length;
+         const numberMap = context.numberMap;
+         
+         // For each numeric token compute players who picked it
+         const playersForNumber = {};
+         numTokens.forEach(n => {
+         playersForNumber[n] = (numberMap[n] || []).slice(); // array of indices
+         });
+         
+         // combinedPlayers = union of all playersForNumber for numbers in this cond
+         let combinedSet = new Set();
+         numTokens.forEach(n => {
+         (playersForNumber[n] || []).forEach(i => combinedSet.add(i));
+         });
+         
+         // If no numeric tokens exist in condition, combinedSet is empty
+         // Count function
+         const countCombined = combinedSet.size;
+         
+         // Prepare a small map of variable substitutions
+         // num_token -> boolean (any players picked that number)
+         const varMap = {};
+         numTokens.forEach(n => varMap[n] = (playersForNumber[n] && playersForNumber[n].length>0));
+         
+         // pX tokens: if numeric tokens exist -> pX = whether player X is in combinedSet
+         // if no numeric tokens -> pX = whether player X has any value (non-null)
+         const players = context.players;
+         playerTokens.forEach(pt => {
+         const num = parseInt(pt.slice(1),10); // p1 -> 1
+         const idx = num-1;
+         if(numTokens.length>0){
+         varMap[pt] = combinedSet.has(idx);
+         } else {
+         varMap[pt] = players[idx] !== null;
+         }
+         });
+         
+         // minNp / maxNp tokens
+         minMaxTokens.forEach(tok => {
+         const m = tok.match(/(min|max)(\d+)p/i);
+         if(m){
+         const typ = m[1].toLowerCase();
+         const n = parseInt(m[2],10);
+         if(typ === 'min') varMap[tok] = (countCombined >= n);
+         else varMap[tok] = (countCombined <= n);
+         }
+         });
+         
+         // Now build a safe expression from the condition string by token replacement.
+         // Replace tokens (numbers, pX, minXp) with true/false
+         // Also support NOT, AND, OR (case-insensitive)
+         // We'll replace whole-word occurrences.
+         
+         // Start with original cond string, but keep tokens spacing normalized
+         let expr = s;
+         
+         // Replace NOT/AND/OR with JS operators
+         expr = expr.replace(/\bNOT\b/ig, '!');
+         expr = expr.replace(/\bAND\b/ig, '&&');
+         expr = expr.replace(/\bOR\b/ig, '||');
+         
+         // Replace known tokens with boolean literals
+         // Replace longer tokens first (min/max), then player tokens, then numeric tokens
+         const allTokens = minMaxTokens.concat(playerTokens).concat(numTokens);
+         // sort by length desc to avoid partial replacements (e.g., p1 vs p10)
+         allTokens.sort((a,b)=>b.length-a.length);
+         
+         allTokens.forEach(tok=>{
+         // Create regex for whole word match, case-insensitive for p/minmax
+         const re = new RegExp('\\b' + tok.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\b', 'ig');
+         const val = (tok in varMap) ? varMap[tok] : false;
+         expr = expr.replace(re, val ? 'true' : 'false');
+         });
+         
+         // As safety: replace any remaining pX or numbers conservatively (false)
+         expr = expr.replace(/\bp\d+\b/ig, 'false');
+         expr = expr.replace(/\b\d+\b/g, function(m){ // any leftover number
+         // if it's in varMap then replaced earlier, else false
+         return (m in varMap && varMap[m]) ? 'true' : 'false';
+         });
+         
+         // Remove stray double spaces
+         expr = expr.replace(/\s+/g,' ');
+         
+         // Try evaluating expression with Function (safe-ish for local tool)
+         let passed = false;
+         let evalError = null;
+         try {
+         // create new Function to evaluate expression
+         // but ensure expression contains only allowed chars (digits, true,false,!,&,|,(), spaces)
+         if(!/^[\s\(\)truefalsenotruefals!&|<>=]*$/i.test(expr) && !/^(?:true|false|!|\(|\)|&|\||\s)+$/.test(expr)) {
+         // we still allow digits? we cleaned them earlier. We'll proceed but be careful.
+         }
+         // Evaluate
+         passed = Function('"use strict"; return (' + expr + ');')();
+         } catch(e){
+         evalError = e.toString();
+         passed = false;
+         }
+         
+         // Decide which players to assign output to:
+         // If numeric tokens exist -> assign to playersForNumber union (combinedSet)
+         // Else if pX tokens exist -> assign to those players
+         // Else assign to all players who have any value
+         let assigned = [];
+         if(numTokens.length>0){
+         assigned = Array.from(combinedSet).sort((a,b)=>a-b);
+         } else if(playerTokens.length>0){
+         assigned = playerTokens.map(pt => parseInt(pt.slice(1),10)-1).filter(i=>i>=0 && i<players.length);
+         } else {
+         assigned = players.map((v,i)=> v!==null ? i : -1).filter(i=>i>=0);
+         }
+         
+         // If condition explicitly contains "NOT pX" pattern and numeric tokens present,
+         // we should interpret e.g. "33 NOT p2" as: number 33 selected by someone AND player2 NOT in that set.
+         // Our expression replaced NOT p2 -> !false/true accordingly and already evaluated.
+         // assigned remains union (we might want to remove the excluded player if NOT used). To handle that,
+         // if condition contains pattern 'not p' we'll remove those players from assigned:
+         const notPlayerMatches = s.match(/\bNOT\s+p\d+\b/ig) || s.match(/\bnot\s+p\d+\b/ig) || [];
+         notPlayerMatches.forEach(m=>{
+         const p = m.match(/\d+/);
+         if(p){
+         const idx = parseInt(p[0],10)-1;
+         assigned = assigned.filter(x=>x !== idx);
+         }
+         });
+         
+         // Map assigned indices to human-readable Player names
+         const assignedPlayers = assigned.map(i => 'Player' + (i+1));
+         
+         return {
+         passed,
+         expr,
+         evalError,
+         numTokens,
+         playerTokens,
+         minMaxTokens,
+         playersForNumber,
+         combinedPlayers: Array.from(combinedSet),
+         assignedPlayers
+         };
+         };
+         }
+         
+         // Main evaluate action
+         document.getElementById('evalBtn').addEventListener('click', () => {
+         const players = getPlayers();
+         const globalNumbers = parseNumberList(document.getElementById('globalNumbers').value);
+         const numberMap = buildNumberMap(players, globalNumbers);
+         
+         let rules;
+         try {
+         rules = JSON.parse(document.getElementById('rules').value);
+         if(!Array.isArray(rules)) throw 'Rules must be JSON array';
+         } catch(e){
+         document.getElementById('result').innerText = 'Greška pri parsiranju pravila JSON: ' + e;
+         return;
+         }
+         
+         const debugLines = [];
+         debugLines.push('Players raw: ' + JSON.stringify(players));
+         debugLines.push('Global numbers: ' + JSON.stringify(globalNumbers));
+         debugLines.push('Number map (number -> playerIndices): ' + JSON.stringify(numberMap));
+         debugLines.push('');
+         
+         const outputs = []; // {out:..., players: [...]}
+         rules.forEach((r, idx) => {
+         const cond = (r.cond || '').toString();
+         const out = r.out || ('out_'+idx);
+         const evaler = makeEvaluator(cond);
+         const res = evaler({players, numberMap});
+         debugLines.push(`Rule ${idx+1}: cond="${cond}" out="${out}"`);
+         debugLines.push(' -> expr (after replace): ' + res.expr);
+         if(res.evalError) debugLines.push(' -> eval error: ' + res.evalError);
+         debugLines.push(' -> numTokens: ' + JSON.stringify(res.numTokens));
+         debugLines.push(' -> playerTokens: ' + JSON.stringify(res.playerTokens));
+         debugLines.push(' -> minMaxTokens: ' + JSON.stringify(res.minMaxTokens));
+         debugLines.push(' -> playersForNumber: ' + JSON.stringify(res.playersForNumber));
+         debugLines.push(' -> combinedPlayers: ' + JSON.stringify(res.combinedPlayers));
+         debugLines.push(' -> passed: ' + res.passed);
+         debugLines.push(' -> assigned players: ' + JSON.stringify(res.assignedPlayers));
+         debugLines.push('');
+         
+         if(res.passed){
+         outputs.push({out, players: res.assignedPlayers});
+         }
+         });
+         
+         // Build human-friendly result
+         if(outputs.length === 0){
+         document.getElementById('result').innerText = 'Nijedno pravilo nije prošlo.';
+         } else {
+         const lines = outputs.map(o => `${o.out} -> ${o.players.length ? o.players.join(', ') : '(nitko)'}`);
+         document.getElementById('result').innerHTML = lines.map(l=>`<div>${l}</div>`).join('');
+         }
+         
+         document.getElementById('debug').innerText = debugLines.join('\n');
+         });
+         
+         })();
+      </script>
+   </body>
+</html>
