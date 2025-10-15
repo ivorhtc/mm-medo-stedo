@@ -272,4 +272,97 @@
       debugLines.push(' -> minMaxTokens: ' + JSON.stringify(res.minMaxTokens));
       debugLines.push(' -> playersForNumber: ' + JSON.stringify(res.playersForNumber));
       debugLines.push(' -> combinedPlayers: ' + JSON.stringify(res.combinedPlayers));
-      debugLines.
+      debugLines.push(' -> passed: ' + res.passed);
+      debugLines.push(' -> assigned players: ' + JSON.stringify(res.assignedPlayers));
+      debugLines.push('');
+
+      if(res.passed){
+        outputs.push({out, players: res.assignedPlayers});
+      }
+    });
+
+    // GROUP BY player-list (so [p1,p2] -> codes)
+    // Create map: key = JSON.stringify(sorted players), val = set of outs
+    const groupMap = new Map();
+    outputs.forEach(o=>{
+      // sort players to have consistent key
+      const key = JSON.stringify(o.players.slice().sort());
+      if(!groupMap.has(key)) groupMap.set(key, new Set());
+      groupMap.get(key).add(o.out);
+    });
+
+    // Build human-friendly result
+    if(groupMap.size === 0){
+      document.getElementById('result').innerText = 'Nijedno pravilo nije prošlo.';
+    } else {
+      const lines = [];
+      for(const [key, outsSet] of groupMap.entries()){
+        const playersList = JSON.parse(key);
+        const outs = Array.from(outsSet);
+        lines.push(`[${playersList.join(', ')}] → ${outs.join(', ')}`);
+      }
+      document.getElementById('result').innerHTML = lines.map(l=>`<div>${l}</div>`).join('');
+    }
+
+    document.getElementById('debug').innerText = debugLines.join('\n');
+  });
+
+  // Save to URL (copy)
+  function saveToURL(){
+    const params = new URLSearchParams();
+    // players
+    for(let i=1;i<=7;i++){
+      const v = document.getElementById('p'+i).value.trim();
+      if(v) params.set('p'+i, v);
+    }
+    const g = document.getElementById('globalNumbers').value.trim();
+    if(g) params.set('g', g);
+    const rules = document.getElementById('rules').value;
+    if(rules) params.set('rules', rules);
+    const url = `${location.origin}${location.pathname}?${params.toString()}`;
+    navigator.clipboard.writeText(url).then(()=> {
+      alert('Link kopiran u clipboard:\n' + url);
+    }).catch(()=> {
+      prompt('Kopiraj link ručno:', url);
+    });
+  }
+
+  // import/export rules
+  document.getElementById('fileInput').addEventListener('change', handleFileImport);
+  function exportRules(){
+    const data = document.getElementById('rules').value;
+    const blob = new Blob([data], {type: "application/json"});
+    const u = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = u;
+    a.download = 'rules.json';
+    a.click();
+    URL.revokeObjectURL(u);
+  }
+  function importRules(){
+    document.getElementById('fileInput').click();
+  }
+  function handleFileImport(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      document.getElementById('rules').value = ev.target.result;
+    };
+    reader.readAsText(file);
+  }
+
+  // Prefill from URL params if present
+  (function prefillFromURL(){
+    const params = new URLSearchParams(window.location.search);
+    for(let i=1;i<=7;i++){
+      if(params.has('p'+i)) document.getElementById('p'+i).value = params.get('p'+i);
+    }
+    if(params.has('g')) document.getElementById('globalNumbers').value = params.get('g');
+    if(params.has('rules')) document.getElementById('rules').value = params.get('rules');
+  })();
+
+})();
+</script>
+</body>
+</html>
