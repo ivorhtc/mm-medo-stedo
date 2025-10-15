@@ -2,85 +2,179 @@
 <html lang="hr">
 <head>
   <meta charset="utf-8">
-  <title>Evaluator</title>
+  <title>Murder Mystery Evaluator 🎩🔪</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    :root {
+      --bg1: #1d1a1a;
+      --bg2: #2a1c1c;
+      --accent: #c54b4b;
+      --text: #f8f6f6;
+      --muted: #b4a7a7;
+      --card: #2d2424;
+      --gold: #d4b46e;
+    }
+
     body {
-      font-family: system-ui, sans-serif;
-      background: #fafafa;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: radial-gradient(circle at top, var(--bg2) 0%, var(--bg1) 100%);
       margin: 0;
-      padding: 30px;
-      color: #222;
+      padding: 32px;
+      color: var(--text);
     }
+
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      background: var(--card);
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
+
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      color: var(--gold);
+      letter-spacing: 1px;
+      font-weight: 700;
+      font-size: 1.9rem;
+    }
+
+    label {
+      color: var(--gold);
+      font-weight: 600;
+      margin-top: 14px;
+      display: block;
+    }
+
     input, textarea, button {
       font-family: inherit;
       font-size: 1rem;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      margin: 6px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 8px 0;
       width: 100%;
       box-sizing: border-box;
+      background: #3b2b2b;
+      color: var(--text);
     }
+
+    textarea {
+      min-height: 120px;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #a98;
+    }
+
     button {
-      width: auto;
-      padding: 8px 16px;
-      background: #222;
-      color: white;
-      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
       cursor: pointer;
-      border-radius: 8px;
+      transition: 0.2s;
+      width: auto;
+      padding: 10px 18px;
     }
-    button:hover { background: #444; }
-    pre {
-      background: #f6f6f6;
-      padding: 12px;
-      border-radius: 8px;
-      white-space: pre-wrap;
-      font-size: 0.95rem;
+
+    button:hover {
+      background: #a33b3b;
     }
-    h1 { margin-top: 0; }
+
     .btn-row {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
       margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      background: #3a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #4d3a3a;
+      text-align: left;
+    }
+
+    th {
+      background: #4c3333;
+      color: var(--gold);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    pre {
+      background: #3a2a2a;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    #output {
+      color: #fff;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <h1>Evaluator</h1>
+  <h1>🎩 Murder Mystery Evaluator 🔪</h1>
 
-  <label for="input">Input (comma separated):</label>
+  <label for="input">Ulaz (brojevi odvojenI zarezom):</label>
   <input id="input" type="text" placeholder="1,2,13,5">
 
-  <label for="rules">Rules (JSON):</label>
-  <textarea id="rules" rows="6" placeholder='[
+  <label for="rules">Pravila (JSON):</label>
+  <textarea id="rules" placeholder='[
   {"cond": "1 OR 2 AND NOT 3", "out": "010"},
   {"cond": "13", "out": "011"},
   {"cond": "13 OR 5", "out": "201"}
 ]'></textarea>
 
   <div class="btn-row">
-    <button onclick="evaluate()">Evaluate</button>
-    <button onclick="saveToURL()">Save URL</button>
-    <button onclick="exportRules()">Export Rules</button>
-    <button onclick="importRules()">Import Rules</button>
+    <button onclick="evaluate()">⚖️ Evaluate</button>
+    <button onclick="saveToURL()">💾 Save URL</button>
+    <button onclick="exportRules()">📤 Export Rules</button>
+    <button onclick="importRules()">📥 Import Rules</button>
   </div>
 
   <input type="file" id="fileInput" style="display:none" accept=".json" onchange="handleFileImport(event)">
 
-  <h3>Rezultat:</h3>
-  <pre id="output"></pre>
+  <h3>🎭 Igrači</h3>
+  <table id="playersTable">
+    <thead><tr><th>Igrač</th><th>Rezultat</th></tr></thead>
+    <tbody>
+      <tr><td>p1</td><td>-</td></tr>
+      <tr><td>p2</td><td>-</td></tr>
+      <tr><td>p3</td><td>-</td></tr>
+      <tr><td>p4</td><td>-</td></tr>
+      <tr><td>p5</td><td>-</td></tr>
+      <tr><td>p6</td><td>-</td></tr>
+      <tr><td>p7</td><td>-</td></tr>
+    </tbody>
+  </table>
+
+  <h3>📊 Grupirani Rezultati</h3>
+  <pre id="output">(nema rezultata)</pre>
+
+  <footer>🕵️‍♂️ Murder Mystery Evaluator © 2025</footer>
 </div>
 
 <script>
@@ -118,6 +212,8 @@ function evaluate() {
   }
 
   const resultMap = new Map();
+  const table = document.querySelector("#playersTable tbody");
+  table.querySelectorAll("td:nth-child(2)").forEach(td => td.textContent = "-");
 
   for (let i = 1; i <= 7; i++) {
     const p = 'p' + i;
@@ -131,6 +227,7 @@ function evaluate() {
       const key = JSON.stringify(outputs.sort());
       if (!resultMap.has(key)) resultMap.set(key, []);
       resultMap.get(key).push(p);
+      table.querySelector(`tr:nth-child(${i}) td:nth-child(2)`).textContent = outputs.join(', ');
     }
   }
 
@@ -146,7 +243,7 @@ function saveToURL() {
   const rules = encodeURIComponent(document.getElementById('rules').value);
   const url = `${window.location.origin}${window.location.pathname}?in=${input}&rules=${rules}`;
   navigator.clipboard.writeText(url);
-  alert('Link kopiran u clipboard:\n' + url);
+  alert('🔗 Link kopiran u clipboard:\n' + url);
 }
 
 function importFromURL() {
