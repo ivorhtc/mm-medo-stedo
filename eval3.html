@@ -2,286 +2,274 @@
 <html lang="hr">
 <head>
   <meta charset="utf-8">
-  <title>Murder Mystery Evaluator 🎩🔪</title>
+  <title>Murder Mystery Evaluator — Player1..Player7</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
-      --bg1: #1d1a1a;
+      --bg1: #171414;
       --bg2: #2a1c1c;
-      --accent: #c54b4b;
-      --text: #f8f6f6;
-      --muted: #b4a7a7;
-      --card: #2d2424;
+      --card: #2f2424;
+      --accent: #c84b4b;
       --gold: #d4b46e;
+      --muted: #b7a9a9;
+      --panel: #3b2b2b;
+      --glass: rgba(255,255,255,0.03);
     }
-
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: radial-gradient(circle at top, var(--bg2) 0%, var(--bg1) 100%);
-      margin: 0;
-      padding: 32px;
-      color: var(--text);
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: var(--card);
-      padding: 28px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 0;
-      color: var(--gold);
-      letter-spacing: 1px;
-      font-weight: 700;
-      font-size: 1.9rem;
-    }
-
-    label {
-      color: var(--gold);
-      font-weight: 600;
-      margin-top: 14px;
-      display: block;
-    }
-
-    input, textarea, button {
-      font-family: inherit;
-      font-size: 1rem;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      margin: 8px 0;
-      width: 100%;
-      box-sizing: border-box;
-      background: #3b2b2b;
-      color: var(--text);
-    }
-
-    textarea {
-      min-height: 120px;
-    }
-
-    input::placeholder, textarea::placeholder {
-      color: #a98;
-    }
-
-    button {
-      background: var(--accent);
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-      width: auto;
-      padding: 10px 18px;
-    }
-
-    button:hover {
-      background: #a33b3b;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 14px;
-      background: #3a2a2a;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 10px;
-      border-bottom: 1px solid #4d3a3a;
-      text-align: left;
-    }
-
-    th {
-      background: #4c3333;
-      color: var(--gold);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    pre {
-      background: #3a2a2a;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      color: var(--muted);
-    }
-
-    #output {
-      color: #fff;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
+    html,body{height:100%;margin:0;padding:0;font-family: "Segoe UI", system-ui, sans-serif;background: radial-gradient(circle at 10% 10%, var(--bg2) 0%, var(--bg1) 60%);}
+    .wrap{max-width:1000px;margin:28px auto;padding:20px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+    .card{background:var(--card);padding:20px;border-radius:12px;color:var(--muted);box-shadow:0 6px 24px rgba(0,0,0,0.5)}
+    h1{margin:0 0 8px;color:var(--gold);font-size:1.6rem;letter-spacing:0.6px}
+    p.lead{color:#e8ddd0;margin:6px 0 14px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    label{display:block;color:var(--gold);font-weight:600;margin-bottom:6px;font-size:0.95rem}
+    input[type="text"], textarea {width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--panel);color:#fff}
+    textarea{min-height:120px;resize:vertical}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    button{background:var(--accent);border:none;color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+    button.secondary{background:#4a3a3a}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
+    .players-table{width:100%;margin-top:14px;border-collapse:collapse;background:transparent}
+    .players-table th, .players-table td{padding:8px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.03);color:#fff}
+    .players-table th{color:var(--gold);background:transparent}
+    .out{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));padding:12px;border-radius:8px;color:#fff;margin-top:10px;min-height:36px}
+    pre#debug{background:#0d0b0b;color:#ddd;padding:12px;border-radius:8px;overflow:auto;margin-top:12px;max-height:320px}
+    .top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .small{font-size:0.9rem;color:var(--muted)}
+    .file-input{display:none}
+    @media(max-width:880px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media(max-width:520px){ .grid{grid-template-columns:1fr} .top-row{flex-direction:column;align-items:flex-start} }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1>🎩 Murder Mystery Evaluator 🔪</h1>
+  <div class="wrap">
+    <div class="card">
+      <div class="top-row">
+        <div>
+          <h1>🎩 Murder Mystery Evaluator</h1>
+          <p class="lead">Unesi igrače i pravila pa pritisni <b>Evaluiraj</b>. Rezultati su grupirani po listama igrača.</p>
+        </div>
+        <div class="small">Tip: koristi *min2p*, *p1*, *NOT p2*, numeričke tokene i logičke operatorе (AND/OR/NOT).</div>
+      </div>
 
-  <label for="input">Ulaz (brojevi odvojenI zarezom):</label>
-  <input id="input" type="text" placeholder="1,2,13,5">
+      <h3 style="color:var(--gold);margin-top:16px">Unesi vrijednosti igrača (po jedan broj u polje)</h3>
+      <div class="grid" style="margin-bottom:10px">
+        <div><label>Player1</label><input id="p1" type="text" placeholder="npr. 122"></div>
+        <div><label>Player2</label><input id="p2" type="text" placeholder="npr. 150"></div>
+        <div><label>Player3</label><input id="p3" type="text" placeholder="npr. 122"></div>
+        <div><label>Player4</label><input id="p4" type="text" placeholder="npr. 70"></div>
+        <div><label>Player5</label><input id="p5" type="text" placeholder="npr. 33"></div>
+        <div><label>Player6</label><input id="p6" type="text" placeholder="npr. 33"></div>
+        <div><label>Player7</label><input id="p7" type="text" placeholder="npr. 33"></div>
+        <div><label>Globalni brojevi</label><input id="globalNumbers" placeholder="npr. 10,200"></div>
+      </div>
 
-  <label for="rules">Pravila (JSON):</label>
-  <textarea id="rules" placeholder='[
-  {"cond": "1 OR 2 AND NOT 3", "out": "010"},
-  {"cond": "13", "out": "011"},
-  {"cond": "13 OR 5", "out": "201"}
-]'></textarea>
+      <h3 style="color:var(--gold);margin-top:6px">Pravila (JSON array) — svako pravilo: {"cond":"...","out":"kod"}</h3>
+      <textarea id="rules" rows="8">[
+{"cond":"150","out":"300"},
+{"cond":"min2p AND p1 AND 150","out":"301"},
+{"cond":"min3p AND 150","out":"302"},
+{"cond":"33","out":"401"},
+{"cond":"33 NOT p2","out":"402"}
+]</textarea>
 
-  <div class="btn-row">
-    <button onclick="evaluate()">⚖️ Evaluate</button>
-    <button onclick="saveToURL()">💾 Save URL</button>
-    <button onclick="exportRules()">📤 Export Rules</button>
-    <button onclick="importRules()">📥 Import Rules</button>
+      <div class="controls">
+        <button id="evalBtn">⚖️ Evaluiraj</button>
+        <button onclick="saveToURL()" class="secondary">💾 Save URL</button>
+        <button onclick="exportRules()" class="ghost">📤 Export Rules</button>
+        <button onclick="importRules()" class="ghost">📥 Import Rules</button>
+        <input type="file" id="fileInput" class="file-input" accept=".json">
+      </div>
+
+      <h3 style="color:var(--gold);margin-top:18px">Rezultati</h3>
+      <div id="result" class="out">Nema rezultata još.</div>
+
+      <h4 style="color:var(--gold);margin-top:12px">Detaljan debug (interni skupovi i evaluacije)</h4>
+      <pre id="debug">—</pre>
+    </div>
   </div>
 
-  <input type="file" id="fileInput" style="display:none" accept=".json" onchange="handleFileImport(event)">
-
-  <h3>🎭 Igrači</h3>
-  <table id="playersTable">
-    <thead><tr><th>Igrač</th><th>Rezultat</th></tr></thead>
-    <tbody>
-      <tr><td>p1</td><td>-</td></tr>
-      <tr><td>p2</td><td>-</td></tr>
-      <tr><td>p3</td><td>-</td></tr>
-      <tr><td>p4</td><td>-</td></tr>
-      <tr><td>p5</td><td>-</td></tr>
-      <tr><td>p6</td><td>-</td></tr>
-      <tr><td>p7</td><td>-</td></tr>
-    </tbody>
-  </table>
-
-  <h3>📊 Grupirani Rezultati</h3>
-  <pre id="output">(nema rezultata)</pre>
-
-  <footer>🕵️‍♂️ Murder Mystery Evaluator © 2025</footer>
-</div>
-
 <script>
-function parseInput() {
-  const val = document.getElementById('input').value.trim();
-  if (!val) return [];
-  return val.split(',').map(v => v.trim()).filter(Boolean);
-}
-
-function evaluateCondition(cond, inputVals) {
-  let expr = cond
-    .replace(/\bAND\b/g, '&&')
-    .replace(/\bOR\b/g, '||')
-    .replace(/\bNOT\b/g, '!');
-  for (const val of inputVals) {
-    const regex = new RegExp(`\\b${val}\\b`, 'g');
-    expr = expr.replace(regex, 'true');
-  }
-  expr = expr.replace(/\b\d+\b/g, 'false');
-  try {
-    return eval(expr);
-  } catch {
-    return false;
-  }
-}
-
-function evaluate() {
-  const inputVals = parseInput();
-  let rules;
-  try {
-    rules = JSON.parse(document.getElementById('rules').value);
-  } catch (e) {
-    alert('Rules JSON nije ispravan!');
-    return;
-  }
-
-  const resultMap = new Map();
-  const table = document.querySelector("#playersTable tbody");
-  table.querySelectorAll("td:nth-child(2)").forEach(td => td.textContent = "-");
-
-  for (let i = 1; i <= 7; i++) {
-    const p = 'p' + i;
-    let outputs = [];
-    for (const r of rules) {
-      if (evaluateCondition(r.cond, inputVals)) {
-        outputs.push(r.out);
-      }
+(function(){
+  // helpers
+  const getPlayers = () => {
+    const players = [];
+    for (let i=1;i<=7;i++){
+      const el = document.getElementById('p'+i);
+      const v = el ? el.value.trim() : '';
+      players.push(v === '' ? null : v);
     }
-    if (outputs.length > 0) {
-      const key = JSON.stringify(outputs.sort());
-      if (!resultMap.has(key)) resultMap.set(key, []);
-      resultMap.get(key).push(p);
-      table.querySelector(`tr:nth-child(${i}) td:nth-child(2)`).textContent = outputs.join(', ');
-    }
-  }
-
-  let text = "";
-  for (const [outputs, players] of resultMap.entries()) {
-    text += `[${players.join(', ')}] → ${JSON.parse(outputs).join(', ')}\n`;
-  }
-  document.getElementById('output').textContent = text || "(nema rezultata)";
-}
-
-function saveToURL() {
-  const input = encodeURIComponent(document.getElementById('input').value);
-  const rules = encodeURIComponent(document.getElementById('rules').value);
-  const url = `${window.location.origin}${window.location.pathname}?in=${input}&rules=${rules}`;
-  navigator.clipboard.writeText(url);
-  alert('🔗 Link kopiran u clipboard:\n' + url);
-}
-
-function importFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has('in')) {
-    document.getElementById('input').value = params.get('in');
-  }
-  if (params.has('rules')) {
-    document.getElementById('rules').value = params.get('rules');
-  }
-}
-
-function exportRules() {
-  const data = document.getElementById('rules').value;
-  const blob = new Blob([data], {type: "application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = "rules.json";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importRules() {
-  document.getElementById('fileInput').click();
-}
-
-function handleFileImport(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    document.getElementById('rules').value = ev.target.result;
+    return players;
   };
-  reader.readAsText(file);
-}
+  const parseNumberList = s => {
+    if(!s) return [];
+    return s.split(',').map(x=>x.trim()).filter(x=>x!=='');
+  };
 
-importFromURL();
-</script>
-</body>
-</html>
+  // Build map: number -> array of player indices (0-based)
+  function buildNumberMap(players, globalNumbers){
+    const map = {};
+    players.forEach((val, idx) => {
+      if (val === null) return;
+      const vals = val.toString().split(',').map(x=>x.trim()).filter(x=>x!=='');
+      vals.forEach(v=>{
+        if(!map[v]) map[v] = new Set();
+        map[v].add(idx);
+      });
+    });
+    // Add global numbers: treat as if every present player also has them
+    globalNumbers.forEach(g=>{
+      if(!map[g]) map[g] = new Set();
+      for(let i=0;i<players.length;i++){
+        if(players[i] !== null) map[g].add(i);
+      }
+    });
+    const out = {};
+    for(const k in map) out[k] = Array.from(map[k]);
+    return out;
+  }
+
+  // makeEvaluator (same robust evaluator you provided)
+  function makeEvaluator(condString) {
+    let s = condString ? condString.replace(/\s+/g,' ').trim() : '';
+    const numTokens = Array.from(new Set((s.match(/\b\d+\b/g) || [])));
+    const playerTokens = Array.from(new Set((s.match(/\bp\d+\b/ig) || []).map(t=>t.toLowerCase())));
+    const minMaxTokens = Array.from(new Set((s.match(/\b(min|max)\d+p\b/ig) || []).map(t=>t.toLowerCase())));
+
+    return function evaluate(context){
+      const playersCount = context.players.length;
+      const numberMap = context.numberMap;
+      const playersForNumber = {};
+      numTokens.forEach(n => {
+        playersForNumber[n] = (numberMap[n] || []).slice();
+      });
+
+      let combinedSet = new Set();
+      numTokens.forEach(n => {
+        (playersForNumber[n] || []).forEach(i => combinedSet.add(i));
+      });
+      const countCombined = combinedSet.size;
+
+      const varMap = {};
+      numTokens.forEach(n => varMap[n] = (playersForNumber[n] && playersForNumber[n].length>0));
+
+      const players = context.players;
+      playerTokens.forEach(pt => {
+        const num = parseInt(pt.slice(1),10);
+        const idx = num-1;
+        if(numTokens.length>0){
+          varMap[pt] = combinedSet.has(idx);
+        } else {
+          varMap[pt] = players[idx] !== null;
+        }
+      });
+
+      minMaxTokens.forEach(tok => {
+        const m = tok.match(/(min|max)(\d+)p/i);
+        if(m){
+          const typ = m[1].toLowerCase();
+          const n = parseInt(m[2],10);
+          if(typ === 'min') varMap[tok] = (countCombined >= n);
+          else varMap[tok] = (countCombined <= n);
+        }
+      });
+
+      let expr = s;
+      expr = expr.replace(/\bNOT\b/ig, '!');
+      expr = expr.replace(/\bAND\b/ig, '&&');
+      expr = expr.replace(/\bOR\b/ig, '||');
+
+      const allTokens = minMaxTokens.concat(playerTokens).concat(numTokens);
+      allTokens.sort((a,b)=>b.length-a.length);
+
+      allTokens.forEach(tok=>{
+        const re = new RegExp('\\b' + tok.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\b', 'ig');
+        const val = (tok in varMap) ? varMap[tok] : false;
+        expr = expr.replace(re, val ? 'true' : 'false');
+      });
+
+      expr = expr.replace(/\bp\d+\b/ig, 'false');
+      expr = expr.replace(/\b\d+\b/g, function(m){
+        return (m in varMap && varMap[m]) ? 'true' : 'false';
+      });
+
+      expr = expr.replace(/\s+/g,' ');
+
+      let passed = false;
+      let evalError = null;
+      try {
+        passed = Function('"use strict"; return (' + expr + ');')();
+      } catch(e){
+        evalError = e.toString();
+        passed = false;
+      }
+
+      let assigned = [];
+      if(numTokens.length>0){
+        assigned = Array.from(combinedSet).sort((a,b)=>a-b);
+      } else if(playerTokens.length>0){
+        assigned = playerTokens.map(pt => parseInt(pt.slice(1),10)-1).filter(i=>i>=0 && i<players.length);
+      } else {
+        assigned = players.map((v,i)=> v!==null ? i : -1).filter(i=>i>=0);
+      }
+
+      const notPlayerMatches = s.match(/\bNOT\s+p\d+\b/ig) || s.match(/\bnot\s+p\d+\b/ig) || [];
+      notPlayerMatches.forEach(m=>{
+        const p = m.match(/\d+/);
+        if(p){
+          const idx = parseInt(p[0],10)-1;
+          assigned = assigned.filter(x=>x !== idx);
+        }
+      });
+
+      const assignedPlayers = assigned.map(i => 'Player' + (i+1));
+
+      return {
+        passed,
+        expr,
+        evalError,
+        numTokens,
+        playerTokens,
+        minMaxTokens,
+        playersForNumber,
+        combinedPlayers: Array.from(combinedSet),
+        assignedPlayers
+      };
+    };
+  }
+
+  // Main evaluate action
+  document.getElementById('evalBtn').addEventListener('click', () => {
+    const players = getPlayers();
+    const globalNumbers = parseNumberList(document.getElementById('globalNumbers').value);
+    const numberMap = buildNumberMap(players, globalNumbers);
+
+    let rules;
+    try {
+      rules = JSON.parse(document.getElementById('rules').value);
+      if(!Array.isArray(rules)) throw 'Rules must be JSON array';
+    } catch(e){
+      document.getElementById('result').innerText = 'Greška pri parsiranju pravila JSON: ' + e;
+      return;
+    }
+
+    const debugLines = [];
+    debugLines.push('Players raw: ' + JSON.stringify(players));
+    debugLines.push('Global numbers: ' + JSON.stringify(globalNumbers));
+    debugLines.push('Number map (number -> playerIndices): ' + JSON.stringify(numberMap));
+    debugLines.push('');
+
+    const outputs = []; // {out:..., players: [...]}
+    rules.forEach((r, idx) => {
+      const cond = (r.cond || '').toString();
+      const out = r.out || ('out_'+idx);
+      const evaler = makeEvaluator(cond);
+      const res = evaler({players, numberMap});
+      debugLines.push(`Rule ${idx+1}: cond="${cond}" out="${out}"`);
+      debugLines.push(' -> expr (after replace): ' + res.expr);
+      if(res.evalError) debugLines.push(' -> eval error: ' + res.evalError);
+      debugLines.push(' -> numTokens: ' + JSON.stringify(res.numTokens));
+      debugLines.push(' -> playerTokens: ' + JSON.stringify(res.playerTokens));
+      debugLines.push(' -> minMaxTokens: ' + JSON.stringify(res.minMaxTokens));
+      debugLines.push(' -> playersForNumber: ' + JSON.stringify(res.playersForNumber));
+      debugLines.push(' -> combinedPlayers: ' + JSON.stringify(res.combinedPlayers));
+      debugLines.
