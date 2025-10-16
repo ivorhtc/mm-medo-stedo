@@ -36,6 +36,30 @@
     .top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
     .small{font-size:0.9rem;color:var(--muted)}
     .file-input{display:none}
+    .player-container {
+      display: inline-block;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin: 10px;
+      width: 150px;
+      vertical-align: top;
+    }
+
+    .player-emoji {
+      font-size: 50px;
+      line-height: 1;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .player-label {
+      font-weight: bold;
+      margin-bottom: 6px;
+      display: block;
+    }
+
     @media(max-width:880px){ .grid{grid-template-columns:repeat(2,1fr)} }
     @media(max-width:520px){ .grid{grid-template-columns:1fr} .top-row{flex-direction:column;align-items:flex-start} }
   </style>
@@ -53,7 +77,11 @@
 
       <h3 style="color:var(--gold);margin-top:16px">Unesi vrijednosti igrača (po jedan broj u polje)</h3>
       <div class="grid" style="margin-bottom:10px">
-        <div><label>🐢 Player1</label><input id="p1" type="text" placeholder="npr. 122"></div>
+        <div class="player-container">
+          <span class="player-emoji">🐢</span>
+          <label class="player-label" for="p1">Player1</label>
+          <input id="p1" type="text" placeholder="npr. 122">
+        </div>
         <div><label>🦃 Player2</label><input id="p2" type="text" placeholder="npr. 150"></div>
         <div><label>🐈 Player3</label><input id="p3" type="text" placeholder="npr. 122"></div>
         <div><label>🐌 Player4</label><input id="p4" type="text" placeholder="npr. 70"></div>
