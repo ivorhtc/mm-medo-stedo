@@ -74,9 +74,9 @@
 
       <div class="controls">
         <button id="evalBtn">⚖️ Evaluiraj</button>
-        <button onclick="saveToURL()" class="secondary">💾 Save URL</button>
-        <button onclick="exportRules()" class="ghost">📤 Export Rules</button>
-        <button onclick="importRules()" class="ghost">📥 Import Rules</button>
+        <button id="saveBnt" onclick="saveToURL()" class="secondary">💾 Save URL</button>
+        <button id="exportBtn" onclick="exportRules()" class="ghost">📤 Export Rules</button>
+        <button id="importBtn" onclick="importRules()" class="ghost">📥 Import Rules</button>
         <input type="file" id="fileInput" class="file-input" accept=".json">
       </div>
 
@@ -306,6 +306,19 @@
 
     document.getElementById('debug').innerText = debugLines.join('\n');
   });
+
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    saveToURL();
+  });
+
+  document.getElementById('importBtn').addEventListener('click', () => {
+    importRules();
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    exportRules();
+  });
+
 
   // Save to URL (copy)
   function saveToURL(){
