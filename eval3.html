@@ -353,6 +353,19 @@
       groupMap.get(key).add(o.out);
     });
 
+    const playerIcons = {
+      "Player1": "🟢",
+      "Player2": "🔴",
+      "Player3": "⚫",
+      "Player4": "🔵",
+      "Player5": "🟡",
+      "Player6": "⚪",
+      "Player7": "🟠",
+      "Player8": "🟣",
+      "Player9": "🩷",
+    };
+
+    
     // Build human-friendly result
     if(groupMap.size === 0){
       document.getElementById('result').innerText = 'Nijedno pravilo nije prošlo.';
@@ -361,7 +374,9 @@
       for(const [key, outsSet] of groupMap.entries()){
         const playersList = JSON.parse(key);
         const outs = Array.from(outsSet);
-        lines.push(`[${playersList.join(', ')}] → ${outs.join(', ')}`);
+        var line = `[${playersList.join(', ')}] → ${outs.join(', ')}`;
+        line = line.replace(/Player\d+/g, match => playerIcons[match] || match);
+        lines.push(line);
       }
       document.getElementById('result').innerHTML = lines.map(l=>`<div>${l}</div>`).join('');
     }
