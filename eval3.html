@@ -122,17 +122,11 @@
           <label class="player-label" for="p9">Player9</label>
           <input id="p9" type="text" placeholder="npr. 33">
         </div>
-        <div><label>Globalni brojevi</label><input id="globalNumbers" placeholder="npr. 10,200"></div>
+        <div>
+          <label>Globalni brojevi</label>
+          <input id="globalNumbers" type="text" placeholder="npr. 10,200">
+        </div>
       </div>
-
-      <h3 style="color:var(--gold);margin-top:6px">Pravila (JSON array) — svako pravilo: {"cond":"...","out":"kod"}</h3>
-      <textarea id="rules" rows="8">[
-{"cond":"150","out":"300"},
-{"cond":"min2p AND p1 AND 150","out":"301"},
-{"cond":"min3p AND 150","out":"302"},
-{"cond":"33","out":"401"},
-{"cond":"33 NOT p2","out":"402"}
-]</textarea>
 
       <div class="controls">
         <button id="evalBtn">⚖️ Evaluiraj</button>
@@ -144,6 +138,15 @@
 
       <h3 style="color:var(--gold);margin-top:18px">Rezultati</h3>
       <div id="result" class="out">Nema rezultata još.</div>
+
+      <h3 style="color:var(--gold);margin-top:6px">Pravila (JSON array) — svako pravilo: {"cond":"...","out":"kod"}</h3>
+      <textarea id="rules" rows="8">[
+{"cond":"150","out":"300"},
+{"cond":"min2p AND p1 AND 150","out":"301"},
+{"cond":"min3p AND 150","out":"302"},
+{"cond":"33","out":"401"},
+{"cond":"33 NOT p2","out":"402"}
+]</textarea>
 
       <h4 style="color:var(--gold);margin-top:12px">Detaljan debug (interni skupovi i evaluacije)</h4>
       <pre id="debug">—</pre>
