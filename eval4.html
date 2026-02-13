@@ -114,10 +114,19 @@ pre{
 
 <h3 style="color:var(--gold)">Pravila JSON</h3>
 <textarea id="rules">[
-{"header":"true","p1":"Petar","color":"#808080"},
-{"header":"true","p2":"Igor","color":"#FFFF00"},
-{"header":"true","key":"300","value":"U kuhinji nalaziš nož."},
-{"cond":"150","out":"300"}
+  {"header":"true", "p1": "Petar", "color": "#808080"},
+  {"header":"true", "p2": "Igor", "color": "#FFFF00"},
+  {"header":"true", "p3": "Viktor", "color": "#0000FF"},
+  {"header":"true", "p4": "Aleksandar", "color": "#808080"},
+  {"header":"true", "p5": "Damir", "color": "#808080"},
+  {"header":"true", "p6": "Oliver", "color": "#808080"},
+  {"header":"true", "key":"300", "value":"U kuhinji nalaziš nož."},
+
+  {"cond":"150","out":"300"},
+  {"cond":"min2p AND p1 AND 150","out":"301"},
+  {"cond":"min3p AND 150","out":"302"},
+  {"cond":"33","out":"401"},
+  {"cond":"33 NOT p2","out":"402"}
 ]</textarea>
 
 <h4 style="color:var(--gold)">Debug</h4>
