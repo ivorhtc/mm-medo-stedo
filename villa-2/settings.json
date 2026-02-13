@@ -1,8 +1,9 @@
 [
-  {"p1": "Petar", "color": "#808080"},
-  {"p2": "Igor", "color": "#FFFF00"},
-  {"p3": "Viktor", "color": "#0000FF"},
-  {"p4": "Aleksandar", "color": "#808080"},
-  {"p5": "Damir", "color": "#808080"},
-  {"p6": "Oliver", "color": "#808080"}
+  {"p1": "Petar", "color": "#b4acac"},
+  {"p2": "Igor", "color": "#b4acac"},
+  {"p3": "Viktor", "color": "#b4acac"},
+  {"p4": "Aleksandar", "color": "#b4acac"},
+  {"p5": "Damir", "color": "#b4acac"},
+  {"p6": "Oliver", "color": "#b4acac"}
+  {"p6": "Voditelj", "color": "#E6E6FA"}
 ]
