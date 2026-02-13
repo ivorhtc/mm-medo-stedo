@@ -39,14 +39,13 @@ h1{color:var(--gold)}
 }
 .player-emoji{font-size:40px}
 .player-label{font-weight:bold;display:block;margin-bottom:6px}
-input,textarea{
+input{
   width:100%;
   padding:8px;
   border-radius:8px;
   border:none;
   box-sizing:border-box;
 }
-textarea{min-height:120px;background:var(--panel);color:#fff}
 button{
   background:var(--accent);
   border:none;
@@ -61,7 +60,6 @@ button{
   margin-top:15px;
   border-radius:14px;
   padding:15px;
-  color:#000;
 }
 .result-header{
   display:flex;
@@ -89,15 +87,17 @@ pre{
 <h1>🎩 Murder Mystery Evaluator</h1>
 
 <div class="grid">
-<div class="player-container"><div class="player-emoji">🐍🟢</div><label id="label1" class="player-label">Player1</label><input id="p1"></div>
-<div class="player-container"><div class="player-emoji">🦀🔴</div><label id="label2" class="player-label">Player2</label><input id="p2"></div>
-<div class="player-container"><div class="player-emoji">🐈‍⬛⚫</div><label id="label3" class="player-label">Player3</label><input id="p3"></div>
-<div class="player-container"><div class="player-emoji">🐋🔵</div><label id="label4" class="player-label">Player4</label><input id="p4"></div>
-<div class="player-container"><div class="player-emoji">🐥🟡</div><label id="label5" class="player-label">Player5</label><input id="p5"></div>
-<div class="player-container"><div class="player-emoji">🐑⚪</div><label id="label6" class="player-label">Player6</label><input id="p6"></div>
-<div class="player-container"><div class="player-emoji">🐫🟠</div><label id="label7" class="player-label">Player7</label><input id="p7"></div>
-<div class="player-container"><div class="player-emoji">🍆🟣</div><label id="label8" class="player-label">Player8</label><input id="p8"></div>
-<div class="player-container"><div class="player-emoji">🐷🩷</div><label id="label9" class="player-label">Player9</label><input id="p9"></div>
+<script>
+for(let i=1;i<=9;i++){
+document.write(`
+<div class="player-container">
+<div class="player-emoji">🎭</div>
+<label id="label${i}" class="player-label">Player${i}</label>
+<input id="p${i}">
+</div>
+`);
+}
+</script>
 </div>
 
 <div style="margin-top:10px">
@@ -112,14 +112,6 @@ pre{
 <h3 style="color:var(--gold)">Rezultati</h3>
 <div id="result"></div>
 
-<h3 style="color:var(--gold)">Pravila JSON</h3>
-<textarea id="rules">[
-{"header":"true","p1":"Petar","color":"#808080"},
-{"header":"true","p2":"Igor","color":"#FFFF00"},
-{"header":"true","key":"300","value":"U kuhinji nalaziš nož."},
-{"cond":"150","out":"300"}
-]</textarea>
-
 <h4 style="color:var(--gold)">Debug</h4>
 <pre id="debug">—</pre>
 
@@ -127,6 +119,19 @@ pre{
 </div>
 
 <script>
+async function loadGameFiles(){
+  const [settingsRes, itemsRes, rulesRes] = await Promise.all([
+    fetch("settings.json"),
+    fetch("items.json"),
+    fetch("rules.json")
+  ]);
+  return {
+    settings: await settingsRes.json(),
+    items: await itemsRes.json(),
+    rules: await rulesRes.json()
+  };
+}
+
 function getPlayers(){
   const arr=[];
   for(let i=1;i<=9;i++){
@@ -135,10 +140,12 @@ function getPlayers(){
   }
   return arr;
 }
+
 function parseList(s){
   if(!s)return[];
   return s.split(',').map(x=>x.trim()).filter(x=>x);
 }
+
 function buildNumberMap(players,globals){
   const map={};
   players.forEach((v,i)=>{
@@ -157,37 +164,44 @@ function buildNumberMap(players,globals){
   Object.keys(map).forEach(k=>out[k]=Array.from(map[k]));
   return out;
 }
+
 function setPlayerName(i,name){
   document.getElementById("label"+i).innerText=name;
 }
+
 function setPlayerColor(i,color){
   document.getElementsByClassName("player-container")[i-1].style.background=color;
 }
+
 function copyText(t){
   navigator.clipboard.writeText(t);
   alert("Copied!");
 }
-document.getElementById("evalBtn").addEventListener("click",()=>{
+
+document.getElementById("evalBtn").addEventListener("click", async ()=>{
+
+  const {settings, items, rules} = await loadGameFiles();
+
   const players=getPlayers();
   const globals=parseList(document.getElementById("globalNumbers").value);
   const numberMap=buildNumberMap(players,globals);
-  let rules;
-  try{rules=JSON.parse(document.getElementById("rules").value);}
-  catch(e){alert("JSON error");return;}
 
   const cardMap={};
-  const realRules=[];
-  rules.forEach(r=>{
-    if(r.header==="true"){
-      for(let k in r){
-        if(k.startsWith("p")){
-          const idx=parseInt(k.slice(1));
-          setPlayerName(idx,r[k]);
-          if(r.color)setPlayerColor(idx,r.color);
-        }
+
+  // SETTINGS
+  settings.forEach(obj=>{
+    for(let key in obj){
+      if(key.startsWith("p")){
+        const idx=parseInt(key.slice(1));
+        setPlayerName(idx,obj[key]);
+        if(obj.color)setPlayerColor(idx,obj.color);
       }
-      if(r.key&&r.value)cardMap[r.key]=r.value;
-    }else if(r.cond)realRules.push(r);
+    }
+  });
+
+  // ITEMS
+  items.forEach(obj=>{
+    cardMap[obj.key]=obj.value;
   });
 
   const playerCards={};
@@ -195,7 +209,8 @@ document.getElementById("evalBtn").addEventListener("click",()=>{
     if(v!==null)playerCards["Player"+(i+1)]=[];
   });
 
-  realRules.forEach(r=>{
+  // RULES
+  rules.forEach(r=>{
     const cond=r.cond;
     const out=r.out;
     const assigned=[];
@@ -216,10 +231,12 @@ document.getElementById("evalBtn").addEventListener("click",()=>{
   Object.keys(playerCards).forEach(p=>{
     if(playerCards[p].length===0)return;
     const text=playerCards[p].join("\n\n");
+    const idx=parseInt(p.replace("Player",""));
+    const name=document.getElementById("label"+idx).innerText;
     html+=`
     <div class="result-player" style="background:#ffffff">
       <div class="result-header">
-        <strong>${document.getElementById("label"+p.replace("Player","")).innerText}</strong>
+        <strong>${name}</strong>
         <button onclick="copyText(\`${text}\`)">Copy</button>
       </div>
       <div class="result-cards">
@@ -230,6 +247,7 @@ document.getElementById("evalBtn").addEventListener("click",()=>{
 
   document.getElementById("result").innerHTML=html||"Nema rezultata.";
   document.getElementById("debug").innerText=JSON.stringify(numberMap,null,2);
+
 });
 </script>
 </body>
