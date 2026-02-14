@@ -1,16 +1,17 @@
 [
-  {"key": "300", "value": "U kuhinji nalaziš nož."},
   {
     "key": "350",
-    "value": "Vidiš kako ${lista_1} uzima nož i sprema ga kod sebe."
-  },
-  {
-    "listName": "lista_1",
-    "entries": [
-      { "player": "p1", "text": "Petar" },
-      { "player": "p3", "text": "Viktor" },
-      { "player": "p5", "text": "Damir" },
-      { "player": "p2", "text": "Aleksandar" }
+    "value": "Vidiš kako ${lista_1} uzima nož i sprema ga kod sebe.",
+    "lists": [
+      {
+        "listName": "lista_1",
+        "entries": [
+          { "player": "p1", "text": "Petar" },
+          { "player": "p3", "text": "Viktor" },
+          { "player": "p5", "text": "Damir" },
+          { "player": "p2", "text": "Aleksandar" }
+        ]
+      }
     ]
   }
 ]
