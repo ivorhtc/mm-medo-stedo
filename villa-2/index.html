@@ -299,15 +299,20 @@
     const players=getPlayers();
     const globals=parseList(document.getElementById("globalNumbers").value);
     const numberMap=buildNumberMap(players,globals);
-    console.log("numberMap: " + numberMap);
+    console.log('numberMap:', JSON.stringify(numberMap, null, 2));
 
     const itemMap={};
     items.forEach(obj=>itemMap[obj.key]=obj);
 
     const playerCards={};
     players.forEach((v,i)=>{
+      console.log("Player "+(i+1)+": "+v);
       if(v!==null)playerCards["Player"+(i+1)]=[];
     });
+    Object.keys(playerCards).forEach(p=>
+            console.log(p + " = " +playerCards[p])
+    )
+
 
     // SETTINGS
     settings.forEach(obj=>{
@@ -344,7 +349,7 @@
         outputs.push({out, players: res.assignedPlayers});
       }
     });
-    console.log("outputs:" + outputs);
+    console.log('outputs:', JSON.stringify(outputs, null, 2));
 
     outputs.forEach(({out, players}) => {
       const triggeredPlayers = players;
