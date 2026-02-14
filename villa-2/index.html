@@ -306,12 +306,9 @@
 
     const playerCards={};
     players.forEach((v,i)=>{
-      console.log("Player "+(i+1)+": "+v);
       playerCards["Player"+(i+1)]=[];
     });
-    Object.keys(playerCards).forEach(p=>
-            console.log(p + " = " +playerCards[p])
-    )
+
 
 
     // SETTINGS
@@ -366,9 +363,12 @@
 
         let winnerIdx=null;
 
+        console.log('eventObj:', JSON.stringify(eventObj, null, 2));
+        console.log('involved:', JSON.stringify(involved, null, 2));
         if(eventObj.logic?.winnerStrategy==="priorityList"){
           const priority=eventObj.logic.priorityList;
           for(let p of priority){
+            console.log('p of priority:', JSON.stringify(p, null, 2));
             const idx=parseInt(p.slice(1))-1;
             if(involved.includes(idx)){
               winnerIdx=idx+1;
@@ -378,11 +378,9 @@
         }
 
         Object.keys(playerCards).forEach(p=>
-        console.log(p + " = " +playerCards[p])
         )
         // winner text
         if(winnerIdx && eventObj.output.winner){
-          console.log("Adding winner text to "+winnerIdx+": "+eventObj.output.winner);
           playerCards[winnerIdx].push(eventObj.output.winner);
         }
 
@@ -393,7 +391,6 @@
                     eventObj.output.others,
                     winnerIdx
             );
-            console.log("Adding others text to " + involvedPlayer+": "+txt);
             playerCards[involvedPlayer].push(txt);
           }
         });
@@ -414,12 +411,8 @@
         });
 
       }else{
-        Object.keys(playerCards).forEach(p=>
-                console.log(p + " => " +JSON.stringify(playerCards[p]))
-        )
         // obični tekstualni item
         triggeredPlayers.forEach(playerName=>{
-          console.log(playerName + " triggered!");
           playerCards[playerName]
                   .push(eventObj.value||out);
         });
