@@ -1,6 +1,10 @@
 [
   {
-    "key": "7",
+    "key": "71",
+    "value": "Kuhinja je prostrana i moderno uređena, s dugim redom ladica i drvenih polica punih začina i čaša. Uz zid stoji veliki srebrni frižider, a u sredini prostorije nalazi se masivni drveni stol na kojem su ostavljene čaše od sinoćnje večere."
+  },
+  {
+    "key": "72",
     "type": "event",
     "logic": {
       "winnerStrategy": "priorityList",
