@@ -417,9 +417,9 @@
                 console.log(p + " => " +JSON.stringify(playerCards[p]))
         )
         // obični tekstualni item
-        triggeredPlayers.forEach(i=>{
-          console.log("Player"+(i+1)+" triggered!");
-          playerCards["Player"+(i+1)]
+        triggeredPlayers.forEach(playerName=>{
+          console.log(playerName + " triggered!");
+          playerCards[playerName]
                   .push(eventObj.value||out);
         });
       }
