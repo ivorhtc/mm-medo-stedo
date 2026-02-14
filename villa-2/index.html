@@ -382,8 +382,7 @@
         )
         // winner text
         if(winnerIdx && eventObj.output.winner){
-          playerCards["Player"+winnerIdx]
-                  .push(eventObj.output.winner);
+          playerCards["Player"+winnerIdx].push(eventObj.output.winner);
         }
 
         // others text
@@ -415,7 +414,7 @@
 
       }else{
         Object.keys(playerCards).forEach(p=>
-                console.log(p + " = " +playerCards[p])
+                console.log(p + " => " +JSON.stringify(playerCards[p]))
         )
         // obični tekstualni item
         triggeredPlayers.forEach(i=>{
