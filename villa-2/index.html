@@ -372,6 +372,9 @@
           }
         }
 
+        Object.keys(playerCards).forEach(p=>
+        console.log(p + " = " +playerCards[p])
+        )
         // winner text
         if(winnerIdx && eventObj.output.winner){
           playerCards["Player"+winnerIdx]
