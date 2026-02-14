@@ -84,6 +84,7 @@ pre{
 <div class="wrap">
 <div class="card">
 
+
 <h1>🎩 Villa 2 Murder Mistery</h1>
 
 <div class="grid">
@@ -178,12 +179,6 @@ function copyText(t){
   alert("Copied!");
 }
 
-function replaceWinnerPlaceholder(text,winnerIdx){
-  if(!winnerIdx)return text;
-  const winnerName=document.getElementById("label"+winnerIdx).innerText;
-  return text.replace(/\$\{winner\}/g,winnerName);
-}
-
 document.getElementById("evalBtn").addEventListener("click", async ()=>{
 
   const {settings, items, rules} = await loadGameFiles();
@@ -192,13 +187,7 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
   const globals=parseList(document.getElementById("globalNumbers").value);
   const numberMap=buildNumberMap(players,globals);
 
-  const itemMap={};
-  items.forEach(obj=>itemMap[obj.key]=obj);
-
-  const playerCards={};
-  players.forEach((v,i)=>{
-    if(v!==null)playerCards["Player"+(i+1)]=[];
-  });
+  const cardMap={};
 
   // SETTINGS
   settings.forEach(obj=>{
@@ -211,83 +200,32 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
     }
   });
 
+  // ITEMS
+  items.forEach(obj=>{
+    cardMap[obj.key]=obj.value;
+  });
+
+  const playerCards={};
+  players.forEach((v,i)=>{
+    if(v!==null)playerCards["Player"+(i+1)]=[];
+  });
+
   // RULES
   rules.forEach(r=>{
     const cond=r.cond;
     const out=r.out;
-
-    const triggeredPlayers=new Set();
-
+    const assigned=[];
     Object.keys(numberMap).forEach(n=>{
       if(cond.includes(n)){
-        numberMap[n].forEach(i=>triggeredPlayers.add(i));
+        numberMap[n].forEach(i=>assigned.push("Player"+(i+1)));
       }
     });
-
-    if(triggeredPlayers.size===0)return;
-
-    const eventObj=itemMap[out];
-    if(!eventObj)return;
-
-    // === EVENT TYPE ===
-    if(eventObj.type==="event"){
-
-      const involved=[...triggeredPlayers];
-
-      let winnerIdx=null;
-
-      if(eventObj.logic?.winnerStrategy==="priorityList"){
-        const priority=eventObj.logic.priorityList;
-        for(let p of priority){
-          const idx=parseInt(p.slice(1))-1;
-          if(involved.includes(idx)){
-            winnerIdx=idx+1;
-            break;
-          }
-        }
-      }
-
-      // winner text
-      if(winnerIdx && eventObj.output.winner){
-        playerCards["Player"+winnerIdx]
-          .push(eventObj.output.winner);
-      }
-
-      // others text
-      involved.forEach(i=>{
-        const idx=i+1;
-        if(idx!==winnerIdx && eventObj.output.others){
-          const txt=replaceWinnerPlaceholder(
-            eventObj.output.others,
-            winnerIdx
-          );
-          playerCards["Player"+idx].push(txt);
-        }
-      });
-
-      // specific player outputs (p3, p7, etc.)
-      Object.keys(eventObj.output).forEach(key=>{
-        if(key==="winner"||key==="others")return;
-        if(key.startsWith("p")){
-          const idx=parseInt(key.slice(1));
-          if(playerCards["Player"+idx]){
-            const txt=replaceWinnerPlaceholder(
-              eventObj.output[key],
-              winnerIdx
-            );
-            playerCards["Player"+idx].push(txt);
-          }
-        }
-      });
-
-    }else{
-      // obični tekstualni item
-      triggeredPlayers.forEach(i=>{
-        playerCards["Player"+(i+1)]
-          .push(eventObj.value||out);
+    const unique=[...new Set(assigned)];
+    if(unique.length>0){
+      unique.forEach(p=>{
+        playerCards[p].push(cardMap[out]||out);
       });
     }
-
   });
 
   let html="";
