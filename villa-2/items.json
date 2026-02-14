@@ -1,3 +1,20 @@
 [
-  {"key": "300", "value": "U kuhinji nalaziš nož."}
+  {
+    "key": "71",
+    "value": "Kuhinja je prostrana i moderno uređena, s dugim redom ladica i drvenih polica punih začina i čaša. Uz zid stoji veliki srebrni frižider, a u sredini prostorije nalazi se masivni drveni stol na kojem su ostavljene čaše od sinoćnje večere."
+  },
+  {
+    "key": "72",
+    "type": "event",
+    "logic": {
+      "winnerStrategy": "priorityList",
+      "priorityList": ["p1","p3","p5","p2"]
+    },
+    "output": {
+      "winner": "U kuhinji nalaziš nož.",
+      "others": "Vidiš kako ${winner} uzima nož i sprema ga kod sebe.",
+      "p3": "Čim si čuo idemo u kuhinju sjetiš se da su u kuhinji noževi.",
+      "p7": "Daj nož (item 701) ${winner}. Global +701"
+    }
+  }
 ]

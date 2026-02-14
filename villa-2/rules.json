@@ -1,4 +1,6 @@
 [
+  {"cond": "7", "out": "71", "desc": "Genericki opis kuhinje"},
+  {"cond": "7 AND NOT 701", "out": "72", "desc": "Pretrazivanje kuhinje dok nož jos nije naden."},
   {"cond":"150","out":"300"},
   {"cond":"min2p AND p1 AND 150","out":"301"},
   {"cond":"min3p AND 150","out":"302"},
