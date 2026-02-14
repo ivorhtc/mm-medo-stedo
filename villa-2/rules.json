@@ -1,9 +1,23 @@
 [
-  {"cond": "7", "out": "71", "desc": "Genericki opis kuhinje"},
-  {"cond": "7 AND NOT 701", "out": "72", "desc": "Pretrazivanje kuhinje dok nož jos nije naden."},
-  {"cond":"150","out":"300"},
-  {"cond":"min2p AND p1 AND 150","out":"301"},
-  {"cond":"min3p AND 150","out":"302"},
-  {"cond":"33","out":"401"},
-  {"cond":"33 NOT p2","out":"402"}
+  { "cond": "7", "out": "71", "desc": "Genericki opis kuhinje" },
+
+  { "cond": "7 AND NOT 701", "out": "72", "desc": "Pretrazivanje kuhinje dok nož jos nije naden." },
+
+  { "cond": "771", "out": "771", "desc": "Pretrazivanje stola s čašama." },
+
+  { "cond": "772 AND NOT 702", "out": "772", "desc": "Pretrazivanje ladica dok ključ jos nije naden." },
+
+  { "cond": "773", "out": "773", "desc": "Pretrazivanje polica." },
+
+  { "cond": "3", "out": "31", "desc": "Ulazak u radnu sobu." },
+
+  { "cond": "3 AND NOT 702", "out": "32", "desc": "Sef je zaključan bez ključa." },
+
+  { "cond": "3 AND 702 AND NOT 301", "out": "33", "desc": "Otvaranje sefa s ključem i pronalazak pištolja." },
+
+  { "cond": "150", "out": "300" },
+  { "cond": "min2p AND p1 AND 150", "out": "301" },
+  { "cond": "min3p AND 150", "out": "302" },
+  { "cond": "33", "out": "401" },
+  { "cond": "33 NOT p2", "out": "402" }
 ]

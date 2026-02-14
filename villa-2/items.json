@@ -3,6 +3,7 @@
     "key": "71",
     "value": "Kuhinja je prostrana i moderno uređena, s dugim redom ladica i drvenih polica punih začina i čaša. Uz zid stoji veliki srebrni frižider, a u sredini prostorije nalazi se masivni drveni stol na kojem su ostavljene čaše od sinoćnje večere."
   },
+
   {
     "key": "72",
     "type": "event",
@@ -13,8 +14,56 @@
     "output": {
       "winner": "U kuhinji nalaziš nož.",
       "others": "Vidiš kako ${winner} uzima nož i sprema ga kod sebe.",
-      "p3": "Čim si čuo idemo u kuhinju sjetiš se da su u kuhinji noževi.",
+      "p3": "(🧠 : Čim si čuo da netko ide u kuhinju sjetiš se da su u kuhinji noževi.)",
       "p7": "Daj nož (item 701) ${winner}. Global +701"
+    }
+  },
+
+  {
+    "key": "771",
+    "value": "Na stolu su tri prazne čaše. Jedna od njih ima tragove tamnog ruža na rubu."
+  },
+
+  {
+    "key": "772",
+    "type": "event",
+    "logic": {
+      "winnerStrategy": "priorityList",
+      "priorityList": ["p3","p1","p5","p2"]
+    },
+    "output": {
+      "winner": "U ladici pronalaziš mali metalni ključ.",
+      "others": "Vidiš kako ${winner} pronalazi ključ u ladici i sprema u džep.",
+      "p7": "Daj ključ (item 702) ${winner}. Global +702"
+    }
+  },
+
+  {
+    "key": "773",
+    "value": "Police su pune začina i starih čaša. Na jednoj polici nalazi se prazna kutija od metaka."
+  },
+
+  {
+    "key": "31",
+    "value": "Radna soba je tiha i mračna. U kutu prostorije stoji veliki metalni sef."
+  },
+
+  {
+    "key": "32",
+    "value": "Sef je zaključan. Čini se da treba mali metalni ključ."
+  },
+
+  {
+    "key": "33",
+    "type": "event",
+    "logic": {
+      "winnerStrategy": "priorityList",
+      "priorityList": ["p1","p3","p5","p2"]
+    },
+    "output": {
+      "winner": "Otvaraš sef i unutra pronalaziš pištolj.",
+      "others": "Vidiš kako ${winner} otvara sef i vadi nešto iz njega.",
+      "p7": "Daj pištolj (item 301) ${winner}. Global +301"
     }
   }
 ]
