@@ -132,13 +132,12 @@
     };
   }
 
-  function getPlayers(){
-    const arr=[];
-    for(let i=1;i<=7;i++){
-      const v=document.getElementById("p"+i).value.trim();
-      arr.push(v? v : null);
-    }
-    return arr;
+  function getPlayers() {
+    const playerInputs = document.querySelectorAll("[id^='p']"); // Select all elements with IDs starting with 'p'
+    return Array.from(playerInputs).map(input => {
+      const v = input.value.trim();
+      return v ? v : null;
+    });
   }
 
   function parseList(s){
@@ -184,6 +183,115 @@
     return text.replace(/\$\{winner\}/g,winnerName);
   }
 
+  // makeEvaluator (same robust evaluator you provided)
+  function makeEvaluator(condString) {
+    let s = condString ? condString.replace(/\s+/g,' ').trim() : '';
+    const numTokens = Array.from(new Set((s.match(/\b\d+\b/g) || [])));
+    const playerTokens = Array.from(new Set((s.match(/\bp\d+\b/ig) || []).map(t=>t.toLowerCase())));
+    const minMaxTokens = Array.from(new Set((s.match(/\b(min|max)\d+p\b/ig) || []).map(t=>t.toLowerCase())));
+
+    return function evaluate(context){
+      const playersCount = context.players.length;
+      const numberMap = context.numberMap;
+      const playersForNumber = {};
+      numTokens.forEach(n => {
+        playersForNumber[n] = (numberMap[n] || []).slice();
+      });
+
+      let combinedSet = new Set();
+      numTokens.forEach(n => {
+        (playersForNumber[n] || []).forEach(i => combinedSet.add(i));
+      });
+      const countCombined = combinedSet.size;
+
+      const varMap = {};
+      numTokens.forEach(n => varMap[n] = (playersForNumber[n] && playersForNumber[n].length>0));
+
+      const players = context.players;
+      playerTokens.forEach(pt => {
+        const num = parseInt(pt.slice(1),10);
+        const idx = num-1;
+        if(numTokens.length>0){
+          varMap[pt] = combinedSet.has(idx);
+        } else {
+          varMap[pt] = players[idx] !== null;
+        }
+      });
+
+      minMaxTokens.forEach(tok => {
+        const m = tok.match(/(min|max)(\d+)p/i);
+        if(m){
+          const typ = m[1].toLowerCase();
+          const n = parseInt(m[2],10);
+          if(typ === 'min') varMap[tok] = (countCombined >= n);
+          else varMap[tok] = (countCombined <= n);
+        }
+      });
+
+      let expr = s;
+      expr = expr.replace(/\bNOT\b/ig, '!');
+      expr = expr.replace(/\bAND\b/ig, '&&');
+      expr = expr.replace(/\bOR\b/ig, '||');
+
+      const allTokens = minMaxTokens.concat(playerTokens).concat(numTokens);
+      allTokens.sort((a,b)=>b.length-a.length);
+
+      allTokens.forEach(tok=>{
+        const re = new RegExp('\\b' + tok.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\b', 'ig');
+        const val = (tok in varMap) ? varMap[tok] : false;
+        expr = expr.replace(re, val ? 'true' : 'false');
+      });
+
+      expr = expr.replace(/\bp\d+\b/ig, 'false');
+      expr = expr.replace(/\b\d+\b/g, function(m){
+        return (m in varMap && varMap[m]) ? 'true' : 'false';
+      });
+
+      expr = expr.replace(/\s+/g,' ');
+
+      let passed = false;
+      let evalError = null;
+      try {
+        passed = Function('"use strict"; return (' + expr + ');')();
+      } catch(e){
+        evalError = e.toString();
+        passed = false;
+      }
+
+      let assigned = [];
+      if(numTokens.length>0){
+        assigned = Array.from(combinedSet).sort((a,b)=>a-b);
+      } else if(playerTokens.length>0){
+        assigned = playerTokens.map(pt => parseInt(pt.slice(1),10)-1).filter(i=>i>=0 && i<players.length);
+      } else {
+        assigned = players.map((v,i)=> v!==null ? i : -1).filter(i=>i>=0);
+      }
+
+      const notPlayerMatches = s.match(/\bNOT\s+p\d+\b/ig) || s.match(/\bnot\s+p\d+\b/ig) || [];
+      notPlayerMatches.forEach(m=>{
+        const p = m.match(/\d+/);
+        if(p){
+          const idx = parseInt(p[0],10)-1;
+          assigned = assigned.filter(x=>x !== idx);
+        }
+      });
+
+      const assignedPlayers = assigned.map(i => 'Player' + (i+1));
+
+      return {
+        passed,
+        expr,
+        evalError,
+        numTokens,
+        playerTokens,
+        minMaxTokens,
+        playersForNumber,
+        combinedPlayers: Array.from(combinedSet),
+        assignedPlayers
+      };
+    };
+  }
+
   document.getElementById("evalBtn").addEventListener("click", async ()=>{
 
     const {settings, items, rules} = await loadGameFiles();
@@ -191,6 +299,7 @@
     const players=getPlayers();
     const globals=parseList(document.getElementById("globalNumbers").value);
     const numberMap=buildNumberMap(players,globals);
+    console.log("numberMap: " + numberMap);
 
     const itemMap={};
     items.forEach(obj=>itemMap[obj.key]=obj);
@@ -211,18 +320,34 @@
       }
     });
 
+    let debugLines=[];
     // RULES
-    rules.forEach(r=>{
-      const cond=r.cond;
-      const out=r.out;
+    const outputs = []; // {out:..., players: [...]}
+    rules.forEach((r, idx) => {
+      const cond = (r.cond || '').toString();
+      const out = r.out || ('out_'+idx);
+      const evaler = makeEvaluator(cond);
+      const res = evaler({players, numberMap});
+      debugLines.push(`Rule ${idx+1}: cond="${cond}" out="${out}"`);
+      debugLines.push(' -> expr (after replace): ' + res.expr);
+      if(res.evalError) debugLines.push(' -> eval error: ' + res.evalError);
+      debugLines.push(' -> numTokens: ' + JSON.stringify(res.numTokens));
+      debugLines.push(' -> playerTokens: ' + JSON.stringify(res.playerTokens));
+      debugLines.push(' -> minMaxTokens: ' + JSON.stringify(res.minMaxTokens));
+      debugLines.push(' -> playersForNumber: ' + JSON.stringify(res.playersForNumber));
+      debugLines.push(' -> combinedPlayers: ' + JSON.stringify(res.combinedPlayers));
+      debugLines.push(' -> passed: ' + res.passed);
+      debugLines.push(' -> assigned players: ' + JSON.stringify(res.assignedPlayers));
+      debugLines.push('');
 
-      const triggeredPlayers=new Set();
+      if(res.passed){
+        outputs.push({out, players: res.assignedPlayers});
+      }
+    });
+    console.log("outputs:" + outputs);
 
-      Object.keys(numberMap).forEach(n=>{
-        if(cond.includes(n)){
-          numberMap[n].forEach(i=>triggeredPlayers.add(i));
-        }
-      });
+    outputs.forEach(({out, players}) => {
+      const triggeredPlayers = players;
 
       if(triggeredPlayers.size===0)return;
 
@@ -287,7 +412,6 @@
                   .push(eventObj.value||out);
         });
       }
-
     });
 
     let html="";
@@ -309,7 +433,7 @@
     });
 
     document.getElementById("result").innerHTML=html||"Nema rezultata.";
-    document.getElementById("debug").innerText=JSON.stringify(numberMap,null,2);
+    document.getElementById('debug').innerText = debugLines.join('\n');
 
   });
 </script>
