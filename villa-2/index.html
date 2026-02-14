@@ -418,6 +418,7 @@
         )
         // obični tekstualni item
         triggeredPlayers.forEach(i=>{
+          console.log("Player"+(i+1)+" triggered!");
           playerCards["Player"+(i+1)]
                   .push(eventObj.value||out);
         });
