@@ -409,6 +409,9 @@
         });
 
       }else{
+        Object.keys(playerCards).forEach(p=>
+                console.log(p + " = " +playerCards[p])
+        )
         // obični tekstualni item
         triggeredPlayers.forEach(i=>{
           playerCards["Player"+(i+1)]
