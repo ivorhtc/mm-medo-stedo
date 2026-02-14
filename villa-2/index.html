@@ -307,7 +307,7 @@
     const playerCards={};
     players.forEach((v,i)=>{
       console.log("Player "+(i+1)+": "+v);
-      if(v!==null)playerCards["Player"+(i+1)]=[];
+      playerCards["Player"+(i+1)]=[];
     });
     Object.keys(playerCards).forEach(p=>
             console.log(p + " = " +playerCards[p])
