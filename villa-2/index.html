@@ -382,20 +382,19 @@
         )
         // winner text
         if(winnerIdx && eventObj.output.winner){
-          console.log("Adding winner text to Player"+winnerIdx+": "+eventObj.output.winner);
-          playerCards["Player"+winnerIdx].push(eventObj.output.winner);
+          console.log("Adding winner text to "+winnerIdx+": "+eventObj.output.winner);
+          playerCards[winnerIdx].push(eventObj.output.winner);
         }
 
         // others text
-        involved.forEach(i=>{
-          const idx=i+1;
-          if(idx!==winnerIdx && eventObj.output.others){
+        involved.forEach(involvedPlayer=>{
+          if(involvedPlayer!==winnerIdx && eventObj.output.others){
             const txt=replaceWinnerPlaceholder(
                     eventObj.output.others,
                     winnerIdx
             );
-            console.log("Adding others text to Player"+idx+": "+txt);
-            playerCards["Player"+idx].push(txt);
+            console.log("Adding others text to " + involvedPlayer+": "+txt);
+            playerCards[involvedPlayer].push(txt);
           }
         });
 
