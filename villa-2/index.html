@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <title>Murder Mystery Evaluator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
 :root{
   --bg1:#171414;
@@ -84,7 +83,6 @@ pre{
 <div class="wrap">
 <div class="card">
 
-
 <h1>🎩 Villa 2 Murder Mistery</h1>
 
 <div class="grid">
@@ -95,10 +93,6 @@ pre{
   <div class="player-container"><div class="player-emoji">🐍🟢</div><label id="label5" class="player-label">Damir</label><input id="p5"></div>
   <div class="player-container"><div class="player-emoji">🍆🟣</div><label id="label6" class="player-label">Oliver</label><input id="p6"></div>
   <div class="player-container"><div class="player-emoji">⚠️⚠️</div><label id="label7" class="player-label">Voditelj</label><input id="p7"></div>
-
-  <!--<div class="player-container"><div class="player-emoji">🐑⚪</div><label id="label6" class="player-label">Player6</label><input id="p6"></div>
-  <div class="player-container"><div class="player-emoji">🐫🟠</div><label id="label7" class="player-label">Player7</label><input id="p7"></div>
-  <div class="player-container"><div class="player-emoji">🐷🩷</div><label id="label9" class="player-label">Player9</label><input id="p9"></div>-->
 </div>
 
 <div style="margin-top:10px">
@@ -179,6 +173,33 @@ function copyText(t){
   alert("Copied!");
 }
 
+// 🔥 PLACEHOLDER ENGINE
+function resolvePlaceholders(text, currentPlayerIndex, itemKey, playerCards, listMap){
+
+  const regex = /\$\{(.*?)\}/g;
+
+  return text.replace(regex,(match,listName)=>{
+
+    const list=listMap[listName];
+    if(!list)return "";
+
+    for(let entry of list){
+
+      const idx=parseInt(entry.player.replace("p",""))-1;
+      if(idx===currentPlayerIndex)continue;
+
+      const playerKey="Player"+(idx+1);
+
+      if(playerCards[playerKey] && playerCards[playerKey].includes(itemKey)){
+        return entry.text;
+      }
+    }
+
+    return "";
+
+  });
+}
+
 document.getElementById("evalBtn").addEventListener("click", async ()=>{
 
   const {settings, items, rules} = await loadGameFiles();
@@ -188,6 +209,7 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
   const numberMap=buildNumberMap(players,globals);
 
   const cardMap={};
+  const listMap={};
 
   // SETTINGS
   settings.forEach(obj=>{
@@ -202,7 +224,12 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
 
   // ITEMS
   items.forEach(obj=>{
-    cardMap[obj.key]=obj.value;
+    if(obj.key){
+      cardMap[obj.key]=obj.value;
+    }
+    if(obj.listName){
+      listMap[obj.listName]=obj.entries;
+    }
   });
 
   const playerCards={};
@@ -221,19 +248,32 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
       }
     });
     const unique=[...new Set(assigned)];
-    if(unique.length>0){
-      unique.forEach(p=>{
-        playerCards[p].push(cardMap[out]||out);
-      });
-    }
+    unique.forEach(p=>{
+      playerCards[p].push(out); // spremamo KEY
+    });
   });
 
   let html="";
   Object.keys(playerCards).forEach(p=>{
     if(playerCards[p].length===0)return;
-    const text=playerCards[p].join("\n\n");
+
     const idx=parseInt(p.replace("Player",""));
     const name=document.getElementById("label"+idx).innerText;
+
+    let finalTexts=[];
+
+    playerCards[p].forEach(key=>{
+      const raw=cardMap[key];
+      if(raw){
+        const resolved=resolvePlaceholders(raw,idx-1,key,playerCards,listMap);
+        finalTexts.push(resolved);
+      }else{
+        finalTexts.push(key);
+      }
+    });
+
+    const text=finalTexts.join("\n\n");
+
     html+=`
     <div class="result-player" style="background:#ffffff">
       <div class="result-header">
@@ -241,7 +281,7 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
         <button onclick="copyText(\`${text}\`)">Copy</button>
       </div>
       <div class="result-cards">
-        ${playerCards[p].map(c=>`<div>${c}</div>`).join("")}
+        ${finalTexts.map(c=>`<div>${c}</div>`).join("")}
       </div>
     </div>`;
   });
