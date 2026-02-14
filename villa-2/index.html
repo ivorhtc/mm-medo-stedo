@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <title>Murder Mystery Evaluator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 :root{
   --bg1:#171414;
@@ -12,7 +13,6 @@
   --accent:#c84b4b;
   --gold:#d4b46e;
   --muted:#b7a9a9;
-  --panel:#3b2b2b;
 }
 html,body{
   height:100%;
@@ -93,10 +93,6 @@ pre{
   <div class="player-container"><div class="player-emoji">🐍🟢</div><label id="label5" class="player-label">Damir</label><input id="p5"></div>
   <div class="player-container"><div class="player-emoji">🍆🟣</div><label id="label6" class="player-label">Oliver</label><input id="p6"></div>
   <div class="player-container"><div class="player-emoji">⚠️⚠️</div><label id="label7" class="player-label">Voditelj</label><input id="p7"></div>
-
-  <!--<div class="player-container"><div class="player-emoji">🐑⚪</div><label id="label6" class="player-label">Player6</label><input id="p6"></div>
-  <div class="player-container"><div class="player-emoji">🐫🟠</div><label id="label7" class="player-label">Player7</label><input id="p7"></div>
-  <div class="player-container"><div class="player-emoji">🐷🩷</div><label id="label9" class="player-label">Player9</label><input id="p9"></div>-->
 </div>
 
 <div style="margin-top:10px">
@@ -118,6 +114,7 @@ pre{
 </div>
 
 <script>
+
 async function loadGameFiles(){
   const [settingsRes, itemsRes, rulesRes] = await Promise.all([
     fetch("settings.json"),
@@ -177,17 +174,21 @@ function copyText(t){
   alert("Copied!");
 }
 
-// 🔥 PLACEHOLDER ENGINE
-function resolvePlaceholders(text, currentPlayerIndex, itemKey, playerCards, listMap){
+
+// 🔥 NOVI PLACEHOLDER ENGINE (LOKALNE LISTE)
+
+function resolvePlaceholders(text, currentPlayerIndex, itemKey, playerCards, itemObj){
 
   const regex = /\$\{(.*?)\}/g;
 
   return text.replace(regex,(match,listName)=>{
 
-    const list=listMap[listName];
-    if(!list)return "";
+    if(!itemObj.lists)return "";
 
-    for(let entry of list){
+    const listObj = itemObj.lists.find(l=>l.listName===listName);
+    if(!listObj)return "";
+
+    for(let entry of listObj.entries){
 
       const idx=parseInt(entry.player.replace("p",""))-1;
       if(idx===currentPlayerIndex)continue;
@@ -200,9 +201,9 @@ function resolvePlaceholders(text, currentPlayerIndex, itemKey, playerCards, lis
     }
 
     return "";
-
   });
 }
+
 
 document.getElementById("evalBtn").addEventListener("click", async ()=>{
 
@@ -212,8 +213,7 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
   const globals=parseList(document.getElementById("globalNumbers").value);
   const numberMap=buildNumberMap(players,globals);
 
-  const cardMap={};
-  const listMap={};
+  const itemMap={};
 
   // SETTINGS
   settings.forEach(obj=>{
@@ -226,14 +226,9 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
     }
   });
 
-  // ITEMS
+  // ITEMS → sada spremamo cijeli objekt
   items.forEach(obj=>{
-    if(obj.key){
-      cardMap[obj.key]=obj.value;
-    }
-    if(obj.listName){
-      listMap[obj.listName]=obj.entries;
-    }
+    itemMap[obj.key]=obj;
   });
 
   const playerCards={};
@@ -258,22 +253,34 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
   });
 
   let html="";
+
   Object.keys(playerCards).forEach(p=>{
+
     if(playerCards[p].length===0)return;
 
     const idx=parseInt(p.replace("Player",""));
     const name=document.getElementById("label"+idx).innerText;
 
-    let finalTexts=[];
+    const finalTexts=[];
 
     playerCards[p].forEach(key=>{
-      const raw=cardMap[key];
-      if(raw){
-        const resolved=resolvePlaceholders(raw,idx-1,key,playerCards,listMap);
-        finalTexts.push(resolved);
-      }else{
+
+      const itemObj=itemMap[key];
+      if(!itemObj){
         finalTexts.push(key);
+        return;
       }
+
+      const resolved=resolvePlaceholders(
+        itemObj.value,
+        idx-1,
+        key,
+        playerCards,
+        itemObj
+      );
+
+      finalTexts.push(resolved);
+
     });
 
     const text=finalTexts.join("\n\n");
@@ -294,6 +301,7 @@ document.getElementById("evalBtn").addEventListener("click", async ()=>{
   document.getElementById("debug").innerText=JSON.stringify(numberMap,null,2);
 
 });
+
 </script>
 </body>
 </html>
