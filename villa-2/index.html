@@ -177,8 +177,10 @@
     alert("Copied!");
   }
 
-  function replaceWinnerPlaceholder(text,winnerIdx){
-    if(!winnerIdx)return text;
+  function replaceWinnerPlaceholder(text,winner){
+    if(!winner)return text;
+    const winnerIdx = parseInt(winner.slice(1)) - 1;
+    console.log('winnerIdx:', winnerIdx);
     const winnerName=document.getElementById("label"+winnerIdx).innerText;
     return text.replace(/\$\{winner\}/g,winnerName);
   }
