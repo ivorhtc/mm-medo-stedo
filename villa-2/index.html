@@ -370,6 +370,7 @@
           for(let p of priority){
             console.log('p of priority:', JSON.stringify(p, null, 2));
             const idx=parseInt(p.slice(1))-1;
+            console.log('idx of priority:', idx);
             if(involved.includes(idx)){
               winnerIdx=idx+1;
               break;
@@ -377,8 +378,6 @@
           }
         }
 
-        Object.keys(playerCards).forEach(p=>
-        )
         // winner text
         if(winnerIdx && eventObj.output.winner){
           playerCards[winnerIdx].push(eventObj.output.winner);
