@@ -1,7 +1,7 @@
 [
-  { "cond": "7.1", "out": "71.0", "desc": "Genericki opis kuhinje" },
+  { "cond": "71", "out": "71", "desc": "Genericki opis kuhinje" },
 
-  { "cond": "7.1 AND NOT 7.0.1", "out": "72", "desc": "Pretrazivanje kuhinje dok nož jos nije naden." },
+  { "cond": "71 AND NOT 701", "out": "72", "desc": "Pretrazivanje kuhinje dok nož jos nije naden." },
 
   { "cond": "771", "out": "771", "desc": "Pretrazivanje stola s čašama." },
 
