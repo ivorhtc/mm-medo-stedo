@@ -3,9 +3,9 @@
   { "key": "1101", "value": "Moderna vila okružena je visokim borovima i skrivena iza elegantne crne metalne ograde s velikim ulaznim vratima. Kuća ima velike staklene prozore, prostranu garažu i osvijetljeni ulaz do kojeg vodi široki prilaz. Na vanjskom zidu pokraj glavnih vrata nalazi se mala metalna tabla s ugraviranom godinom 2001.",
   "admin": "Global +800211"},
 
-  {"value": "10 and p1" "key": "111"},
-  {"value": "10 and p2" "key": "112"},
-  {"value": "10 and p1 and p2" "key": "113"},
+  {"value": "10 and p1", "key": "111"},
+  {"value": "10 and p2", "key": "112"},
+  {"value": "10 and p1 and p2", "key": "113"},
 
   
   { "key": "1000", "value": "Prostrana moderna kuhinja s ladicama, policama i velikim srebrnim frižiderom." },
