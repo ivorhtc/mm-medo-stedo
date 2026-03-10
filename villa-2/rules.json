@@ -57,7 +57,7 @@
   { "cond": "8000", "out": "8000", "desc": "Radna soba" },
   { "cond": "8001", "out": "8001", "desc": "Stol" },
   { "cond": "8002", "out": "8002", "desc": "Ladice" },
-  { "cond": "8003", "out": "8003", "desc": "Sef" },
+  { "cond": "8003 AND NOT 800211", "out": "8003", "desc": "Sef" },
   { "cond": "8003 AND 800211", "out": "80031", "desc": "Otvoreni sef" },
   { "cond": "8004", "out": "8004", "desc": "Police s knjigama" },
   { "cond": "8005", "out": "8005", "desc": "Prozor" },
