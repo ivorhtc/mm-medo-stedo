@@ -70,6 +70,18 @@
     .result-cards div{
       margin-bottom:6px;
     }
+    .desc-box{
+      font-size:12px;
+      margin-top:6px;
+      color:#333;
+      text-align:left;
+    }
+    .desc-box div{
+      background:#f3f3f3;
+      padding:3px 6px;
+      border-radius:6px;
+      margin-bottom:3px;
+    }
     pre{
       background:#0d0b0b;
       color:#ddd;
@@ -87,13 +99,13 @@
     <h1>🎩 Villa 2 Murder Mistery</h1>
 
     <div class="grid">
-      <div class="player-container"><div class="player-emoji">🐈‍⬛⚫</div><label id="label1" class="player-label">Samir</label><input id="p1"></div>
-      <div class="player-container"><div class="player-emoji">🐥🟡</div><label id="label2" class="player-label">Igor</label><input id="p2"></div>
-      <div class="player-container"><div class="player-emoji">🐋🔵</div><label id="label3" class="player-label">Viktor</label><input id="p3"></div>
-      <div class="player-container"><div class="player-emoji">🦀🔴</div><label id="label4" class="player-label">Radomir</label><input id="p4"></div>
-      <div class="player-container"><div class="player-emoji">🐍🟢</div><label id="label5" class="player-label">Davor</label><input id="p5"></div>
-      <div class="player-container"><div class="player-emoji">🍆🟣</div><label id="label6" class="player-label">Oliver</label><input id="p6"></div>
-      <div class="player-container"><div class="player-emoji">⚠️⚠️</div><label id="label7" class="player-label">Voditelj</label><input id="p7"></div>
+      <div class="player-container"><div class="player-emoji">🐈‍⬛⚫</div><label id="label1" class="player-label">Samir</label><input id="p1"><div class="desc-box" id="desc-p1"></div></div>
+      <div class="player-container"><div class="player-emoji">🐥🟡</div><label id="label2" class="player-label">Igor</label><input id="p2"><div class="desc-box" id="desc-p2"></div></div>
+      <div class="player-container"><div class="player-emoji">🐋🔵</div><label id="label3" class="player-label">Viktor</label><input id="p3"><div class="desc-box" id="desc-p3"></div></div>
+      <div class="player-container"><div class="player-emoji">🦀🔴</div><label id="label4" class="player-label">Radomir</label><input id="p4"><div class="desc-box" id="desc-p4"></div></div>
+      <div class="player-container"><div class="player-emoji">🐍🟢</div><label id="label5" class="player-label">Davor</label><input id="p5"><div class="desc-box" id="desc-p5"></div></div>
+      <div class="player-container"><div class="player-emoji">🍆🟣</div><label id="label6" class="player-label">Oliver</label><input id="p6"><div class="desc-box" id="desc-p6"></div></div>
+      <div class="player-container"><div class="player-emoji">⚠️⚠️</div><label id="label7" class="player-label">Voditelj</label><input id="p7"><div class="desc-box" id="desc-p7"></div></div>
 
       <!--<div class="player-container"><div class="player-emoji">🐑⚪</div><label id="label6" class="player-label">Player6</label><input id="p6"></div>
       <div class="player-container"><div class="player-emoji">🐫🟠</div><label id="label7" class="player-label">Player7</label><input id="p7"></div>
@@ -119,16 +131,20 @@
 </div>
 
 <script>
+
+  let rulesCache = [];
+  
   async function loadGameFiles(){
     const [settingsRes, itemsRes, rulesRes] = await Promise.all([
       fetch("settings.json"),
       fetch("items.json"),
       fetch("rules.json")
     ]);
+    rulesCache = await rulesRes.json();
     return {
       settings: await settingsRes.json(),
       items: await itemsRes.json(),
-      rules: await rulesRes.json()
+      rules: rulesCache
     };
   }
 
@@ -187,6 +203,46 @@
     const winnerName=document.getElementById("label"+winnerIdx).innerText;
     return text.replace(/\$\{winner\}/g,winnerName);
   }
+
+  function updateInputDescriptions(input){
+    const values = input.value
+      .split(/[;,]/)
+      .map(v=>v.trim())
+      .filter(v=>v);
+    const descBox = document.getElementById("desc-"+input.id);
+
+    if(values.length===0){
+      descBox.innerHTML="";
+      return;
+    }
+    const descs = [];
+
+    values.forEach(v=>{
+      rulesCache.forEach(r=>{
+        if(r.cond === v && r.desc){
+          descs.push(r.desc);
+        }
+      });
+    });
+
+    descBox.innerHTML = descs
+      .map(d=>`<div>${d}</div>`)
+      .join("");
+  }
+
+  document.querySelectorAll("[id^='p']").forEach(input=>{
+
+  let timer=null;
+
+  input.addEventListener("input",()=>{
+    clearTimeout(timer);
+
+    timer=setTimeout(()=>{
+        updateInputDescriptions(input);
+      },300); // debounce
+    });
+
+  });
 
   // makeEvaluator (same robust evaluator you provided)
   function makeEvaluator(condString) {
