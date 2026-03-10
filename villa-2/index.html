@@ -135,8 +135,12 @@
   function getPlayers() {
     const playerInputs = document.querySelectorAll("[id^='p']"); // Select all elements with IDs starting with 'p'
     return Array.from(playerInputs).map(input => {
-      const v = input.value.trim();
-      return v ? v : null;
+      const v = input.value.trim();   
+      if(!v) return null;
+
+      return v.split(/[;,]/)
+        .map(x => x.trim())
+        .filter(x => x.length > 0);
     });
   }
 
@@ -147,11 +151,10 @@
 
   function buildNumberMap(players,globals){
     const map={};
-    players.forEach((v,i)=>{
-      if(!v)return;
-      v.split(',').forEach(n=>{
-        n=n.trim();
-        if(!map[n])map[n]=new Set();
+    players.forEach((vals,i)=>{
+      if(!vals)return;
+      vals.forEach(n=>{
+        if(!map[n]) map[n]=new Set();
         map[n].add(i);
       });
     });
