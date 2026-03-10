@@ -8,6 +8,9 @@
   { "a":"8002 - > u ladici nades papiric na kojem pise da je sifra sefa godina izgradnje vile"},
   { "a": "//1101 - > dobis opis vile izvana u kojem pise da ima velku tablu na kojoj pise da je godina izgradnje vile 2001 izgradnje vile"},
 
+  {"cond": "10 and p1" "out": "111"},
+  {"cond": "10 and p2" "out": "112"},
+  {"cond": "10 and p1 and p2" "out": "113"},
   
   { "cond": "1000", "out": "1000", "desc": "Kuhinja" },
   { "cond": "1001", "out": "1001", "desc": "Ladice" },
