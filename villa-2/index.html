@@ -415,9 +415,11 @@
       if(triggeredPlayers.size===0)return;
 
       const eventObj=itemMap[out];
+      console.log('0 - eventObj:', JSON.stringify(eventObj, null, 2));
       if(!eventObj)return;
 
       // === EVENT TYPE ===
+      console.log('0 - eventObj.type:', JSON.stringify(eventObj.type, null, 2));
       if(eventObj.type==="event"){
 
         const involved=[...triggeredPlayers];
