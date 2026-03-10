@@ -1,10 +1,10 @@
 [
   { "cond": "1100", "out": "1100", "desc": "Vila izvana" }, 
-  //1100 - > dobis opis vile izvana u kojem pise da ima velku tablu na kojoj pise godina izgradnje vile
-  //  { "cond": "8002", "out": "8002", "desc": "Ladice" },
-  //8002 - > u ladici nades papiric na kojem pise da je sifra sefa godina izgradnje vile
+  { "a": "1100 - > dobis opis vile izvana u kojem pise da ima velku tablu na kojoj pise godina izgradnje vile" },
+  { "a": "8002", "out": "8002", "desc": "Ladice" },
+  { "a":"8002 - > u ladici nades papiric na kojem pise da je sifra sefa godina izgradnje vile"},
   { "cond": "1100 AND 80021", "out": "1101", "desc": "Tabla na vili" }, 
-  //1101 - > dobis opis vile izvana u kojem pise da ima velku tablu na kojoj pise da je godina izgradnje vile 2001 izgradnje vile
+  { "a": "//1101 - > dobis opis vile izvana u kojem pise da ima velku tablu na kojoj pise da je godina izgradnje vile 2001 izgradnje vile"},
 
   
   { "cond": "1000", "out": "1000", "desc": "Kuhinja" },
