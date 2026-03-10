@@ -140,7 +140,7 @@
   },
 
   {
-    "key": "33",
+    "key": "401",
     "type": "event",
     "logic": {
       "winnerStrategy": "priorityList",
@@ -148,6 +148,20 @@
     },
     "output": {
       "winner": "Otvaraš sef i unutra pronalaziš pištolj.",
+      "others": "Vidiš kako ${winner} otvara sef i vadi nešto iz njega.",
+      "p7": "Daj pištolj (item 301) ${winner}. Global +301"
+    }
+  },
+
+  {
+    "key": "402",
+    "type": "event",
+    "logic": {
+      "winnerStrategy": "priorityList",
+      "priorityList": ["p1","p3","p5","p2"]
+    },
+    "output": {
+      "winner": "Otvaraš sef i unutra pronalaziš gljivu.",
       "others": "Vidiš kako ${winner} otvara sef i vadi nešto iz njega.",
       "p7": "Daj pištolj (item 301) ${winner}. Global +301"
     }
