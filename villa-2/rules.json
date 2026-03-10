@@ -1,4 +1,12 @@
 [
+  { "cond": "1100", "out": "1100", "desc": "Vila izvana" }, 
+  //1100 - > dobis opis vile izvana u kojem pise da ima velku tablu na kojoj pise godina izgradnje vile
+  //  { "cond": "8002", "out": "8002", "desc": "Ladice" },
+  //8002 - > u ladici nades papiric na kojem pise da je sifra sefa godina izgradnje vile
+  { "cond": "1100 AND 80021", "out": "1101", "desc": "Tabla na vili" }, 
+  //1101 - > dobis opis vile izvana u kojem pise da ima velku tablu na kojoj pise da je godina izgradnje vile 2001 izgradnje vile
+
+  
   { "cond": "1000", "out": "1000", "desc": "Kuhinja" },
   { "cond": "1001", "out": "1001", "desc": "Ladice" },
   { "cond": "1002", "out": "1002", "desc": "Police s začinima i čašama" },
@@ -50,6 +58,7 @@
   { "cond": "8001", "out": "8001", "desc": "Stol" },
   { "cond": "8002", "out": "8002", "desc": "Ladice" },
   { "cond": "8003", "out": "8003", "desc": "Sef" },
+  { "cond": "8003 AND 800211", "out": "80031", "desc": "Otvoreni sef" },
   { "cond": "8004", "out": "8004", "desc": "Police s knjigama" },
   { "cond": "8005", "out": "8005", "desc": "Prozor" },
   { "cond": "8006", "out": "8006", "desc": "Tijelo Zvonimira Farkaša" },
