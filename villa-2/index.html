@@ -221,8 +221,24 @@
     const winnerIdx = parseInt(winner.replace("Player", ""));
     console.log('winnerIdx:', winnerIdx);
     //const winnerName=document.getElementById("label"+winnerIdx).innerText;
-    const winnerName=playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].n;
+    // short nominativ replace
+    const winnerName="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].n + "\"" ;
     return text.replace(/\$\{winner\}/g,winnerName);
+    // all cases replaces
+    const winnerNameN="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].n + "\"" ;
+    return text.replace(/\$\{winnerN\}/g,winnerName);
+    const winnerNameG="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].g + "\"" ;
+    return text.replace(/\$\{winnerN\}/g,winnerName);
+    const winnerNameD="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].d + "\"" ;
+    return text.replace(/\$\{winnerN\}/g,winnerName);
+    const winnerNameA="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].a + "\"" ;
+    return text.replace(/\$\{winnerN\}/g,winnerName);
+    const winnerNameV="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].v + "\"" ;
+    return text.replace(/\$\{winnerN\}/g,winnerName);
+    const winnerNameL="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].l + "\"" ;
+    return text.replace(/\$\{winnerN\}/g,winnerName);
+    const winnerNameI="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].i + "\"" ;
+    return text.replace(/\$\{winnerN\}/g,winnerName);
   }
 
   function updateInputDescriptions(input){
