@@ -143,7 +143,7 @@
       fetch("rules.json")
     ]);
     rulesCache = await rulesRes.json();
-    settingsCache = await settings.json();
+    settingsCache = await settingsRes.json();
     processPlayers(settingsCache);
     
     return {
