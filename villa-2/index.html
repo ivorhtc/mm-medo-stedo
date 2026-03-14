@@ -206,12 +206,15 @@
   }
 
   function updateInputDescriptions(input){
+    console.log("Input updating");
     const values = input.value
       .split(/[;,]/)
       .map(v=>v.trim())
       .filter(v=>v);
+    console.log("desc-"+input.id);
     const descBox = document.getElementById("desc-"+input.id);
-
+    console.log("descBox: ", JSON.stringify(descBox, null, 2));
+    
     if(values.length===0){
       descBox.innerHTML="";
       return;
@@ -221,6 +224,7 @@
     values.forEach(v=>{
       rulesCache.forEach(r=>{
         if(r.cond === v && r.desc){
+          console.log(r.desc);
           descs.push(r.desc);
         }
       });
