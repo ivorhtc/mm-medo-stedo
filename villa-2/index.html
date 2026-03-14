@@ -221,7 +221,7 @@
     const winnerIdx = parseInt(winner.replace("Player", ""));
     console.log('winnerIdx:', winnerIdx);
     //const winnerName=document.getElementById("label"+winnerIdx).innerText;
-    const winnerName=playerCache["p"+idx].icon + " " + playerCache["p"+idx].n;
+    const winnerName=playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].n;
     return text.replace(/\$\{winner\}/g,winnerName);
   }
 
