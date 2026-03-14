@@ -134,6 +134,7 @@
 <script>
 
   let rulesCache = [];
+  let settingsCache = [];
   
   async function loadGameFiles(){
     const [settingsRes, itemsRes, rulesRes] = await Promise.all([
@@ -142,11 +143,29 @@
       fetch("rules.json")
     ]);
     rulesCache = await rulesRes.json();
+    settingsCache = await settings.json();
+    processPlayers(settingsCache);
+    
     return {
-      settings: await settingsRes.json(),
+      settings: await settingsCache,
       items: await itemsRes.json(),
       rules: rulesCache
     };
+  }
+  
+  let playerCache = [];
+  
+  function processPlayers(settings) {
+    settings.forEach(obj=>{
+      for(let key in obj){
+        if(key.startsWith("p")){
+          const idx=parseInt(key.slice(1));
+          playerCache[key] = obj.attr;
+          playerCache["Player" + idx] = obj.attr;
+        }
+      }
+    });
+    console.log("playerCache: ", JSON.stringify(playerCache, null, 2));
   }
 
   function getPlayers() {
@@ -206,14 +225,11 @@
   }
 
   function updateInputDescriptions(input){
-    console.log("Input updating");
     const values = input.value
       .split(/[;,]/)
       .map(v=>v.trim())
       .filter(v=>v);
-    console.log("desc-"+input.id);
     const descBox = document.getElementById("desc-"+input.id);
-    console.log("descBox: ", JSON.stringify(descBox, null, 2));
     
     if(values.length===0){
       descBox.innerHTML="";
