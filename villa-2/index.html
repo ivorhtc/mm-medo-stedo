@@ -363,7 +363,7 @@
     const {settings, items, rules} = await loadGameFiles();
 
     const players=getPlayers();
-    const globals=parseList(document.getElementById("globalNumbers").value);
+    const globals=parseList(document.getElementById("p-globalNumbers").value);
     const numberMap=buildNumberMap(players,globals);
     console.log('numberMap:', JSON.stringify(numberMap, null, 2));
 
