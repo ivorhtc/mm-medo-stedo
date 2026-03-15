@@ -3,8 +3,19 @@
   { "key": "1101", "value": "Moderna vila okružena je visokim borovima i skrivena iza elegantne crne metalne ograde s velikim ulaznim vratima. Kuća ima velike staklene prozore, prostranu garažu i osvijetljeni ulaz do kojeg vodi široki prilaz. Na vanjskom zidu pokraj glavnih vrata nalazi se mala metalna tabla s ugraviranom godinom 2001.",
   "admin": "Global +800211"},
   
-  { "key": "1000", "value": "Prostrana moderna kuhinja s ladicama, policama i velikim srebrnim frižiderom.", "p2": "Hello lik" },
-  { "key": "1001", "value": "U ladicama su noževi i kuhinjski pribor, ali jedna ladica ima prazno mjesto kao da je nešto nedavno uzeto." },
+  { "key": "1000", "value": "Prostrana moderna kuhinja s ladicama, policama i velikim srebrnim frižiderom.", 
+    "p2": "🧠 U kuhinji u ladici se nalazi injekcija kojom si ubrizgao otrov. Ako pretražuješ ladicu sam ili s nekim ces spremiti injekciju u džep." },
+  
+  { "key": "1001", "value": "U ladicama su noževi i kuhinjski pribor.", 
+    "p2": "Spremas injekciju u dzep bez da itko vidi.", 
+    "admin": "Global +1001771"},
+  { "key": "1001881", "value": "U ladicama uz noževe i kuhinjski pribor nalazite praznu injekciju.", "admin":"Karta +7, Global +88772" },
+  { "key": "1001882", "value": "U ladicama su noževi i kuhinjski pribor." },
+  { "key": "1001883", "value": "U ladicama su noževi i kuhinjski pribor.", 
+    "p2": "Spremas injekciju u dzep i nadaš se da nitko nije vidio.", 
+    "p6": "Primjecujes da 🟡 Zuti sprema neku injekciju u dzep",
+    "admin": "Global +1001771"},
+  
   { "key": "1002", "value": "Police su pune začina i čaša za vino, sve uredno posloženo." },
   { "key": "1003", "value": "Frižider je gotovo prazan osim nekoliko boca vina i male kutije s lijekovima." },
   { "key": "1004", "value": "Sudoper je čist, ali u odvodu se osjeti blagi miris vina." },
