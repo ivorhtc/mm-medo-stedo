@@ -18,7 +18,7 @@
   { "cond": "1001 and not p2 and not 1001771 and not 88772", "out": "1001881", "desc": "Ladice" },
   { "cond": "1001 and 1001771", "out": "1001882", "desc": "Ladice" },
   { "cond": "1001 and 88772", "out": "1001882", "desc": "Ladice" },
-  { "cond": "1001771", "desc": "Zuti ima injekciju u dzepu"}
+  { "cond": "1001771", "desc": "Zuti ima injekciju u dzepu"},
 
   { "key": "1001", "value": "U ladicama su noževi i kuhinjski pribor.",
     "p2": "Spremas injekciju u dzep bez da itko vidi.",
