@@ -1,21 +1,36 @@
 [
+  {"cond": "6", "desc": "Našli ste pribor za otkrivanje otisaka. (Karta +6, Global +88771)" },
+  
   { "story": "1100 je vila izvana, ali ako ste procitali papiric u ladici (8002) da je šifra sefa godina izgradnje onda vidite i godinu izgradnje" },
   { "cond": "1100 AND NOT 80021", "out": "1100", "desc": "Vila izvana" }, 
   { "cond": "80021", "desc":"80021 - Trazite godinu izgradnje vile."},
   { "cond": "1100 AND 80021", "out": "1101", "desc": "Tabla na vili" }, 
   { "cond": "800211", "desc":"800211 - Znate sifru sefa."},
 
-  { "a": "1100 - > dobis opis vile izvana u kojem pise da ima velku tablu na kojoj pise godina izgradnje vile" },
-  { "a": "8002", "out": "8002", "desc": "Ladice" },
   { "a":"8002 - > u ladici nades papiric na kojem pise da je sifra sefa godina izgradnje vile"},
   { "a": "//1101 - > dobis opis vile izvana u kojem pise da ima velku tablu na kojoj pise da je godina izgradnje vile 2001 izgradnje vile"},
 
-  {"cond": "10 and p1", "out": "111"},
-  {"cond": "10 and p2", "out": "112"},
-  {"cond": "10 and p1 and p2", "out": "113"},
-  
   { "cond": "1000", "out": "1000", "desc": "Kuhinja" },
-  { "cond": "1001", "out": "1001", "desc": "Ladice" },
+ 
+  { "cond": "1001", "desc": "Ladice", "story": "U ladici je injekcija kojom je 🟡 Zuti ubrizgao otrov u vino, ako on pretraži ladicu spremi ju u dzep"},
+  { "cond": "1001 and p2 and not p6 and not 1001771 and not 88772", "out": "1001", "desc": "Ladice" },
+  { "cond": "1001 and p2 and p6 and not 1001771 and not 88772", "out": "1001883", "desc": "Ladice" },
+  { "cond": "1001 and not p2 and not 1001771 and not 88772", "out": "1001881", "desc": "Ladice" },
+  { "cond": "1001 and 1001771", "out": "1001882", "desc": "Ladice" },
+  { "cond": "1001 and 88772", "out": "1001882", "desc": "Ladice" },
+  { "cond": "1001771", "desc": "Zuti ima injekciju u dzepu"}
+
+  { "key": "1001", "value": "U ladicama su noževi i kuhinjski pribor.", 
+    "p2": "Spremas injekciju u dzep bez da itko vidi.", 
+    "admin": "Global +1001771"},
+  { "key": "1001881", "value": "U ladicama uz noževe i kuhinjski pribor nalazite praznu injekciju.", "admin":"Karta +7, Global +88772" },
+  { "key": "1001882", "value": "U ladicama su noževi i kuhinjski pribor." },
+  { "key": "1001883", "value": "U ladicama su noževi i kuhinjski pribor.", 
+    "p2": "Spremas injekciju u dzep i nadaš se da nitko nije vidio.", 
+    "p6": "Primjecujes da 🟡 Zuti sprema neku injekciju u dzep",
+    "admin": "Global +1001771"},
+
+  
   { "cond": "1002", "out": "1002", "desc": "Police s začinima i čašama" },
   { "cond": "1003", "out": "1003", "desc": "Frižider" },
   { "cond": "1004", "out": "1004", "desc": "Sudoper" },
