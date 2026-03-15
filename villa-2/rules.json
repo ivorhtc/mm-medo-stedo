@@ -20,9 +20,9 @@
   { "cond": "1001 and 88772", "out": "1001882", "desc": "Ladice" },
   { "cond": "1001771", "desc": "Zuti ima injekciju u dzepu"}
 
-  { "key": "1001", "value": "U ladicama su noževi i kuhinjski pribor.", 
-    "p2": "Spremas injekciju u dzep bez da itko vidi.", 
-    "admin": "Global +1001771"},
+  { "key": "1001", "value": "U ladicama su noževi i kuhinjski pribor.",
+    "p2": "Spremas injekciju u dzep bez da itko vidi.",
+    "admin": "Global +1001771" },
   { "key": "1001881", "value": "U ladicama uz noževe i kuhinjski pribor nalazite praznu injekciju.", "admin":"Karta +7, Global +88772" },
   { "key": "1001882", "value": "U ladicama su noževi i kuhinjski pribor." },
   { "key": "1001883", "value": "U ladicama su noževi i kuhinjski pribor.", 
