@@ -474,7 +474,10 @@ function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
     }
   }
 
-  // 3. Pronađi sve igrače koji su u ISTIM sobama (presjek)
+  // 3. Ako nema zajedničkih soba - par nije u istoj sobi, samo oni dobivaju poruku
+  if (sharedRooms.size === 0) return triggeredPlayers;
+
+  // 4. Pronađi sve igrače koji su u ISTIM sobama (presjek)
   const result = new Set(triggeredPlayers);
   allPlayers.forEach((vals, i) => {
     if (!vals) return;
@@ -486,7 +489,6 @@ function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
     });
   });
 
-  console.log('getPlayersInSameRoom:', {triggered: triggeredPlayers, sharedRooms: Array.from(sharedRooms), result: Array.from(result)});
   return Array.from(result);
 }
 
