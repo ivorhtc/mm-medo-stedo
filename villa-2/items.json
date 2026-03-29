@@ -114,22 +114,28 @@
   {"key": "8007007", "value": "📱 Zvonimirov mobitel:\n• Intimne fotografije s Radojkom Špek\n• Obiteljske fotografije s Viktorom i Viktorijom Farkaš — stare nekoliko godina\n• SMS odvjetniku u srijedu: 'Dođi u petak, mijenjamo oporuku'"},
 
   {"story": "VINSKI PODRUM - CO zamka. Radomir je namjestio vrata i ventile."},
+
   {"story": "Scenarij A: Crveni je tu - podmece kutiju, otvara prozor, flag 100001"},
+
   {"story": "Scenarij B: Nema Crvenog, ali je Žuti ili Ljubičasti - vrata se zatvore, oni otvore prozor, ostali zarobljeni, flag 100002"},
+
   {"story": "Scenarij C: Nema Crvenog, Žutog ni Ljubičastog - svi zarobljeni, flag 100003"},
+
   {"story": "Redosljed smrti: Crni (100011) → Plavi (100012) → Zeleni (100013)"},
+
   {"story": "Oslobađanje: netko izvana pretražuje 10000 dok je 100002 ili 100003 aktivan → otvori vrata → flag 100004"},
+
   {"story": "VINSKI PODRUM - Scenarij A: Crveni (p4) je unutra"},
   {"key": "10000a", "value": "Ulazite u vinski podrum. Hladniji je nego što bi trebao biti. Crveni odmah primjećuje vrata prema kotlovnici — brzo podmeće kutiju da ostanu otvorena. Zatim ide prema prozoru uz strop i otvara ga. Možete pretražiti: police za vino (10001), boce vina (10002), vrata prema kotlovnici (10003), pod (10004), prozor (10005), kutiju na polici (10006).", "p4": "🧠 Stavljaš kutiju da se vrata ne zatvore i otvараš prozor. Znaš točno zašto.", "global": "100001"},
 
   {"story": "VINSKI PODRUM - Scenarij B6: Ljubičasti (p6) otvara prozor, Crveni nije unutra. Smrt: Crni > Plavi > Zeleni"},
-  {"key": "10000b6", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p1", "p3", "p5"]}, "output": {"winner": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. Zrak je sve teži. Ne možeš disati. Padaš mrtav. Ostatak igre pratiš i možeš glasati na kraju — ali bez pričanja o igri.", "others": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. ${winnerN} pada mrtav. Ljubičasti brzo ide prema prozoru uz strop i otvara ga. Svježi zrak ulazi — ali vrata su još uvijek zatvorena. Šutite i čekate da vas netko oslobodi izvana.", "p6": "🧠  pada. Brzo ideš prema prozoru i otvараš ga. Vrata su još uvijek zatvorena izvana. Šutite i čekate.", "p7": "Global +100002. Dodaj svim igračima broj tijela ovisno o tome tko je pao: Crni=100011, Plavi=100012, Zeleni=100013"}},
+  {"key": "10000b6", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p1", "p3", "p5"]}, "output": {"winner": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. Zrak je sve teži. Ne možeš disati. Padaš mrtav. Ostatak igre pratiš i možeš glasati na kraju — ali bez pričanja o igri.", "others": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. ${winnerN} pada mrtav. Ljubičasti brzo ide prema prozoru uz strop i otvara ga. Svježi zrak ulazi — ali vrata su još uvijek zatvorena. Šutite i čekate da vas netko oslobodi izvana.", "p6": "🧠 ${winnerN} pada mrtav. Brzo ideš prema prozoru i otvараš ga. Vrata su još uvijek zatvorena izvana. Šutite i čekate.", "p7": "Global +100002. Dodaj svim igračima broj tijela ovisno o tome tko je pao: Crni=100011, Plavi=100012, Zeleni=100013"}},
 
   {"story": "VINSKI PODRUM - Scenarij B2: Žuti (p2) otvara prozor, Crveni i Ljubičasti nisu unutra. Smrt: Crni > Plavi > Zeleni"},
-  {"key": "10000b2", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p1", "p3", "p5"]}, "output": {"winner": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. Zrak je sve teži. Ne možeš disati. Padaš mrtav. Ostatak igre pratiš i možeš glasati na kraju — ali bez pričanja o igri.", "others": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. ${winnerN} pada mrtav. Žuti brzo ide prema prozoru uz strop i otvara ga. Svježi zrak ulazi — ali vrata su još uvijek zatvorena. Šutite i čekate da vas netko oslobodi izvana.", "p2": "🧠  pada. Brzo ideš prema prozoru i otvараš ga. Vrata su još uvijek zatvorena izvana. Šutite i čekate.", "p7": "Global +100002. Dodaj svim igračima broj tijela ovisno o tome tko je pao: Crni=100011, Plavi=100012, Zeleni=100013"}},
+  {"key": "10000b2", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p1", "p3", "p5"]}, "output": {"winner": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. Zrak je sve teži. Ne možeš disati. Padaš mrtav. Ostatak igre pratiš i možeš glasati na kraju — ali bez pričanja o igri.", "others": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. ${winnerN} pada mrtav. Žuti brzo ide prema prozoru uz strop i otvara ga. Svježi zrak ulazi — ali vrata su još uvijek zatvorena. Šutite i čekate da vas netko oslobodi izvana.", "p2": "🧠 ${winnerN} pada mrtav. Brzo ideš prema prozoru i otvараš ga. Vrata su još uvijek zatvorena izvana. Šutite i čekate.", "p7": "Global +100002. Dodaj svim igračima broj tijela ovisno o tome tko je pao: Crni=100011, Plavi=100012, Zeleni=100013"}},
 
   {"story": "VINSKI PODRUM - Scenarij C: nitko od Crvenog, Žutog, Ljubičastog nije unutra. Smrt: Crni > Plavi > Zeleni"},
-  {"key": "10000c", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p1", "p3", "p5"]}, "output": {"winner": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. Zrak je sve teži. Ne možeš disati. Padaš mrtav. Ostatak igre pratiš i možeš glasati na kraju — ali bez pričanja o igri.", "others": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. ${winnerN} pada mrtav. Nema prozora koji možete doseći. Šutite i čekate da vas netko oslobodi izvana.", "p7": "Global +100003. Dodaj svim igračima broj tijela ovisno o tome tko je pao: Crni=100011, Plavi=100012, Zeleni=100013"}},
+  {"key": "10000c", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p1", "p3", "p5"]}, "output": {"winner": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. Zrak je sve teži. Ne možeš disati. Padaš mrtav. Ostatak igre pratiš i možeš glasati na kraju — ali bez pričanja o igri.", "others": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. ${winnerN} pada mrtav. Otvarate prozor. Šutite i čekate da vas netko oslobodi izvana.", "p7": "Global +100003. Dodaj svim igračima broj tijela ovisno o tome tko je pao: Crni=100011, Plavi=100012, Zeleni=100013"}},
   {"key": "10000free", "value": "Vrata vinskog podruma su otvorena. Vidite unutra police s vinom i jedan otvoreni prozor uz strop. Možete ući i pretražiti: police za vino (10001), boce vina (10002), vrata prema kotlovnici (10003), pod (10004), prozor (10005), kutiju na polici (10006)."},
   {"key": "10000locked", "value": "Vrata vinskog podruma su zatvorena izvana. Čujete glasove iznutra.", "admin": "Otvorite vrata ako želite osloboditi zarobljene. Global +100004"},
   {"key": "10001", "value": "Police su pune starih boca vina. Na jednoj polici primjećujete oznake godišta — najstarija boca je iz 1987."},
@@ -163,11 +169,17 @@
   {"key": "120061", "value": "Na polici u kutu stoji odvijač — izgleda kao da je nedavno korišten. Uzimate pribor za otiske i provjerate odvijač. Na njemu su jasni otisci prstiju.", "admin": "Otisci na odvijаču pripadaju Zelenom (Davoru)."},
 
   {"story": "PRIBOR ZA OTISKE - Ljubičasti tajni zadatak. Flag 88771 aktivira otiske na svim predmetima."},
+
   {"story": "Oliver dobiva na pocetku: 'Pošalji +6 uz broj sobe gdje si. U tom pretraživanju odglumi da ste našli pribor za provjeru otisaka. Čim prije, ali što manje očito.'"},
+
   {"story": "RAZGOVORI PO PAROVIMA - svaka osoba ima 10 recenica, brojac je po paru"},
+
   {"story": "Format flag para: p1+p2=12001x, p1+p3=13001x, p1+p4=14001x, p1+p5=15001x, p1+p6=16001x"},
+
   {"story": "p2+p3=23001x, p2+p4=24001x, p2+p5=25001x, p2+p6=26001x"},
+
   {"story": "p3+p4=34001x, p3+p5=35001x, p3+p6=36001x, p4+p5=45001x, p4+p6=46001x, p5+p6=56001x"},
+
   {"story": "Recenice po osobi - p1 Samir"},
   {"key": "talk1a", "value": "⚫ Crni: 'Radim za firmu koja čisti ovu vilu već 5 godina. Zvonimir mi je uvijek bio korektan.'"},
   {"key": "talk1b", "value": "⚫ Crni: 'Uzeo sam godišnji. Trebao sam malo zraka, malo odmora.'"},
