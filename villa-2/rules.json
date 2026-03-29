@@ -1,10 +1,9 @@
 [
-  {"cond": "6", "desc": "Našli ste pribor za otkrivanje otisaka. (Karta +6, Global +88771)" },
-  
+
   {"story": "VILA IZVANA"},
   {"cond": "1100 AND NOT 80021", "out": "1100", "desc": "Vila izvana - ne vide godinu"},
   {"cond": "1100 AND 80021", "out": "1101", "desc": "Vila izvana - vide godinu 2004, dobiju flag 800211"},
-  
+
   {"story": "RADNA SOBA"},
   {"cond": "8000", "out": "8000", "desc": "Radna soba - opis s tijelom i navigacija"},
   {"cond": "8001", "out": "8001", "desc": "Stol - nova oporuka, Radojka nasljeđuje sve"},
@@ -13,13 +12,13 @@
   {"cond": "8003 AND 800211", "out": "80031", "desc": "Sef otvoren s 2004 - prazan, zlatna prašina"},
   {"cond": "8004", "out": "8004", "desc": "Police s knjigama - fotografija Zvonimira i Radojke"},
   {"cond": "8005", "out": "8005", "desc": "Prozor radne sobe"},
-  
+
   {"story": "TIJELO - 4 varijante ovisno o p2 i p6"},
   {"cond": "8006 AND NOT p2 AND NOT p6", "out": "8006", "desc": "Tijelo - samo opis"},
   {"cond": "8006 AND p2 AND NOT p6", "out": "8006p2", "desc": "Tijelo - opis + privatna poruka Žutom"},
   {"cond": "8006 AND NOT p2 AND p6", "out": "8006p6", "desc": "Tijelo - opis + privatna poruka Ljubičastom"},
   {"cond": "8006 AND p2 AND p6", "out": "8006p2p6", "desc": "Tijelo - opis + privatna poruka i Žutom i Ljubičastom"},
-  
+
   {"story": "KUHINJA - injekcija"},
   {"cond": "1000", "out": "1000", "desc": "Kuhinja - opis"},
   {"cond": "1001 AND p2 AND NOT p6 AND NOT 1001771 AND NOT 88772", "out": "1001", "desc": "Ladice - Žuti uzima injekciju sam"},
@@ -30,7 +29,7 @@
   {"cond": "1002", "out": "1002", "desc": "Police sa začinima i čašama"},
   {"cond": "1003", "out": "1003", "desc": "Frižider"},
   {"cond": "1004", "out": "1004", "desc": "Sudoper"},
-  
+
   {"story": "TERETANA - posjetnica na policama (2004)"},
   {"cond": "2000", "out": "2000", "desc": "Teretana"},
   {"cond": "2001", "out": "2001", "desc": "Bučice"},
@@ -38,10 +37,10 @@
   {"cond": "2003", "out": "2003", "desc": "Prostirke"},
   {"cond": "2004", "out": "2004", "desc": "Police s opremom - posjetnica Davor i Radojka Fit, admin dobiva flag 20000"},
   {"cond": "2005", "out": "2005", "desc": "Prozor teretane"},
-  
+
   {"story": "INSTAGRAM - dostupno preko vizitke (flag 20000) ili Davorovog mobitela"},
   {"cond": "20001 AND 20000", "out": "20001", "desc": "Instagram @davoriradojkafit - Radojka se izbrisala"},
-  
+
   {"story": "BLAGOVAONICA"},
   {"cond": "3000", "out": "3000", "desc": "Blagovaonica"},
   {"cond": "3001", "out": "3001", "desc": "Stol - mrlja od vina"},
@@ -50,7 +49,7 @@
   {"cond": "3004", "out": "3004", "desc": "Ormar za pribor"},
   {"cond": "3005", "out": "3005", "desc": "Pod tepihom - ogrebotina kao da je nešto teško vučeno"},
   {"cond": "3006", "out": "3006", "desc": "Prozor blagovaonice"},
-  
+
   {"story": "GARAŽA - kombi bez pajsera (40040) blokiran, s pajserom se otvara"},
   {"cond": "4000", "out": "4000", "desc": "Garaža - opis s dva vozila"},
   {"cond": "4001", "out": "4001", "desc": "Alat na polici - prazan prostor za polugu"},
@@ -60,7 +59,7 @@
   {"cond": "4004 AND 40040 AND NOT 40041", "out": "40041", "desc": "Kombi provalen pajserom - novac, zlato, krvava poluga, Crnog ID"},
   {"cond": "4004 AND 40041", "out": "40041", "desc": "Kombi već otvoren - isti prikaz"},
   {"cond": "4005", "out": "4005", "desc": "Garažna vrata - zatvorena, auto vani"},
-  
+
   {"story": "SPAVAĆA SOBA"},
   {"cond": "5000", "out": "5000", "desc": "Spavaća soba"},
   {"cond": "5001", "out": "5001", "desc": "Krevet"},
@@ -68,14 +67,14 @@
   {"cond": "5003", "out": "5003", "desc": "Noćni ormarić - kutija tableta, ali su vitamini"},
   {"cond": "5004", "out": "5004", "desc": "Prozor spavaće"},
   {"cond": "5005", "out": "5005", "desc": "Pod spavaće"},
-  
+
   {"story": "WC"},
   {"cond": "6000", "out": "6000", "desc": "WC"},
   {"cond": "6001", "out": "6001", "desc": "Umivaonik - mokar"},
   {"cond": "6002", "out": "6002", "desc": "Ormar u WC-u - prazan prostor gdje su bile tablete"},
   {"cond": "6003", "out": "6003", "desc": "WC školjka"},
   {"cond": "6004", "out": "6004", "desc": "Ogledalo"},
-  
+
   {"story": "SPAJZA - pajser u ormaru (7004)"},
   {"cond": "7000", "out": "7000", "desc": "Spajza"},
   {"cond": "7001", "out": "7001", "desc": "Police spajze"},
@@ -83,7 +82,7 @@
   {"cond": "7003", "out": "7003", "desc": "Pod spajze"},
   {"cond": "7004 AND NOT 40040", "out": "7004", "desc": "Ormar spajze - nalaze pajser, admin daje fizički pajser i flag 40040"},
   {"cond": "7004 AND 40040", "out": "7004", "desc": "Ormar spajze - pajser već nađen"},
-  
+
   {"story": "BALKON - ograda olabavljena. Zeleni i Ljubičasti ne padaju. Svi ostali koji pretražuju 8101 padaju (samo prvi pad, flag 810001)."},
   {"cond": "8100", "out": "8100", "desc": "Balkon - opis"},
   {"cond": "8101 AND p5 AND NOT p6 AND NOT 810001", "out": "81010", "desc": "Ograda - samo Zeleni, zna da je on to napravio"},
@@ -96,12 +95,12 @@
   {"cond": "8102", "out": "8102", "desc": "Stolić na balkonu"},
   {"cond": "8103", "out": "8103", "desc": "Stolice na balkonu"},
   {"cond": "8104", "out": "8104", "desc": "Cvjetni lonci"},
-  
+
   {"story": "TIJELA U VRTU - pretraživa nakon pada s balkona"},
   {"cond": "81001 AND 810001", "out": "81001", "desc": "Tijelo Crnog u vrtu"},
   {"cond": "81002 AND 810001", "out": "81002", "desc": "Tijelo Plavog u vrtu"},
   {"cond": "81003 AND 810001", "out": "81003", "desc": "Tijelo Crvenog u vrtu"},
-  
+
   {"story": "SOBA ZA GOSTE - laptop na stolu (9003)"},
   {"cond": "9000", "out": "9000", "desc": "Soba za goste"},
   {"cond": "9001", "out": "9001", "desc": "Krevet - zgužvan, netko je spavao"},
@@ -109,7 +108,7 @@
   {"cond": "9003", "out": "9003", "desc": "Stol - laptop, otvara hakiranje, admin dobiva flag 90031"},
   {"cond": "9004", "out": "9004", "desc": "Pod sobe za goste"},
   {"cond": "9005", "out": "9005", "desc": "Prozor - pogled direktno na garažu"},
-  
+
   {"story": "HAKIRANJE - dostupno samo uz flag 90031 (laptop nađen)"},
   {"cond": "8007001 AND 90031", "out": "8007001", "desc": "Samirov mobitel"},
   {"cond": "8007002 AND 90031", "out": "8007002", "desc": "Igorov mobitel"},
@@ -118,14 +117,15 @@
   {"cond": "8007005 AND 90031", "out": "8007005", "desc": "Davorov mobitel"},
   {"cond": "8007006 AND 90031", "out": "8007006", "desc": "Oliverov mobitel"},
   {"cond": "8007007 AND 90031", "out": "8007007", "desc": "Zvonimirov mobitel"},
-  
-  {"story": "VINSKI PODRUM - CO zamka. Scenarij A: Crveni tu. B: Žuti ili Ljubičasti bez Crvenog. C: nitko od njih."},
-  {"cond": "10000 AND p4 AND NOT 100001 AND NOT 100002 AND NOT 100003", "out": "10000a", "desc": "Podrum - Crveni podmece kutiju i otvara prozor, flag 100001"},
-  {"cond": "10000 AND NOT p4 AND NOT 100001 AND NOT 100002 AND NOT 100003 AND (p2 OR p6)", "out": "10000b", "desc": "Podrum - Žuti ili Ljubičasti otvara prozor, ostali zarobljeni, flag 100002"},
-  {"cond": "10000 AND NOT p4 AND NOT 100001 AND NOT 100002 AND NOT 100003 AND NOT p2 AND NOT p6", "out": "10000c", "desc": "Podrum - svi zarobljeni, nema prozora, flag 100003"},
+
+  {"story": "VINSKI PODRUM - 4 scenarija ovisno o tome tko je unio 10000"},
+  {"cond": "10000 AND p4 AND NOT 100001 AND NOT 100002 AND NOT 100003", "out": "10000a", "desc": "Podrum - Crveni je unutra, podmece kutiju i otvara prozor"},
+  {"cond": "10000 AND NOT p4 AND p6 AND NOT 100001 AND NOT 100002 AND NOT 100003", "out": "10000b6", "desc": "Podrum - Ljubičasti otvara prozor (bez Crvenog), netko umire"},
+  {"cond": "10000 AND NOT p4 AND NOT p6 AND p2 AND NOT 100001 AND NOT 100002 AND NOT 100003", "out": "10000b2", "desc": "Podrum - Žuti otvara prozor (bez Crvenog i Ljubičastog), netko umire"},
+  {"cond": "10000 AND NOT p4 AND NOT p6 AND NOT p2 AND NOT 100001 AND NOT 100002 AND NOT 100003", "out": "10000c", "desc": "Podrum - nitko ne otvara prozor, netko umire"},
   {"cond": "10000 AND 100004", "out": "10000free", "desc": "Podrum - oslobođen, slobodan ulaz"},
   {"cond": "10000 AND (100002 OR 100003) AND NOT 100004", "out": "10000locked", "desc": "Podrum - zatvorena vrata, čuju se glasovi iznutra"},
-  
+
   {"story": "Smrt u podrumu - redosljed: Crni, Plavi, Zeleni"},
   {"cond": "100002 AND p1 AND NOT 100011", "out": "100110", "desc": "Crni umire u podrumu, admin Global +100011, daj svim igračima broj tijela 100110"},
   {"cond": "100002 AND NOT p1 AND p3 AND NOT 100012", "out": "100120", "desc": "Plavi umire u podrumu, admin Global +100012, daj svim igračima broj tijela 100120"},
@@ -133,7 +133,7 @@
   {"cond": "100003 AND p1 AND NOT 100011", "out": "100110", "desc": "Crni umire u podrumu (C), admin Global +100011"},
   {"cond": "100003 AND NOT p1 AND p3 AND NOT 100012", "out": "100120", "desc": "Plavi umire u podrumu (C), admin Global +100012"},
   {"cond": "100003 AND NOT p1 AND NOT p3 AND p5 AND NOT 100013", "out": "100130", "desc": "Zeleni umire u podrumu (C), admin Global +100013"},
-  
+
   {"story": "Pretraživanje unutar podruma"},
   {"cond": "10001", "out": "10001", "desc": "Police za vino"},
   {"cond": "10002", "out": "10002", "desc": "Boce vina - rupica na čepu, admin flag 100021"},
@@ -141,18 +141,18 @@
   {"cond": "10004", "out": "10004", "desc": "Pod podruma"},
   {"cond": "10005", "out": "10005", "desc": "Prozor - premali za izlaz, p6 privatna poruka"},
   {"cond": "10006", "out": "10006", "desc": "Kutija na polici - pištolj, event s prioritetom"},
-  
+
   {"story": "Tijela u podrumu - pretraživa"},
   {"cond": "100110 AND 100011", "out": "100110", "desc": "Tijelo Crnog u podrumu"},
   {"cond": "100120 AND 100012", "out": "100120", "desc": "Tijelo Plavog u podrumu"},
   {"cond": "100130 AND 100013", "out": "100130", "desc": "Tijelo Zelenog u podrumu"},
-  
+
   {"story": "KOTLOVNICA"},
   {"cond": "11000", "out": "11000", "desc": "Kotlovnica"},
   {"cond": "11001", "out": "11001", "desc": "Kotlovi"},
   {"cond": "11002", "out": "11002", "desc": "Cijevi prema vinskom podrumu"},
   {"cond": "11003", "out": "11003", "desc": "Ventili - jedan namješten drugačije, admin flag 110031"},
-  
+
   {"story": "VEŠERAJ - odvijač s Zelenim otiscima ako igrači imaju pribor (flag 88771)"},
   {"cond": "12000", "out": "12000", "desc": "Vešeraj"},
   {"cond": "12001", "out": "12001", "desc": "Perilica"},
@@ -162,7 +162,7 @@
   {"cond": "12005", "out": "12005", "desc": "Pegla i daska"},
   {"cond": "12006 AND NOT 88771", "out": "12006", "desc": "Odvijač - nedavno korišten, bez otisaka"},
   {"cond": "12006 AND 88771", "out": "120061", "desc": "Odvijač - otisci prstiju, admin kaže da su Zeleni"},
-  
+
   {"story": "RAZGOVORI PO PAROVIMA - p1+p2, svaka razina se triggerira tek kad prethodni flag postoji"},
   {"cond": "p1 AND p2 AND NOT 120011", "out": "talk1a", "desc": "p1+p2 razgovor 1 - Samir rečenica 1", "global": "120011"},
   {"cond": "p1 AND p2 AND 120011 AND NOT 120012", "out": "talk1b", "desc": "p1+p2 razgovor 2 - Samir rečenica 2", "global": "120012"},
@@ -174,7 +174,7 @@
   {"cond": "p1 AND p2 AND 120017 AND NOT 120018", "out": "talk1h", "desc": "p1+p2 razgovor 8", "global": "120018"},
   {"cond": "p1 AND p2 AND 120018 AND NOT 120019", "out": "talk1i", "desc": "p1+p2 razgovor 9", "global": "120019"},
   {"cond": "p1 AND p2 AND 120019", "out": "talk1j", "desc": "p1+p2 razgovor 10"},
-  
+
   {"story": "Igor rečenice za p1+p2 par"},
   {"cond": "p1 AND p2 AND NOT 120011", "out": "talk2a", "desc": "p1+p2 Igor rečenica 1"},
   {"cond": "p1 AND p2 AND 120011 AND NOT 120012", "out": "talk2b", "desc": "p1+p2 Igor rečenica 2"},
@@ -186,7 +186,7 @@
   {"cond": "p1 AND p2 AND 120017 AND NOT 120018", "out": "talk2h", "desc": "p1+p2 Igor rečenica 8"},
   {"cond": "p1 AND p2 AND 120018 AND NOT 120019", "out": "talk2i", "desc": "p1+p2 Igor rečenica 9"},
   {"cond": "p1 AND p2 AND 120019", "out": "talk2j", "desc": "p1+p2 Igor rečenica 10"},
-  
+
   {"story": "p1+p3 par (Samir + Viktor)"},
   {"cond": "p1 AND p3 AND NOT 130011", "out": "talk1a", "desc": "p1+p3 razgovor 1", "global": "130011"},
   {"cond": "p1 AND p3 AND 130011 AND NOT 130012", "out": "talk1b", "desc": "p1+p3 razgovor 2", "global": "130012"},
@@ -208,7 +208,7 @@
   {"cond": "p1 AND p3 AND 130017 AND NOT 130018", "out": "talk3h", "desc": "p1+p3 Viktor rečenica 8"},
   {"cond": "p1 AND p3 AND 130018 AND NOT 130019", "out": "talk3i", "desc": "p1+p3 Viktor rečenica 9"},
   {"cond": "p1 AND p3 AND 130019", "out": "talk3j", "desc": "p1+p3 Viktor rečenica 10"},
-  
+
   {"story": "p1+p4 par (Samir + Radomir)"},
   {"cond": "p1 AND p4 AND NOT 140011", "out": "talk1a", "desc": "p1+p4 razgovor 1", "global": "140011"},
   {"cond": "p1 AND p4 AND 140011 AND NOT 140012", "out": "talk1b", "desc": "p1+p4 razgovor 2", "global": "140012"},
@@ -230,7 +230,7 @@
   {"cond": "p1 AND p4 AND 140017 AND NOT 140018", "out": "talk4h", "desc": "p1+p4 Radomir rečenica 8"},
   {"cond": "p1 AND p4 AND 140018 AND NOT 140019", "out": "talk4i", "desc": "p1+p4 Radomir rečenica 9"},
   {"cond": "p1 AND p4 AND 140019", "out": "talk4j", "desc": "p1+p4 Radomir rečenica 10"},
-  
+
   {"story": "p1+p5 par (Samir + Davor)"},
   {"cond": "p1 AND p5 AND NOT 150011", "out": "talk1a", "desc": "p1+p5 razgovor 1", "global": "150011"},
   {"cond": "p1 AND p5 AND 150011 AND NOT 150012", "out": "talk1b", "desc": "p1+p5 razgovor 2", "global": "150012"},
@@ -252,7 +252,7 @@
   {"cond": "p1 AND p5 AND 150017 AND NOT 150018", "out": "talk5h", "desc": "p1+p5 Davor rečenica 8"},
   {"cond": "p1 AND p5 AND 150018 AND NOT 150019", "out": "talk5i", "desc": "p1+p5 Davor rečenica 9"},
   {"cond": "p1 AND p5 AND 150019", "out": "talk5j", "desc": "p1+p5 Davor rečenica 10"},
-  
+
   {"story": "p1+p6 par (Samir + Oliver)"},
   {"cond": "p1 AND p6 AND NOT 160011", "out": "talk1a", "desc": "p1+p6 razgovor 1", "global": "160011"},
   {"cond": "p1 AND p6 AND 160011 AND NOT 160012", "out": "talk1b", "desc": "p1+p6 razgovor 2", "global": "160012"},
@@ -294,7 +294,7 @@
   {"cond": "p1 AND p6 AND 160017 AND NOT 160018 AND 60003", "out": "talk6h3", "desc": "p1+p6 Oliver susjed rečenica 8"},
   {"cond": "p1 AND p6 AND 160018 AND NOT 160019 AND 60003", "out": "talk6i3", "desc": "p1+p6 Oliver susjed rečenica 9"},
   {"cond": "p1 AND p6 AND 160019 AND 60003", "out": "talk6j3", "desc": "p1+p6 Oliver susjed rečenica 10"},
-  
+
   {"story": "p2+p3 par (Igor + Viktor)"},
   {"cond": "p2 AND p3 AND NOT 230011", "out": "talk2a", "desc": "p2+p3 razgovor 1", "global": "230011"},
   {"cond": "p2 AND p3 AND 230011 AND NOT 230012", "out": "talk2b", "desc": "p2+p3 razgovor 2", "global": "230012"},
@@ -316,7 +316,7 @@
   {"cond": "p2 AND p3 AND 230017 AND NOT 230018", "out": "talk3h", "desc": "p2+p3 Viktor rečenica 8"},
   {"cond": "p2 AND p3 AND 230018 AND NOT 230019", "out": "talk3i", "desc": "p2+p3 Viktor rečenica 9"},
   {"cond": "p2 AND p3 AND 230019", "out": "talk3j", "desc": "p2+p3 Viktor rečenica 10"},
-  
+
   {"story": "p2+p4 par (Igor + Radomir)"},
   {"cond": "p2 AND p4 AND NOT 240011", "out": "talk2a", "desc": "p2+p4 razgovor 1", "global": "240011"},
   {"cond": "p2 AND p4 AND 240011 AND NOT 240012", "out": "talk2b", "desc": "p2+p4 razgovor 2", "global": "240012"},
@@ -338,7 +338,7 @@
   {"cond": "p2 AND p4 AND 240017 AND NOT 240018", "out": "talk4h", "desc": "p2+p4 Radomir rečenica 8"},
   {"cond": "p2 AND p4 AND 240018 AND NOT 240019", "out": "talk4i", "desc": "p2+p4 Radomir rečenica 9"},
   {"cond": "p2 AND p4 AND 240019", "out": "talk4j", "desc": "p2+p4 Radomir rečenica 10"},
-  
+
   {"story": "p2+p5 par (Igor + Davor)"},
   {"cond": "p2 AND p5 AND NOT 250011", "out": "talk2a", "desc": "p2+p5 razgovor 1", "global": "250011"},
   {"cond": "p2 AND p5 AND 250011 AND NOT 250012", "out": "talk2b", "desc": "p2+p5 razgovor 2", "global": "250012"},
@@ -360,7 +360,7 @@
   {"cond": "p2 AND p5 AND 250017 AND NOT 250018", "out": "talk5h", "desc": "p2+p5 Davor rečenica 8"},
   {"cond": "p2 AND p5 AND 250018 AND NOT 250019", "out": "talk5i", "desc": "p2+p5 Davor rečenica 9"},
   {"cond": "p2 AND p5 AND 250019", "out": "talk5j", "desc": "p2+p5 Davor rečenica 10"},
-  
+
   {"story": "p2+p6 par (Igor + Oliver)"},
   {"cond": "p2 AND p6 AND NOT 260011", "out": "talk2a", "desc": "p2+p6 razgovor 1", "global": "260011"},
   {"cond": "p2 AND p6 AND 260011 AND NOT 260012", "out": "talk2b", "desc": "p2+p6 razgovor 2", "global": "260012"},
@@ -402,7 +402,7 @@
   {"cond": "p2 AND p6 AND 260017 AND NOT 260018 AND 60003", "out": "talk6h3", "desc": "p2+p6 Oliver susjed rečenica 8"},
   {"cond": "p2 AND p6 AND 260018 AND NOT 260019 AND 60003", "out": "talk6i3", "desc": "p2+p6 Oliver susjed rečenica 9"},
   {"cond": "p2 AND p6 AND 260019 AND 60003", "out": "talk6j3", "desc": "p2+p6 Oliver susjed rečenica 10"},
-  
+
   {"story": "p3+p4 par (Viktor + Radomir)"},
   {"cond": "p3 AND p4 AND NOT 340011", "out": "talk3a", "desc": "p3+p4 razgovor 1", "global": "340011"},
   {"cond": "p3 AND p4 AND 340011 AND NOT 340012", "out": "talk3b", "desc": "p3+p4 razgovor 2", "global": "340012"},
@@ -424,7 +424,7 @@
   {"cond": "p3 AND p4 AND 340017 AND NOT 340018", "out": "talk4h", "desc": "p3+p4 Radomir rečenica 8"},
   {"cond": "p3 AND p4 AND 340018 AND NOT 340019", "out": "talk4i", "desc": "p3+p4 Radomir rečenica 9"},
   {"cond": "p3 AND p4 AND 340019", "out": "talk4j", "desc": "p3+p4 Radomir rečenica 10"},
-  
+
   {"story": "p3+p5 par (Viktor + Davor)"},
   {"cond": "p3 AND p5 AND NOT 350011", "out": "talk3a", "desc": "p3+p5 razgovor 1", "global": "350011"},
   {"cond": "p3 AND p5 AND 350011 AND NOT 350012", "out": "talk3b", "desc": "p3+p5 razgovor 2", "global": "350012"},
@@ -446,7 +446,7 @@
   {"cond": "p3 AND p5 AND 350017 AND NOT 350018", "out": "talk5h", "desc": "p3+p5 Davor rečenica 8"},
   {"cond": "p3 AND p5 AND 350018 AND NOT 350019", "out": "talk5i", "desc": "p3+p5 Davor rečenica 9"},
   {"cond": "p3 AND p5 AND 350019", "out": "talk5j", "desc": "p3+p5 Davor rečenica 10"},
-  
+
   {"story": "p3+p6 par (Viktor + Oliver)"},
   {"cond": "p3 AND p6 AND NOT 360011", "out": "talk3a", "desc": "p3+p6 razgovor 1", "global": "360011"},
   {"cond": "p3 AND p6 AND 360011 AND NOT 360012", "out": "talk3b", "desc": "p3+p6 razgovor 2", "global": "360012"},
@@ -488,7 +488,7 @@
   {"cond": "p3 AND p6 AND 360017 AND NOT 360018 AND 60003", "out": "talk6h3", "desc": "p3+p6 Oliver susjed rečenica 8"},
   {"cond": "p3 AND p6 AND 360018 AND NOT 360019 AND 60003", "out": "talk6i3", "desc": "p3+p6 Oliver susjed rečenica 9"},
   {"cond": "p3 AND p6 AND 360019 AND 60003", "out": "talk6j3", "desc": "p3+p6 Oliver susjed rečenica 10"},
-  
+
   {"story": "p4+p5 par (Radomir + Davor)"},
   {"cond": "p4 AND p5 AND NOT 450011", "out": "talk4a", "desc": "p4+p5 razgovor 1", "global": "450011"},
   {"cond": "p4 AND p5 AND 450011 AND NOT 450012", "out": "talk4b", "desc": "p4+p5 razgovor 2", "global": "450012"},
@@ -510,7 +510,7 @@
   {"cond": "p4 AND p5 AND 450017 AND NOT 450018", "out": "talk5h", "desc": "p4+p5 Davor rečenica 8"},
   {"cond": "p4 AND p5 AND 450018 AND NOT 450019", "out": "talk5i", "desc": "p4+p5 Davor rečenica 9"},
   {"cond": "p4 AND p5 AND 450019", "out": "talk5j", "desc": "p4+p5 Davor rečenica 10"},
-  
+
   {"story": "p4+p6 par (Radomir + Oliver)"},
   {"cond": "p4 AND p6 AND NOT 460011", "out": "talk4a", "desc": "p4+p6 razgovor 1", "global": "460011"},
   {"cond": "p4 AND p6 AND 460011 AND NOT 460012", "out": "talk4b", "desc": "p4+p6 razgovor 2", "global": "460012"},
@@ -552,7 +552,7 @@
   {"cond": "p4 AND p6 AND 460017 AND NOT 460018 AND 60003", "out": "talk6h3", "desc": "p4+p6 Oliver susjed rečenica 8"},
   {"cond": "p4 AND p6 AND 460018 AND NOT 460019 AND 60003", "out": "talk6i3", "desc": "p4+p6 Oliver susjed rečenica 9"},
   {"cond": "p4 AND p6 AND 460019 AND 60003", "out": "talk6j3", "desc": "p4+p6 Oliver susjed rečenica 10"},
-  
+
   {"story": "p5+p6 par (Davor + Oliver)"},
   {"cond": "p5 AND p6 AND NOT 560011", "out": "talk5a", "desc": "p5+p6 razgovor 1", "global": "560011"},
   {"cond": "p5 AND p6 AND 560011 AND NOT 560012", "out": "talk5b", "desc": "p5+p6 razgovor 2", "global": "560012"},
