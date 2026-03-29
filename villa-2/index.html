@@ -553,8 +553,19 @@ function dispatchItem(eventObj, triggeredPlayers, playerCards, players, numberMa
         playerCards[pName].push(eventObj[key]);
       }
     });
-    if (eventObj.admin) playerCards["Player7"].push(eventObj.admin);
+    pushVoditeljInfo(eventObj, playerCards);
   }
+}
+
+// ============================================================
+// VODITELJ HELPER
+// Procesira global i admin polja iz item/rule i upisuje Voditelju
+// global: "80021, 90031" → sprema se za grupni ispis
+// admin:  slobodan tekst → ide direktno
+// ============================================================
+function pushVoditeljInfo(obj, playerCards) {
+  if (obj.global) playerCards["Player7"].push("__global__" + obj.global);
+  if (obj.admin)  playerCards["Player7"].push(obj.admin);
 }
 
 // ============================================================
@@ -602,7 +613,22 @@ function renderResults(playerCards) {
     if (cards.length === 0) return;
     const idx  = parseInt(pName.replace("Player", ""));
     const name = document.getElementById("label" + idx)?.innerText || pName;
-    const text = cards.join("\n\n");
+
+    // Za Voditelja: grupiraj sve __global__ tagove u jedan redak na vrhu
+    let displayCards;
+    if (pName === "Player7") {
+      const globalFlags = cards
+        .filter(c => c.startsWith("__global__"))
+        .map(c => c.replace("__global__", "").trim());
+      const otherCards = cards.filter(c => !c.startsWith("__global__"));
+      displayCards = globalFlags.length > 0
+        ? ["add to global: " + globalFlags.join(", "), ...otherCards]
+        : otherCards;
+    } else {
+      displayCards = cards;
+    }
+
+    const text = displayCards.join("\n\n");
     html += `
       <div class="result-card">
         <div class="result-card-header">
@@ -610,7 +636,7 @@ function renderResults(playerCards) {
           <button onclick="copyText(\`${text.replace(/`/g, "'")}\`)">Copy</button>
         </div>
         <div class="result-card-body">
-          ${cards.map(c => `<div>${c}</div>`).join("")}
+          ${displayCards.map(c => `<div>${c}</div>`).join("")}
         </div>
       </div>`;
   });
@@ -675,29 +701,28 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
     if (result.passed) {
       outputs.push({
         out,
-        players:  result.assignedPlayers,
-        admin:    rule.admin || null,
+        players: result.assignedPlayers,
+        rule,    // cijeli rule objekt da imamo global i admin
       });
     }
   });
 
   // 8. Dispatch — za svaki triggerirani output upiši u playerCards
-  outputs.forEach(({ out, players: triggered, admin }) => {
+  outputs.forEach(({ out, players: triggered, rule }) => {
     if (triggered.length === 0) return;
 
     const item = itemMap[out];
     if (!item) return;
 
-    // Za talk iteme: provjeri jesu li u istoj sobi prije admin flaga
+    // Za talk iteme: provjeri jesu li u istoj sobi prije slanja
     if (out.startsWith("talk")) {
       const recipients = getPlayersInSameRoom(triggered, numberMap, players);
-      if (recipients.length === 0) return; // nisu u istoj sobi, preskoči sve uključujući admin
-      if (admin) playerCards["Player7"].push(admin);
+      if (recipients.length === 0) return; // nisu u istoj sobi, preskoči sve
+      pushVoditeljInfo(rule, playerCards);  // global i admin iz rule
       recipients.forEach(p => playerCards[p].push(item.value || out));
     } else {
-      // Obični item - admin uvijek ide Voditelju
-      if (admin) playerCards["Player7"].push(admin);
       dispatchItem(item, triggered, playerCards, players, numberMap, out);
+      pushVoditeljInfo(rule, playerCards);  // global i admin iz rule (item global/admin već u dispatchItem)
     }
   });
 
