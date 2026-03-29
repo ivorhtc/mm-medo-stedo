@@ -508,6 +508,19 @@ function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
 // ITEM DISPATCH
 // Procesira jedan triggerirani output i upisuje u playerCards
 // ============================================================
+// Posebna logika za vinski podrum - odlučuje scenarij A/B/C ovisno o tome tko je unio 10000
+function resolvePodrumScenario(triggeredPlayers, numberMap) {
+  // Tko je unio 10000?
+  const inRoom = (numberMap["10000"] || []).map(i => "Player" + (i + 1));
+  const hasP4  = inRoom.includes("Player4"); // Crveni
+  const hasP2  = inRoom.includes("Player2"); // Žuti
+  const hasP6  = inRoom.includes("Player6"); // Ljubičasti
+
+  if (hasP4)                return { scenario: "a", players: inRoom };
+  if (!hasP4 && (hasP2 || hasP6)) return { scenario: "b", players: inRoom };
+  return { scenario: "c", players: inRoom };
+}
+
 function dispatchItem(eventObj, triggeredPlayers, playerCards, players, numberMap, out) {
 
   // --- Event tip (pištolj, injekcija...) ---
@@ -757,9 +770,17 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
       pushVoditeljInfo(rule, playerCards);  // global i admin iz rule
       recipients.forEach(p => playerCards[p].push(item.value || out));
     } else {
-      dispatchItem(item, triggered, playerCards, players, numberMap, out);
-      // Napomena: pushVoditeljInfo za item se poziva unutar dispatchItem
-      // Ovdje dodajemo samo rule-level global/admin (ako postoji odvojeno od item)
+      // Posebna logika za vinski podrum
+      let resolvedOut = out;
+      let resolvedTriggered = triggered;
+      if (out === "10000a") {
+        const podrum = resolvePodrumScenario(triggered, numberMap);
+        resolvedOut = "10000" + podrum.scenario;
+        resolvedTriggered = podrum.players;
+      }
+
+      const resolvedItem = itemMap[resolvedOut] || item;
+      dispatchItem(resolvedItem, resolvedTriggered, playerCards, players, numberMap, resolvedOut);
       if (rule.global || rule.admin) pushVoditeljInfo(rule, playerCards);
     }
   });
