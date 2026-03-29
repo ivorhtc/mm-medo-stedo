@@ -624,6 +624,8 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
   // 3. Expandaj sobe (8001 → dodaj i 8000)
   const players   = expandWithParentRooms(rawPlayers);
   const numberMap = buildNumberMap(players, globals);
+  console.log("numberMap:", JSON.stringify(numberMap, null, 2));
+  console.log("players:", JSON.stringify(players, null, 2));
 
   // 4. Pripremi item lookup mapu
   const itemMap = {};
