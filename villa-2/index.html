@@ -441,18 +441,34 @@ function replacePlaceholders(text, winnerPlayerName) {
 // s triggeriranim igračima i pošalji im poruku
 // ============================================================
 function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
-  // 1. Skupi sve parent sobe triggeriranih igrača
-  const sharedRooms = new Set();
+  // 1. Za svakog triggeriranog igrača skupi njegove sobe
+  const roomsPerPlayer = {};
   triggeredPlayers.forEach(pName => {
     const idx = parseInt(pName.replace("Player", "")) - 1;
+    roomsPerPlayer[pName] = new Set();
     Object.entries(numberMap).forEach(([num, playerIdxs]) => {
       if (playerIdxs.includes(idx)) {
-        sharedRooms.add(roomMap[num] || num); // parent ili sam broj ako nema parenta
+        roomsPerPlayer[pName].add(roomMap[num] || num);
       }
     });
   });
 
-  // 2. Pronađi sve igrače koji su u bilo kojoj od tih soba
+  // 2. Pronađi sobe koje dijele SVA triggerirani igrači (presjek)
+  //    Ako ima samo jedan igrač, uzmi njegove sobe
+  let sharedRooms;
+  const playerNames = Object.keys(roomsPerPlayer);
+  if (playerNames.length === 0) return triggeredPlayers;
+  if (playerNames.length === 1) {
+    sharedRooms = roomsPerPlayer[playerNames[0]];
+  } else {
+    // Presjek soba svih triggeriranih igrača
+    sharedRooms = roomsPerPlayer[playerNames[0]];
+    for (let i = 1; i < playerNames.length; i++) {
+      sharedRooms = new Set([...sharedRooms].filter(r => roomsPerPlayer[playerNames[i]].has(r)));
+    }
+  }
+
+  // 3. Pronađi sve igrače koji su u ISTIM sobama (presjek)
   const result = new Set(triggeredPlayers);
   allPlayers.forEach((vals, i) => {
     if (!vals) return;
