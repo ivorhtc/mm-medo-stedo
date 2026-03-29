@@ -486,6 +486,7 @@ function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
     });
   });
 
+  console.log('getPlayersInSameRoom:', {triggered: triggeredPlayers, sharedRooms: Array.from(sharedRooms), result: Array.from(result)});
   return Array.from(result);
 }
 
