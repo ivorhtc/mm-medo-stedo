@@ -394,8 +394,8 @@ function makeEvaluator(condString) {
     }
 
     // --- Odredi assignedPlayers ---
-    // Ako postoje playerTokeni → assignaj te igrače (koji su prisutni)
-    // Ako samo brojevi → assignaj igrače iz combinedSet
+    // Ako ima playerTokena → assignaj te igrače (razgovori i uvjeti s p1, p2...)
+    // Ako samo numTokeni → assignaj igrače iz combinedSet (sobe)
     // Inače → svi prisutni igrači
     let assigned;
     if (playerTokens.length > 0) {
@@ -716,14 +716,19 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
       // Ako rule ima samo playerTokene (razgovori), ti igrači
       let recipients = result.assignedPlayers;
 
-      if (result.numTokens && result.numTokens.length > 0) {
-        // Uzmi samo igrače koji su unijeli jedan od numTokena iz uvjeta
-        const roomPlayers = new Set();
-        result.numTokens.forEach(n => {
-          (numberMap[n] || []).forEach(i => roomPlayers.add("Player" + (i + 1)));
-        });
-        // Presjek s assignedPlayers
-        recipients = result.assignedPlayers.filter(p => roomPlayers.has(p));
+      // Za sobne iteme - recipients su igrači koji su unijeli broj sobe
+      // Za talk iteme - recipients ostaju playerTokeni (par koji razgovara)
+      if (!out.startsWith("talk") && result.numTokens && result.numTokens.length > 0) {
+        const validRooms = getValidRooms();
+        const roomNums = result.numTokens.filter(n => validRooms.has(n));
+        if (roomNums.length > 0) {
+          const roomPlayers = new Set();
+          roomNums.forEach(n => {
+            (numberMap[n] || []).forEach(i => roomPlayers.add("Player" + (i + 1)));
+          });
+          // Recipients su igrači koji su u sobi (roomPlayers), ne assigned
+          recipients = [...roomPlayers];
+        }
       }
 
       if (recipients.length > 0) {
