@@ -251,13 +251,23 @@ function buildRoomMap(settings) {
   });
 }
 
+// Skup svih validnih soba (parentovi i childovi iz roomMap)
+function getValidRooms() {
+  const valid = new Set(Object.values(roomMap)); // sve parent sobe
+  Object.keys(roomMap).forEach(k => valid.add(k)); // sve child sobe
+  return valid;
+}
+
 // ============================================================
 // PLAYER INPUT
 // ============================================================
 
 // Čita inpute igrača, vraća array of (array of strings | null)
+// Koristi samo p1-p7 inpute, ne p-globalNumbers
 function readPlayerInputs() {
-  return Array.from(document.querySelectorAll("[id^='p']")).map(input => {
+  return [1,2,3,4,5,6,7].map(n => {
+    const input = document.getElementById("p" + n);
+    if (!input) return null;
     const v = input.value.trim();
     if (!v) return null;
     return v.split(/[;,]/).map(x => x.trim()).filter(Boolean);
@@ -483,7 +493,10 @@ function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
     if (!vals) return;
     const arr = Array.isArray(vals) ? vals : [vals];
     arr.forEach(v => {
-      if (sharedRooms.has(roomMap[v] || v)) {
+      // Ignoriraj globalne flagove - samo prave sobe
+      if (!validRooms.has(v)) return;
+      const parent = roomMap[v] || v;
+      if (sharedRooms.has(parent)) {
         result.add("Player" + (i + 1));
       }
     });
