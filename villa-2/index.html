@@ -685,13 +685,20 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
   outputs.forEach(({ out, players: triggered, admin }) => {
     if (triggered.length === 0) return;
 
-    // Admin iz rule direktno ide Voditelju
-    if (admin) playerCards["Player7"].push(admin);
-
     const item = itemMap[out];
     if (!item) return;
 
-    dispatchItem(item, triggered, playerCards, players, numberMap, out);
+    // Za talk iteme: provjeri jesu li u istoj sobi prije admin flaga
+    if (out.startsWith("talk")) {
+      const recipients = getPlayersInSameRoom(triggered, numberMap, players);
+      if (recipients.length === 0) return; // nisu u istoj sobi, preskoči sve uključujući admin
+      if (admin) playerCards["Player7"].push(admin);
+      recipients.forEach(p => playerCards[p].push(item.value || out));
+    } else {
+      // Obični item - admin uvijek ide Voditelju
+      if (admin) playerCards["Player7"].push(admin);
+      dispatchItem(item, triggered, playerCards, players, numberMap, out);
+    }
   });
 
   // 9. Deduplikacija - makni duplikate po igraču (zadržava redosljed)
