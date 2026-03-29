@@ -419,6 +419,7 @@ function makeEvaluator(condString) {
       passed,
       expr,
       evalError,
+      numTokens,
       assignedPlayers: assigned.map(i => 'Player' + (i + 1)),
     };
   };
@@ -710,11 +711,28 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
     debugLines.push("");
 
     if (result.passed) {
-      outputs.push({
-        out,
-        players: result.assignedPlayers,
-        rule,    // cijeli rule objekt da imamo global i admin
-      });
+      // Odredi tko stvarno prima output:
+      // Ako rule ima broj sobe (numTokens), samo igrači koji su u toj sobi
+      // Ako rule ima samo playerTokene (razgovori), ti igrači
+      let recipients = result.assignedPlayers;
+
+      if (result.numTokens && result.numTokens.length > 0) {
+        // Uzmi samo igrače koji su unijeli jedan od numTokena iz uvjeta
+        const roomPlayers = new Set();
+        result.numTokens.forEach(n => {
+          (numberMap[n] || []).forEach(i => roomPlayers.add(Player + (i + 1)));
+        });
+        // Presjek s assignedPlayers
+        recipients = result.assignedPlayers.filter(p => roomPlayers.has(p));
+      }
+
+      if (recipients.length > 0) {
+        outputs.push({
+          out,
+          players: recipients,
+          rule,
+        });
+      }
     }
   });
 
