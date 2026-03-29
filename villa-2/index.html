@@ -348,10 +348,21 @@ function makeEvaluator(condString) {
       varMap[n] = playersForNumber[n].length > 0;
     });
 
-    // Igrači: true ako je igrač prisutan (ima unos), neovisno o brojevima
+    // Igrači:
+    // Ako uvjet ima sobe (validRooms) → p4 znači "p4 je unio tu sobu"
+    // Inače → p4 znači "p4 je prisutan u igri"
+    const validRoomsLocal = new Set([...Object.keys(roomMap), ...Object.values(roomMap)]);
+    const roomNumTokens = numTokens.filter(n => validRoomsLocal.has(n));
+    
     playerTokens.forEach(pt => {
       const idx = parseInt(pt.slice(1), 10) - 1;
-      varMap[pt] = players[idx] !== null;
+      if (roomNumTokens.length > 0) {
+        // Provjeri je li igrač unio jedan od soba iz uvjeta
+        const inRoom = roomNumTokens.some(n => (playersForNumber[n] || []).includes(idx));
+        varMap[pt] = inRoom;
+      } else {
+        varMap[pt] = players[idx] !== null; // je li p4 prisutan
+      }
     });
 
     // min/maxNp: true ako je broj igrača u combinedSet >= ili <= N
