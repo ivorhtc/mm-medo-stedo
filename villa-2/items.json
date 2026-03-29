@@ -1,9 +1,10 @@
 [
-{"story": "VILA IZVANA - vide godinu samo ako su pročitali papirić u ladici (8002)"},
+
+  {"story": "VILA IZVANA - vide godinu samo ako su pročitali papirić u ladici (8002)"},
   {"key": "1100", "value": "Moderna vila okružena je visokim borovima i skrivena iza elegantne crne metalne ograde s velikim ulaznim vratima. Kuća ima velike staklene prozore, prostranu garažu i osvijetljeni ulaz do kojeg vodi široki prilaz. Na vanjskom zidu pokraj glavnih vrata nalazi se mala metalna tabla s ugraviranom godinom izgradnje vile."},
   {"key": "1101", "value": "Moderna vila okružena je visokim borovima i skrivena iza elegantne crne metalne ograde s velikim ulaznim vratima. Na vanjskom zidu pokraj glavnih vrata nalazi se mala metalna tabla s ugraviranom godinom: 2004.", "global": "800211"},
-  
-{"story": "RADNA SOBA - centralna soba, tijelo, sef, oporuka"},
+
+  {"story": "RADNA SOBA - centralna soba, tijelo, sef, oporuka"},
   {"key": "8000", "value": "Radna soba s velikim stolom, policama knjiga i sefom uzidanim u zid. Na kauču uz prozor leži tijelo Zvonimira Farkaša. Možete pretražiti: stol (8001), ladice stola (8002), sef (8003), police s knjigama (8004), tijelo (8006)."},
   {"key": "8001", "value": "Na stolu je otvorena boca vina, prazna čaša i razasuti papiri. Među papirima je nacrt nove oporuke — iz nje su izbačeni Viktor i Viktorija Farkaš, a sve nasljeđuje 'Radojka Špek'. Dokument je potpisan i ovjeren pečatom odvjetničke firme."},
   {"key": "8002", "value": "U ladici su razni dokumenti. Između njih nalazite staru oporuku u kojoj su Viktor i Viktorija Farkaš jedini nasljednici. Također, u ladici je i mali papirić na kojem piše rukom: 'Šifra sefa = godina izgradnje vile.'", "global": "80021"},
@@ -11,14 +12,14 @@
   {"key": "80031", "value": "Unosite kod 2004. Sef se otvara — ali je prazan. Na metalnom dnu ostao je jedino tanak sloj zlatne prašine i otisci prstiju u njoj.", "global": "80031"},
   {"key": "8004", "value": "Police su pune knjiga i mapa. Između knjiga nalazite uokvirenu fotografiju — Zvonimir i žena smiju se na nekoj terasi. Na poleđini fotografije rukom je napisano: 'Radojka, ljeto 2021.'"},
   {"key": "8005", "value": "Prozor gleda prema balkonu. Zavjese su napola zatvorene."},
-  
-{"story": "TIJELO - 4 varijante ovisno o tome je li p2 (Žuti) i/ili p6 (Ljubičasti) prisutan"},
+
+  {"story": "TIJELO - 4 varijante ovisno o tome je li p2 (Žuti) i/ili p6 (Ljubičasti) prisutan"},
   {"key": "8006", "value": "Zvonimir leži na boku na kauču. Na desnoj strani glave ima vidljivu ozljedu — tup udarac, jak. Oko njega nema ničega što bi moglo biti oružje. Tko god ga je udario — ponio je to sa sobom."},
   {"key": "8006p2", "value": "Zvonimir leži na boku na kauču. Na desnoj strani glave ima vidljivu ozljedu — tup udarac, jak. Oko njega nema ničega što bi moglo biti oružje. Tko god ga je udario — ponio je to sa sobom.", "p2": "🧠 Znaš točno što se dogodilo. Udario si ga zlatnom polugom kad se probudio. Poluga je još u kombiju u garaži."},
   {"key": "8006p6", "value": "Zvonimir leži na boku na kauču. Na desnoj strani glave ima vidljivu ozljedu — tup udarac, jak. Oko njega nema ničega što bi moglo biti oružje. Tko god ga je udario — ponio je to sa sobom.", "p6": "🧠 Ozljeda nije kompatibilna s padom. Netko ga je udario tupim predmetom s preciznim zamahom. Oružja nema u sobi — ubojica ga je ponio sa sobom. Tražiš dalje."},
   {"key": "8006p2p6", "value": "Zvonimir leži na boku na kauču. Na desnoj strani glave ima vidljivu ozljedu — tup udarac, jak. Oko njega nema ničega što bi moglo biti oružje. Tko god ga je udario — ponio je to sa sobom.", "p2": "🧠 Znaš točno što se dogodilo. Udario si ga zlatnom polugom kad se probudio. Poluga je još u kombiju u garaži.", "p6": "🧠 Ozljeda nije kompatibilna s padom. Netko ga je udario tupim predmetom s preciznim zamahom. Oružja nema u sobi — ubojica ga je ponio sa sobom. Tražiš dalje."},
-  
-{"story": "KUHINJA - injekcija, kompleksna logika s flagovima 1001771 i 88772"},
+
+  {"story": "KUHINJA - injekcija, kompleksna logika s flagovima 1001771 i 88772"},
   {"key": "1000", "value": "Prostrana moderna kuhinja s ladicama, policama i velikim srebrnim frižiderom. Možete pretražiti: ladice (1001), police sa začinima i čašama (1002), frižider (1003), sudoper (1004)."},
   {"key": "1001", "value": "U ladicama su noževi i kuhinjski pribor.", "p2": "Spremaš injekciju u džep bez da itko vidi.", "global": "1001771"},
   {"key": "1001881", "value": "U ladicama uz noževe i kuhinjski pribor nalazite praznu injekciju.", "global": "88772"},
@@ -27,19 +28,19 @@
   {"key": "1002", "value": "Police su pune začina i čaša za vino, sve uredno posloženo."},
   {"key": "1003", "value": "Frižider je gotovo prazan osim nekoliko boca vina i male kutije s lijekovima."},
   {"key": "1004", "value": "Sudoper je čist, ali u odvodu se osjeti blagi miris vina."},
-  
-{"story": "TERETANA - posjetnica Davor i Radojka Fit vodi na Instagram (20001)"},
+
+  {"story": "TERETANA - posjetnica Davor i Radojka Fit vodi na Instagram (20001)"},
   {"key": "2000", "value": "Moderna soba za vježbanje s bučicama, spravama i velikim prozorom. Možete pretražiti: bučice (2001), sprave (2002), prostirke (2003), police s opremom (2004), prozor (2005)."},
   {"key": "2001", "value": "Bučice su uredno posložene po težini."},
   {"key": "2002", "value": "Sprave za vježbanje izgledaju rijetko korištene."},
   {"key": "2003", "value": "Prostirke za vježbanje smotane su u kutu."},
   {"key": "2004", "value": "Na policama su ručnici i sportske boce. Između ručnika nalazite vizitku: 'Davor i Radojka Fit — personalni treninzi'. Na vizitki je i Instagram profil: @davoriradojkafit. Možete posjetiti profil (20001).", "global": "20000"},
   {"key": "2005", "value": "Kroz prozor se vidi balkon na katu."},
-  
-{"story": "INSTAGRAM Davor i Radojka Fit - dostupno preko vizitke (20000) ili Davorovog mobitela"},
+
+  {"story": "INSTAGRAM Davor i Radojka Fit - dostupno preko vizitke (20000) ili Davorovog mobitela"},
   {"key": "20001", "value": "Instagram profil @davoriradojkafit. Zadnji post je star tri tjedna — fotografija para na treningu, nasmiješeni. Komentari klijenata: 'Gdje ste nestali?', 'Sve ok?'. Radojka više ne prati profil i izbrisala se s njega. Davor je zadnji put bio aktivan prije tjedan dana."},
-  
-{"story": "BLAGOVAONICA - ogrebotina na podu trag je da je nešto teško vučeno (zlato)"},
+
+  {"story": "BLAGOVAONICA - ogrebotina na podu trag je da je nešto teško vučeno (zlato)"},
   {"key": "3000", "value": "Velika blagovaonica s dugim drvenim stolom i vitrinom punom tanjura. Možete pretražiti: stol (3001), stolice (3002), vitrina (3003), ormar za pribor (3004), pod tepihom (3005), prozor (3006)."},
   {"key": "3001", "value": "Na stolu je mrlja od vina i jedna čaša koja još miriše na alkohol."},
   {"key": "3002", "value": "Stolice su uredno poredane kao nakon večere."},
@@ -47,63 +48,63 @@
   {"key": "3004", "value": "U ormaru za pribor nalazi se srebrni pribor i nekoliko svijeća."},
   {"key": "3005", "value": "Pod tepihom nalazi se mala ogrebotina na parketu — kao da je nešto teško povučeno prema hodniku."},
   {"key": "3006", "value": "Prozor gleda na prilaz vile."},
-  
-{"story": "GARAŽA - kombi s novcem, zlatom i polugom. Pajser iz spajze (7004) treba za provaliti. Crni (p1) prepoznaje kombi. Žuti (p2) zna što je unutra."},
+
+  {"story": "GARAŽA - kombi s novcem, zlatom i polugom. Pajser iz spajze (7004) treba za provaliti. Crni (p1) prepoznaje kombi. Žuti (p2) zna što je unutra."},
   {"key": "4000", "value": "Dvostruka garaža s policama za alat i parkiranim vozilima. Uz zid desno stoje police s alatom. Parkirana su dva vozila — osobni auto i bijeli kombi s logom firme za čišćenje. Na podu se vide tragovi blata koji vode prema kombiju. Možete pretražiti: alat na polici (4001), police (4002), pod (4003), kombi (4004), garažna vrata (4005)."},
   {"key": "4001", "value": "Na polici su uredno posloženi alati — čekić, odvijači, kliješta. Primjećujete prazan prostor između alata, oblik nalikuje na dužu polugu ili šipku."},
   {"key": "4002", "value": "Police su pune kutija i stare opreme. Ništa neuobičajeno."},
   {"key": "4003", "value": "Na podu se vide tragovi blata koji vode od unutarnjih vrata vile prema kombiju. Uz to, u svjetlu baterije primjećujete sitne zlatne mrvice razbacane između kombija i vrata.", "global": "4003"},
   {"key": "4005", "value": "Velika garažna vrata zatvorena su iznutra. Kroz pukotinu se vidi da je ispred garaže parkiran jedan auto."},
-  
-{"story": "KOMBI - bez pajsera (40040): iznutra blokiran, netko je spavao. S pajserom (40040): provale, vide sve. Crni dobiva šok poruku u oba slučaja. Žuti dobiva privatnu poruku u oba slučaja."},
+
+  {"story": "KOMBI - bez pajsera (40040): iznutra blokiran, netko je spavao. S pajserom (40040): provale, vide sve. Crni dobiva šok poruku u oba slučaja. Žuti dobiva privatnu poruku u oba slučaja."},
   {"key": "4004", "value": "Kombi je zaključan. Kroz staklo vidite da su prednja sjedala nagnuta unazad kao da je netko spavao unutra. Na stražnjem sjedalu naslućujete neke torbe.", "p1": "🧠 Registracijske oznake... to je tvoj službeni kombi! Što on radi ovdje?", "p2": "🧠 Kombi je još tu. Novac i zlato su sigurno još unutra. Ne smiješ dopustiti da ga itko otvori."},
   {"key": "40041", "value": "Pajserom uspijevate otvoriti kombi. Na stražnjim sjedalima nalazite: nekoliko torbi punih novca, tri zlatne poluge i jednu četvrtu polugu koja ima tragove krvi na vrhu. Na podu kombija leži osobna iskaznica.", "p1": "🧠 Uzimаš osobnu iskaznicu s poda — na njoj je tvoja slika, tvoje ime i prezime. To je TVOJA iskaznica. Kako je završila ovdje?", "p2": "🧠 Gotovo je. Sve su našli. Moraš smisliti objašnjenje — i brzo.", "global": "40041"},
-  
-{"story": "SPAVAĆA SOBA - tablete su zamijenjene vitaminima (Viktorov trag)"},
+
+  {"story": "SPAVAĆA SOBA - tablete su zamijenjene vitaminima (Viktorov trag)"},
   {"key": "5000", "value": "Velika spavaća soba s krevetom i noćnim ormarićima. Možete pretražiti: krevet (5001), ormar (5002), noćni ormarić (5003), prozor (5004), pod (5005)."},
   {"key": "5001", "value": "Krevet je uredno pospremljen."},
   {"key": "5002", "value": "Ormar je pun skupih odijela."},
   {"key": "5003", "value": "U noćnom ormariću nalazi se kutija tableta za srce — ali kad je otvorite, unutra su samo vitamini. Netko je zamijenio tablete."},
   {"key": "5004", "value": "Prozor gleda prema vrtu."},
   {"key": "5005", "value": "Pod je čist, ali se vidi mali trag kapljice vina."},
-  
-{"story": "WC - Viktor je ovdje zamijenio tablete. Umivaonik je mokar, u ormariću prazan prostor."},
+
+  {"story": "WC - Viktor je ovdje zamijenio tablete. Umivaonik je mokar, u ormariću prazan prostor."},
   {"key": "6000", "value": "Mali WC s ogledalom i umivaonikom. Možete pretražiti: umivaonik (6001), ormar/police (6002), WC školjku (6003), ogledalo (6004)."},
   {"key": "6001", "value": "Umivaonik je mokar kao da ga je netko nedavno koristio."},
   {"key": "6002", "value": "U ormariću su ručnici i lijekovi. Između kutija primjećujete prazan prostor — kao da je nešto nedavno izvađeno i zamijenjeno."},
   {"key": "6003", "value": "WC školjka je čista."},
   {"key": "6004", "value": "Ogledalo je lagano napuklo u kutu."},
-  
-{"story": "SPAJZA - pajser iza vreća brašna, svak tko pogleda u ormar (7004) ga nalazi"},
+
+  {"story": "SPAJZA - pajser iza vreća brašna, svak tko pogleda u ormar (7004) ga nalazi"},
   {"key": "7000", "value": "Mala spajza puna tegli i konzervirane hrane. Možete pretražiti: police (7001), tegle i konzerve (7002), pod (7003), ormar (7004)."},
   {"key": "7001", "value": "Police su prepune hrane — konzerve, tegle, paketi tjestenine."},
   {"key": "7002", "value": "Jedna tegla je pala i razbila se na podu, staklo je pometeno u kut."},
   {"key": "7003", "value": "Na podu su sitne mrvice stakla od razbijene tegle."},
   {"key": "7004", "value": "U ormaru su vreće brašna i šećera. Iza njih, naslonjen uz zid, stoji metalni pajser.", "p7": "Dajte igračima pajser. Global +40040"},
-  
-{"story": "BALKON - ograda olabavljena (Davorov trag). Ljubičasti privatno vidi da je labava. Zeleni privatno zna da je on to napravio. Svi ostali koji pretražuju 8101 padaju (samo prvi pad, flag 810001)."},
+
+  {"story": "BALKON - ograda olabavljena (Davorov trag). Ljubičasti privatno vidi da je labava. Zeleni privatno zna da je on to napravio. Svi ostali koji pretražuju 8101 padaju (samo prvi pad, flag 810001)."},
   {"key": "8100", "value": "Balkon s pogledom na vrt i prilaz vile. Možete pretražiti: ogradu (8101), stolić (8102), stolice (8103), cvjetne lonce (8104)."},
-  
-{"story": "8101 ograda - 4 varijante: samo Zeleni, samo Ljubičasti, Zeleni+Ljubičasti, ostali padaju"},
+
+  {"story": "8101 ograda - 4 varijante: samo Zeleni, samo Ljubičasti, Zeleni+Ljubičasti, ostali padaju"},
   {"key": "81010", "value": "Ograda izgleda stabilno na prvi pogled.", "p5": "🧠 Znaš da si ti olabavio ovu ogradu. Vijci su još uvijek popušteni."},
   {"key": "81011", "value": "Ograda izgleda stabilno na prvi pogled.", "p6": "🧠 Primjećuješ da su vijci na jednom dijelu ograde labavi — netko ih je namjerno odšarafio."},
   {"key": "81012", "value": "Ograda izgleda stabilno na prvi pogled.", "p5": "🧠 Znaš da si ti olabavio ovu ogradu. Vijci su još uvijek popušteni.", "p6": "🧠 Primjećuješ da su vijci na jednom dijelu ograde labavi — netko ih je namjerno odšarafio."},
   {"key": "81013", "value": "Naslanjate se na ogradu — i ona popušta. Pada zajedno s vama. Tijelo se nalazi u vrtu ispod balkona.", "global": "810001. Dodajte broj tijela svim igračima ovisno o tome tko je pao."},
-  
-{"story": "Tijela u vrtu nakon pada s balkona"},
+
+  {"story": "Tijela u vrtu nakon pada s balkona"},
   {"key": "81001", "value": "Crni leži nepomično u vrtu ispod balkona. U džepovima nalazite: mobitel (ekran pokazuje kladioničku aplikaciju s dugom od 4.200€), ključeve auta i novčanik s nekoliko računa kladionice."},
   {"key": "81002", "value": "Plavi leži nepomično u vrtu ispod balkona. U džepu kaputa nalazite malu kutiju — unutra su vitamini. Na kutiji je originalna naljepnica za tablete za srce, ali su zamijenjene vitaminima."},
   {"key": "81003", "value": "Crveni leži nepomično u vrtu ispod balkona. U džepovima nalazite: odvjetničku iskaznicu na ime Radomir i ključeve od automobila s privjeskom 'R.Š.' — nije njegovo prezime."},
-  
-{"story": "SOBA ZA GOSTE - Samir je spavao tu. Laptop na stolu (9003) otkljucava hakiranje."},
+
+  {"story": "SOBA ZA GOSTE - Samir je spavao tu. Laptop na stolu (9003) otkljucava hakiranje."},
   {"key": "9000", "value": "Soba za goste s krevetom i malim stolom. Možete pretražiti: krevet (9001), ormar (9002), stol (9003), pod (9004), prozor (9005)."},
   {"key": "9001", "value": "Krevet izgleda kao da je netko nedavno ležao na njemu — jastuk je zgužvan, a deka malo povučena."},
   {"key": "9002", "value": "Ormar je gotovo prazan."},
   {"key": "9003", "value": "Na stolu je laptop — otvoren i uključen. Čini se da je vlasnik zaboravio isključiti ga. Na ekranu je otvorena kladionička stranica. Laptop je nezaključan. Možete hakirati mobitele svih prisutnih (8007001-8007006) i Zvonimirov mobitel (8007007).", "global": "90031"},
   {"key": "9004", "value": "Pod je čist."},
   {"key": "9005", "value": "Prozor gleda prema dvorištu i direktno prema garaži."},
-  
-{"story": "HAKIRANJE MOBITELA - dostupno samo uz flag 90031 (laptop nađen)"},
+
+  {"story": "HAKIRANJE MOBITELA - dostupno samo uz flag 90031 (laptop nađen)"},
   {"key": "8007001", "value": "📱 Samirov mobitel:\n• SMS prijatelju: 'Brat, ne mogu doma, kamataši su mi razbili stan'\n• Kladionička app — trenutni minus: 4.200€\n• Lokacija u petak: firma za čišćenje → Farkaš vila"},
   {"key": "8007002", "value": "📱 Igorov mobitel:\n• Redovne uplate od: Viktorija Farkaš\n• Poziv s Viktorijom Farkaš u utorak, 12 minuta\n• Lokacija: isključena"},
   {"key": "8007003", "value": "📱 Viktorov mobitel:\n• Poziv sestri Viktoriji u Australiju u ponedjeljak, 47 minuta\n• SMS Viktoriji: 'Mora biti gotovo prije idućeg tjedna'\n• Lokacija: Farkaš vila u petak na ručku"},
@@ -111,16 +112,24 @@
   {"key": "8007005", "value": "📱 Davorov mobitel:\n• Redovne uplate od: Zvonimir Farkaš (treninzi)\n• Zadnja uplata: 3 tjedna prije\n• Instagram: @davoriradojkafit — Davor je admin profila (20001)"},
   {"key": "8007006", "value": "📱 Oliverov mobitel:\n• Poruka automatskog sustava: popis tablica automobila koja su bila u Farkaš vili u petak\n• Interna baza — pretrage na sve prisutne osobe\n• Lokacija: dolazi iz smjera policijske postaje"},
   {"key": "8007007", "value": "📱 Zvonimirov mobitel:\n• Intimne fotografije s Radojkom Špek\n• Obiteljske fotografije s Viktorom i Viktorijom Farkaš — stare nekoliko godina\n• SMS odvjetniku u srijedu: 'Dođi u petak, mijenjamo oporuku'"},
-  
-{"story": "VINSKI PODRUM - CO zamka. Radomir je namjestio vrata i ventile."},
-{"story": "Scenarij A: Crveni je tu - podmece kutiju, otvara prozor, flag 100001"},
-{"story": "Scenarij B: Nema Crvenog, ali je Žuti ili Ljubičasti - vrata se zatvore, oni otvore prozor, ostali zarobljeni, flag 100002"},
-{"story": "Scenarij C: Nema Crvenog, Žutog ni Ljubičastog - svi zarobljeni, flag 100003"},
-{"story": "Redosljed smrti: Crni (100011) → Plavi (100012) → Zeleni (100013)"},
-{"story": "Oslobađanje: netko izvana pretražuje 10000 dok je 100002 ili 100003 aktivan → otvori vrata → flag 100004"},
-  {"key": "10000a", "value": "Ulazite u vinski podrum. Hladniji je nego što bi trebao biti, a zrak je nekako teži. Crveni odmah primjećuje vrata prema kotlovnici — brzo podmeće kutiju da ostanu otvorena. Zatim ide prema prozoru uz strop i otvara ga. Možete pretražiti: police za vino (10001), boce vina (10002), vrata prema kotlovnici (10003), pod (10004), prozor (10005), kutiju na polici (10006).", "p4": "🧠 Znaš točno što radiš. Ova vrata ne smiju se zatvoriti.", "global": "100001"},
-  {"key": "10000b", "value": "Ulazite u vinski podrum. Vrata se iza vas zatvaraju — iznutra nema kvake. Zrak je teži nego što bi trebao biti. Zarobljeni ste. Možete pretražiti: police za vino (10001), boce vina (10002), vrata prema kotlovnici (10003), pod (10004), prozor (10005), kutiju na polici (10006).", "p2": "🧠 Brzo ideš prema prozoru uz strop i otvараš ga. Svježi zrak ulazi — ali vrata su još uvijek zatvorena.", "p6": "🧠 Brzo ideš prema prozoru uz strop i otvараš ga. Svježi zrak ulazi — ali vrata su još uvijek zatvorena.", "global": "100002"},
-  {"key": "10000c", "value": "Ulazite u vinski podrum. Vrata se iza vas zatvaraju — iznutra nema kvake. Zrak je sve teži. Zarobljeni ste i nema prozora koji možete doseći. Čekate pomoć izvana. Možete pretražiti: police za vino (10001), boce vina (10002), vrata prema kotlovnici (10003), pod (10004), prozor (10005), kutiju na polici (10006).", "global": "100003"},
+
+  {"story": "VINSKI PODRUM - CO zamka. Radomir je namjestio vrata i ventile."},
+  {"story": "Scenarij A: Crveni je tu - podmece kutiju, otvara prozor, flag 100001"},
+  {"story": "Scenarij B: Nema Crvenog, ali je Žuti ili Ljubičasti - vrata se zatvore, oni otvore prozor, ostali zarobljeni, flag 100002"},
+  {"story": "Scenarij C: Nema Crvenog, Žutog ni Ljubičastog - svi zarobljeni, flag 100003"},
+  {"story": "Redosljed smrti: Crni (100011) → Plavi (100012) → Zeleni (100013)"},
+  {"story": "Oslobađanje: netko izvana pretražuje 10000 dok je 100002 ili 100003 aktivan → otvori vrata → flag 100004"},
+  {"story": "VINSKI PODRUM - Scenarij A: Crveni (p4) je unutra"},
+  {"key": "10000a", "value": "Ulazite u vinski podrum. Hladniji je nego što bi trebao biti. Crveni odmah primjećuje vrata prema kotlovnici — brzo podmeće kutiju da ostanu otvorena. Zatim ide prema prozoru uz strop i otvara ga. Možete pretražiti: police za vino (10001), boce vina (10002), vrata prema kotlovnici (10003), pod (10004), prozor (10005), kutiju na polici (10006).", "p4": "🧠 Stavljaš kutiju da se vrata ne zatvore i otvараš prozor. Znaš točno zašto.", "global": "100001"},
+
+  {"story": "VINSKI PODRUM - Scenarij B6: Ljubičasti (p6) otvara prozor, Crveni nije unutra. Smrt: Crni > Plavi > Zeleni"},
+  {"key": "10000b6", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p1", "p3", "p5"]}, "output": {"winner": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. Zrak je sve teži. Ne možeš disati. Padaš mrtav. Ostatak igre pratiš i možeš glasati na kraju — ali bez pričanja o igri.", "others": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. ${winnerN} pada mrtav. Ljubičasti brzo ide prema prozoru uz strop i otvara ga. Svježi zrak ulazi — ali vrata su još uvijek zatvorena. Šutite i čekate da vas netko oslobodi izvana.", "p6": "🧠  pada. Brzo ideš prema prozoru i otvараš ga. Vrata su još uvijek zatvorena izvana. Šutite i čekate.", "p7": "Global +100002. Dodaj svim igračima broj tijela ovisno o tome tko je pao: Crni=100011, Plavi=100012, Zeleni=100013"}},
+
+  {"story": "VINSKI PODRUM - Scenarij B2: Žuti (p2) otvara prozor, Crveni i Ljubičasti nisu unutra. Smrt: Crni > Plavi > Zeleni"},
+  {"key": "10000b2", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p1", "p3", "p5"]}, "output": {"winner": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. Zrak je sve teži. Ne možeš disati. Padaš mrtav. Ostatak igre pratiš i možeš glasati na kraju — ali bez pričanja o igri.", "others": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. ${winnerN} pada mrtav. Žuti brzo ide prema prozoru uz strop i otvara ga. Svježi zrak ulazi — ali vrata su još uvijek zatvorena. Šutite i čekate da vas netko oslobodi izvana.", "p2": "🧠  pada. Brzo ideš prema prozoru i otvараš ga. Vrata su još uvijek zatvorena izvana. Šutite i čekate.", "p7": "Global +100002. Dodaj svim igračima broj tijela ovisno o tome tko je pao: Crni=100011, Plavi=100012, Zeleni=100013"}},
+
+  {"story": "VINSKI PODRUM - Scenarij C: nitko od Crvenog, Žutog, Ljubičastog nije unutra. Smrt: Crni > Plavi > Zeleni"},
+  {"key": "10000c", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p1", "p3", "p5"]}, "output": {"winner": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. Zrak je sve teži. Ne možeš disati. Padaš mrtav. Ostatak igre pratiš i možeš glasati na kraju — ali bez pričanja o igri.", "others": "Ulazite u vinski podrum. Vrata se zatvaraju iza vas — iznutra nema kvake. ${winnerN} pada mrtav. Nema prozora koji možete doseći. Šutite i čekate da vas netko oslobodi izvana.", "p7": "Global +100003. Dodaj svim igračima broj tijela ovisno o tome tko je pao: Crni=100011, Plavi=100012, Zeleni=100013"}},
   {"key": "10000free", "value": "Vrata vinskog podruma su otvorena. Vidite unutra police s vinom i jedan otvoreni prozor uz strop. Možete ući i pretražiti: police za vino (10001), boce vina (10002), vrata prema kotlovnici (10003), pod (10004), prozor (10005), kutiju na polici (10006)."},
   {"key": "10000locked", "value": "Vrata vinskog podruma su zatvorena izvana. Čujete glasove iznutra.", "admin": "Otvorite vrata ako želite osloboditi zarobljene. Global +100004"},
   {"key": "10001", "value": "Police su pune starih boca vina. Na jednoj polici primjećujete oznake godišta — najstarija boca je iz 1987."},
@@ -128,22 +137,22 @@
   {"key": "10003", "value": "Vrata vode prema kotlovnici. Primjećujete da ih se može otvoriti samo izvana — iznutra nema kvake.", "p4": "🧠 Ti si to napravio. Znaš točno zašto."},
   {"key": "10004", "value": "Pod je hladan i vlažan."},
   {"key": "10005", "value": "Mali prozor uz strop. Jedva prolazi čovjek — previše je mali za izlaz.", "p6": "🧠 Jedini izlaz je izvana. Netko mora otvoriti vrata."},
-  
-{"story": "PIŠTOLJ - event, prioritet: Žuti, Crni, Zeleni, Crveni, Plavi, Ljubičasti. Svi vide tko uzima."},
+
+  {"story": "PIŠTOLJ - event, prioritet: Žuti, Crni, Zeleni, Crveni, Plavi, Ljubičasti. Svi vide tko uzima."},
   {"key": "10006", "type": "event", "logic": {"winnerStrategy": "priorityList", "priorityList": ["p2", "p1", "p5", "p4", "p3", "p6"]}, "output": {"winner": "U kutiji na polici nalazite pištolj s jednim metkom. Spremaš ga u džep.", "others": "Vidite kako ${winnerN} uzima pištolj iz kutije i sprema ga u džep.", "p7": "Daj ${winnerD} pištolj. Global +100061"}},
-  
-{"story": "Tijela u podrumu"},
+
+  {"story": "Tijela u podrumu"},
   {"key": "100110", "value": "Crni leži na podu podruma. U džepovima nalazite: mobitel (ekran pokazuje kladioničku aplikaciju s dugom od 4.200€), ključeve auta i novčanik s nekoliko računa kladionice."},
   {"key": "100120", "value": "Plavi leži na podu podruma. U džepu kaputa nalazite malu kutiju — unutra su vitamini. Na kutiji je originalna naljepnica za tablete za srce, ali su zamijenjene vitaminima."},
   {"key": "100130", "value": "Zeleni leži na podu podruma. U džepovima nalazite: mobitel i mali odvijač."},
-  
-{"story": "KOTLOVNICA - ventili su dirani, jedan namješten drugačije. Trag prema CO zamci."},
+
+  {"story": "KOTLOVNICA - ventili su dirani, jedan namješten drugačije. Trag prema CO zamci."},
   {"key": "11000", "value": "Kotlovnica puna cijevi i bojlera. Možete pretražiti: kotlove (11001), cijevi (11002), ventile (11003)."},
   {"key": "11001", "value": "Kotlovi tiho zuje."},
   {"key": "11002", "value": "Cijevi vode prema vinskom podrumu."},
   {"key": "11003", "value": "Ventili izgledaju kao da ih je netko nedavno dirao — jedan je namješten drugačije od ostalih.", "global": "110031"},
-  
-{"story": "VEŠERAJ - odvijač koji je Zeleni koristio za olabaviti ogradu. Ima Zelenih otisaka ako igrači imaju pribor (flag 88771)."},
+
+  {"story": "VEŠERAJ - odvijač koji je Zeleni koristio za olabaviti ogradu. Ima Zelenih otisaka ako igrači imaju pribor (flag 88771)."},
   {"key": "12000", "value": "Vešeraj s perilicom i sušilicom. Možete pretražiti: perilicu (12001), sušilicu (12002), police (12003), pod (12004), peglu i dasku (12005), alat (12006)."},
   {"key": "12001", "value": "Perilica je puna ručnika."},
   {"key": "12002", "value": "Sušilica je još topla."},
@@ -152,14 +161,14 @@
   {"key": "12005", "value": "Pegla i daska stoje u kutu."},
   {"key": "12006", "value": "Na polici u kutu stoji odvijač — izgleda kao da je nedavno korišten."},
   {"key": "120061", "value": "Na polici u kutu stoji odvijač — izgleda kao da je nedavno korišten. Uzimate pribor za otiske i provjerate odvijač. Na njemu su jasni otisci prstiju.", "admin": "Otisci na odvijаču pripadaju Zelenom (Davoru)."},
-  
-{"story": "PRIBOR ZA OTISKE - Ljubičasti tajni zadatak. Flag 88771 aktivira otiske na svim predmetima."},
-{"story": "Oliver dobiva na pocetku: 'Pošalji +6 uz broj sobe gdje si. U tom pretraživanju odglumi da ste našli pribor za provjeru otisaka. Čim prije, ali što manje očito.'"},
-{"story": "RAZGOVORI PO PAROVIMA - svaka osoba ima 10 recenica, brojac je po paru"},
-{"story": "Format flag para: p1+p2=12001x, p1+p3=13001x, p1+p4=14001x, p1+p5=15001x, p1+p6=16001x"},
-{"story": "p2+p3=23001x, p2+p4=24001x, p2+p5=25001x, p2+p6=26001x"},
-{"story": "p3+p4=34001x, p3+p5=35001x, p3+p6=36001x, p4+p5=45001x, p4+p6=46001x, p5+p6=56001x"},
-{"story": "Recenice po osobi - p1 Samir"},
+
+  {"story": "PRIBOR ZA OTISKE - Ljubičasti tajni zadatak. Flag 88771 aktivira otiske na svim predmetima."},
+  {"story": "Oliver dobiva na pocetku: 'Pošalji +6 uz broj sobe gdje si. U tom pretraživanju odglumi da ste našli pribor za provjeru otisaka. Čim prije, ali što manje očito.'"},
+  {"story": "RAZGOVORI PO PAROVIMA - svaka osoba ima 10 recenica, brojac je po paru"},
+  {"story": "Format flag para: p1+p2=12001x, p1+p3=13001x, p1+p4=14001x, p1+p5=15001x, p1+p6=16001x"},
+  {"story": "p2+p3=23001x, p2+p4=24001x, p2+p5=25001x, p2+p6=26001x"},
+  {"story": "p3+p4=34001x, p3+p5=35001x, p3+p6=36001x, p4+p5=45001x, p4+p6=46001x, p5+p6=56001x"},
+  {"story": "Recenice po osobi - p1 Samir"},
   {"key": "talk1a", "value": "⚫ Crni: 'Radim za firmu koja čisti ovu vilu već 5 godina. Zvonimir mi je uvijek bio korektan.'"},
   {"key": "talk1b", "value": "⚫ Crni: 'Uzeo sam godišnji. Trebao sam malo zraka, malo odmora.'"},
   {"key": "talk1c", "value": "⚫ Crni: 'Pitao sam Zvonimira mogu li prespavati. Rekao je naravno. Normalno za njega.'"},
@@ -170,8 +179,8 @@
   {"key": "talk1h", "value": "⚫ Crni: 'Kamataši su mi razbili stan. Zato sam pitao Zvonimira za noćenje. Nisam imao kud.'"},
   {"key": "talk1i", "value": "⚫ Crni: 'Ako sam bio tu cijelu noć i nisam ništa čuo... znači ubojica je bio jako tih. Ili ga znam.'"},
   {"key": "talk1j", "value": "⚫ Crni: 'Tko god je koristio taj kombi — mene je slučajno zarobio tu. Da mog auta nije bilo ispred garaže, već bi pobjegli.'"},
-  
-{"story": "Recenice po osobi - p2 Igor"},
+
+  {"story": "Recenice po osobi - p2 Igor"},
   {"key": "talk2a", "value": "🟡 Žuti: 'Radim kao čistač. Čišćenje vila, normalan posao.'"},
   {"key": "talk2b", "value": "🟡 Žuti: 'Javila mi se policija kao i svima. Zato sam došao.'"},
   {"key": "talk2c", "value": "🟡 Žuti: 'Nisam poznavao Zvonimira osobno. Samo sam čistio vilu par puta.'"},
@@ -182,8 +191,8 @@
   {"key": "talk2h", "value": "🟡 Žuti: 'Koliko god tražili, nećete naći ništa na meni. Čist sam.'"},
   {"key": "talk2i", "value": "🟡 Žuti: 'Iskreno, sumnjam na one koji su ga dobro poznavali. Obitelj, prijatelji.'"},
   {"key": "talk2j", "value": "🟡 Žuti: 'Ovdje sam stranac. Baš zato me ne treba sumnjičiti.'"},
-  
-{"story": "Recenice po osobi - p3 Viktor"},
+
+  {"story": "Recenice po osobi - p3 Viktor"},
   {"key": "talk3a", "value": "🔵 Plavi: 'Radim u financijama. Ured u centru, standardan posao.'"},
   {"key": "talk3b", "value": "🔵 Plavi: 'Bio sam na ručku ovdje u petak. Ništa posebno.'"},
   {"key": "talk3c", "value": "🔵 Plavi: 'Zvonimir Farkaš mi je... otac. Nisam to htio odmah reći.'"},
@@ -194,8 +203,8 @@
   {"key": "talk3h", "value": "🔵 Plavi: 'Tablete za srce... znao sam da ih uzima svaki dan. Svi su znali.'"},
   {"key": "talk3i", "value": "🔵 Plavi: 'Nisam jedini koji je imao razlog biti ljut na njega. Sestra je još ljuća od mene.'"},
   {"key": "talk3j", "value": "🔵 Plavi: 'Što god mislite o meni — nisam jedini koji je nešto skrivao u ovoj kući.'"},
-  
-{"story": "Recenice po osobi - p4 Radomir"},
+
+  {"story": "Recenice po osobi - p4 Radomir"},
   {"key": "talk4a", "value": "🔴 Crveni: 'Odvjetnik sam. Radim u firmi koja godinama zastupa Zvonimira Farkaša.'"},
   {"key": "talk4b", "value": "🔴 Crveni: 'Došao sam u petak iz profesionalnih razloga. Promjena oporuke, rutinski posao.'"},
   {"key": "talk4c", "value": "🔴 Crveni: 'Zvonimir je bio klijent. Ništa više od toga.'"},
@@ -206,8 +215,8 @@
   {"key": "talk4h", "value": "🔴 Crveni: 'Kad sam odlazio zalutao sam u podrum. Nisam ni znao da postoji vinski podrum.'"},
   {"key": "talk4i", "value": "🔴 Crveni: 'Rekla mi je što želi. Nisam postavljao previše pitanja.'"},
   {"key": "talk4j", "value": "🔴 Crveni: 'Sve što sam radio, radio sam jer sam joj vjerovao. To je moja jedina greška.'"},
-  
-{"story": "Recenice po osobi - p5 Davor"},
+
+  {"story": "Recenice po osobi - p5 Davor"},
   {"key": "talk5a", "value": "🟢 Zeleni: 'Privatni sam trener. Zvonimir mi je bio klijent već tri godine.'"},
   {"key": "talk5b", "value": "🟢 Zeleni: 'Trening u petak je prošao normalno. Otišao sam kad se otišao tuširati.'"},
   {"key": "talk5c", "value": "🟢 Zeleni: 'Vodio sam biznis s partnericom. Sad sam sam.'"},
@@ -218,8 +227,8 @@
   {"key": "talk5h", "value": "🟢 Zeleni: 'Spustio sam se u podrum po alat. Trebao sam nešto popraviti u teretani.'"},
   {"key": "talk5i", "value": "🟢 Zeleni: 'Ograda na balkonu? Nisam ni bio na balkonu.'"},
   {"key": "talk5j", "value": "🟢 Zeleni: 'Sve što znam je da je čovjek mrtav i da ja nisam imao s tim ništa.'"},
-  
-{"story": "Recenice po osobi - p6 Oliver (novinar cover story, default)"},
+
+  {"story": "Recenice po osobi - p6 Oliver (novinar cover story, default)"},
   {"key": "talk6a", "value": "🟣 Ljubičasti: 'Novinar sam. Istraživao sam Zvonimira Farkaša već nekoliko tjedana.'"},
   {"key": "talk6b", "value": "🟣 Ljubičasti: 'Bogatstvo, poslovne veze, sumnjive transakcije. Ima tu materijala za priču.'"},
   {"key": "talk6c", "value": "🟣 Ljubičasti: 'Dobio sam dojavu da nešto nije u redu. Došao sam provjeriti.'"},
@@ -230,8 +239,8 @@
   {"key": "talk6h", "value": "🟣 Ljubičasti: 'Vidio sam auto ispred garaže ujutro. Nije mi jasno čiji je.'"},
   {"key": "talk6i", "value": "🟣 Ljubičasti: 'Ubojica je još uvijek ovdje. Siguran sam u to.'"},
   {"key": "talk6j", "value": "🟣 Ljubičasti: 'Kad nađemo ubojicu — to je naslovnica.'"},
-  
-{"story": "Recenice p6 Oliver - osiguravatelj cover story (flag 60002)"},
+
+  {"story": "Recenice p6 Oliver - osiguravatelj cover story (flag 60002)"},
   {"key": "talk6a2", "value": "🟣 Ljubičasti: 'Radim za osiguravajuću kuću. Zvonimir ima kod nas veliku policu.'"},
   {"key": "talk6b2", "value": "🟣 Ljubičasti: 'Došao sam u petak promijeniti uvjete police. Rutinski posao.'"},
   {"key": "talk6c2", "value": "🟣 Ljubičasti: 'Polica vrijedi jako puno. U slučaju smrti — isplata ide nasljednicima.'"},
@@ -242,8 +251,8 @@
   {"key": "talk6h2", "value": "🟣 Ljubičasti: 'Jedna stvar me zanima — je li oporuka promijenjena prije smrti?'"},
   {"key": "talk6i2", "value": "🟣 Ljubičasti: 'Ubojica je netko tko je znao za policu. Siguran sam.'"},
   {"key": "talk6j2", "value": "🟣 Ljubičasti: 'Kad riješimo ovo — moja firma neće isplatiti ništa dok se ne utvrdi ubojstvo.'"},
-  
-{"story": "Recenice p6 Oliver - susjed cover story (flag 60003)"},
+
+  {"story": "Recenice p6 Oliver - susjed cover story (flag 60003)"},
   {"key": "talk6a3", "value": "🟣 Ljubičasti: 'Uselio sam se u susjednu vilu prije mjesec dana. Još se upoznajem s okolicom.'"},
   {"key": "talk6b3", "value": "🟣 Ljubičasti: 'Došao sam se u petak predstaviti Zvonimiru. Nisam ga zatekao.'"},
   {"key": "talk6c3", "value": "🟣 Ljubičasti: 'Dobio sam poruku ujutro kao i svi. Odmah sam došao.'"},
