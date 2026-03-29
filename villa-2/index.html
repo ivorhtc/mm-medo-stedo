@@ -498,7 +498,8 @@
           if(roomMap[num] !== undefined || num in Object.fromEntries(Object.entries(roomMap).map(([k,v])=>[v,k]))) {
             // je li ovo parent soba
           }
-          if(numberMap[num].includes(idx)) {
+          const numPlayers = Array.isArray(numberMap[num]) ? numberMap[num] : [];
+          if(numPlayers.includes(idx)) {
             // provjeri je li parent soba
             const parent = roomMap[num] || num;
             sharedRooms.add(parent);
@@ -509,7 +510,8 @@
       const result = new Set(triggeredPlayers);
       allPlayers.forEach((vals, i) => {
         if(!vals) return;
-        vals.forEach(v => {
+        const valsArr = Array.isArray(vals) ? vals : [vals];
+        valsArr.forEach(v => {
           const parent = roomMap[v] || v;
           if(sharedRooms.has(parent)) {
             result.add("Player" + (i+1));
