@@ -248,8 +248,35 @@
   function replaceWinnerPlaceholder(text,winner){
     if(!winner)return text;
     const winnerIdx = parseInt(winner.replace("Player", ""));
-    const winnerName="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].n + "\"";
-    return text.replace(/\$\{winner\}/g,winnerName);
+    const p = playerCache["p"+winnerIdx];
+
+    // short nominativ replace (backwards compat)
+    const winnerName = "\"" + p.icon + " " + p.n + "\"";
+    text = text.replace(/\$\{winner\}/g, winnerName);
+
+    // all cases replaces
+    const winnerNameN = "\"" + p.icon + " " + p.n + "\"";
+    text = text.replace(/\$\{winnerN\}/g, winnerNameN);
+
+    const winnerNameG = "\"" + p.icon + " " + p.g + "\"";
+    text = text.replace(/\$\{winnerG\}/g, winnerNameG);
+
+    const winnerNameD = "\"" + p.icon + " " + p.d + "\"";
+    text = text.replace(/\$\{winnerD\}/g, winnerNameD);
+
+    const winnerNameA = "\"" + p.icon + " " + p.a + "\"";
+    text = text.replace(/\$\{winnerA\}/g, winnerNameA);
+
+    const winnerNameV = "\"" + p.icon + " " + p.v + "\"";
+    text = text.replace(/\$\{winnerV\}/g, winnerNameV);
+
+    const winnerNameL = "\"" + p.icon + " " + p.l + "\"";
+    text = text.replace(/\$\{winnerL\}/g, winnerNameL);
+
+    const winnerNameI = "\"" + p.icon + " " + p.i + "\"";
+    text = text.replace(/\$\{winnerI\}/g, winnerNameI);
+
+    return text;
   }
 
   function updateInputDescriptions(input){
