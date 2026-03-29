@@ -557,14 +557,16 @@ function dispatchItem(eventObj, triggeredPlayers, playerCards, players, numberMa
     // Svim primateljima šalje value
     recipients.forEach(p => playerCards[p].push(eventObj.value || out));
 
-    // Specifične poruke po igračima (p1-p7) i admin
-    [1,2,3,4,5,6,7].forEach(n => {
-      const key  = "p" + n;
+    // Specifične poruke po igračima (p1-p6) - samo ako je igrač u triggeredPlayers
+    // p7 (voditelj) uvijek dobiva
+    [1,2,3,4,5,6].forEach(n => {
+      const key   = "p" + n;
       const pName = "Player" + n;
-      if (eventObj[key] && playerCards[pName]) {
+      if (eventObj[key] && playerCards[pName] && recipients.includes(pName)) {
         playerCards[pName].push(eventObj[key]);
       }
     });
+    if (eventObj.p7) playerCards["Player7"].push(eventObj.p7);
     pushVoditeljInfo(eventObj, playerCards);
   }
 }
@@ -756,7 +758,9 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
       recipients.forEach(p => playerCards[p].push(item.value || out));
     } else {
       dispatchItem(item, triggered, playerCards, players, numberMap, out);
-      pushVoditeljInfo(rule, playerCards);  // global i admin iz rule (item global/admin već u dispatchItem)
+      // Napomena: pushVoditeljInfo za item se poziva unutar dispatchItem
+      // Ovdje dodajemo samo rule-level global/admin (ako postoji odvojeno od item)
+      if (rule.global || rule.admin) pushVoditeljInfo(rule, playerCards);
     }
   });
 
