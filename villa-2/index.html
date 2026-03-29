@@ -484,13 +484,16 @@
       debugLines.push('');
 
       if(res.passed){
-        outputs.push({out, players: res.assignedPlayers});
+        outputs.push({out, players: res.assignedPlayers, admin: r.admin || null});
       }
     });
 
-    outputs.forEach(({out, players}) => {
+    outputs.forEach(({out, players, admin}) => {
       const triggeredPlayers = players;
       if(triggeredPlayers.length===0)return;
+
+      // Ako rule ima admin direktno, ispiši voditelju
+      if(admin) playerCards["Player7"].push(admin);
 
       const eventObj=itemMap[out];
       if(!eventObj)return;
