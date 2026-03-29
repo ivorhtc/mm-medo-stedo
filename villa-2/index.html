@@ -383,10 +383,13 @@
       }
 
       let assigned = [];
-      if(numTokens.length>0){
+      if(playerTokens.length>0){
+        // Ako ima playerTokena, assignaj te igrače (koji su prisutni)
+        assigned = playerTokens
+          .map(pt => parseInt(pt.slice(1),10)-1)
+          .filter(i=>i>=0 && i<players.length && players[i]!==null);
+      } else if(numTokens.length>0){
         assigned = Array.from(combinedSet).sort((a,b)=>a-b);
-      } else if(playerTokens.length>0){
-        assigned = playerTokens.map(pt => parseInt(pt.slice(1),10)-1).filter(i=>i>=0 && i<players.length);
       } else {
         assigned = players.map((v,i)=> v!==null ? i : -1).filter(i=>i>=0);
       }
