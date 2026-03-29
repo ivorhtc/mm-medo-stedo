@@ -4,91 +4,111 @@
   <meta charset="utf-8">
   <title>Murder Mystery Evaluator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <style>
-    :root{
-      --bg1:#171414;
-      --bg2:#2a1c1c;
-      --card:#000000;
-      --accent:#c84b4b;
-      --gold:#d4b46e;
-      --muted:#000000;
-      --panel:#3b2b2b;
+    :root {
+      --bg1: #171414;
+      --bg2: #2a1c1c;
+      --card: #000000;
+      --accent: #c84b4b;
+      --gold: #d4b46e;
     }
-    html,body{
-      height:100%;
-      margin:0;
-      font-family:"Segoe UI",system-ui,sans-serif;
-      background:radial-gradient(circle at 10% 10%,var(--bg2),var(--bg1));
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at 10% 10%, var(--bg2), var(--bg1));
     }
-    .wrap{max-width:1100px;margin:28px auto;padding:20px}
-    .card{
-      background:var(--card);
-      padding:20px;
-      border-radius:12px;
-      color:var(--muted);
-      box-shadow:0 10px 40px rgba(0,0,0,0.6);
+    .wrap { max-width: 1100px; margin: 28px auto; padding: 20px; }
+    .card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
     }
-    h1{color:var(--gold)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
-    .player-container{
-      background:#fff;
-      border-radius:16px;
-      padding:14px;
-      text-align:center;
+    h1 { color: var(--gold); }
+    h3, h4 { color: var(--gold); }
+
+    /* Player grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+    .player-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
     }
-    .player-emoji{font-size:40px}
-    .player-label{font-weight:bold;display:block;margin-bottom:6px}
-    input{
-      width:100%;
-      padding:8px;
-      border-radius:8px;
-      border:none;
-      box-sizing:border-box;
+    .player-emoji { font-size: 40px; }
+    .player-label { font-weight: bold; display: block; margin-bottom: 6px; }
+    .player-box input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      box-sizing: border-box;
     }
-    button{
-      background:var(--accent);
-      border:none;
-      color:#fff;
-      padding:8px 12px;
-      border-radius:8px;
-      cursor:pointer;
-      font-weight:bold;
+    .hint-box {
+      font-size: 12px;
+      margin-top: 6px;
+      color: #333;
+      text-align: left;
     }
-    .controls{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
-    .result-player{
-      margin-top:15px;
-      border-radius:14px;
-      padding:15px;
+    .hint-box div {
+      background: #f3f3f3;
+      padding: 3px 6px;
+      border-radius: 6px;
+      margin-bottom: 3px;
     }
-    .result-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:10px;
+
+    /* Globals input */
+    .globals-row { margin-top: 10px; }
+    .globals-row label { color: var(--gold); display: block; margin-bottom: 4px; }
+    .globals-row input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      box-sizing: border-box;
     }
-    .result-cards div{
-      margin-bottom:6px;
+
+    /* Button */
+    .controls { margin-top: 10px; }
+    button {
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
     }
-    .desc-box{
-      font-size:12px;
-      margin-top:6px;
-      color:#333;
-      text-align:left;
+
+    /* Results */
+    .result-card {
+      margin-top: 15px;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 15px;
     }
-    .desc-box div{
-      background:#f3f3f3;
-      padding:3px 6px;
-      border-radius:6px;
-      margin-bottom:3px;
+    .result-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
     }
-    pre{
-      background:#0d0b0b;
-      color:#ddd;
-      padding:10px;
-      border-radius:8px;
-      max-height:300px;
-      overflow:auto;
+    .result-card-header button {
+      font-size: 12px;
+      padding: 4px 10px;
+    }
+    .result-card-body div { margin-bottom: 6px; }
+
+    /* Debug */
+    pre {
+      background: #0d0b0b;
+      color: #ddd;
+      padding: 10px;
+      border-radius: 8px;
+      max-height: 300px;
+      overflow: auto;
     }
   </style>
 </head>
@@ -96,523 +116,561 @@
 <div class="wrap">
   <div class="card">
 
-    <h1>🎩 Villa 2 Murder Mistery</h1>
+    <h1>🎩 Villa 2 Murder Mystery</h1>
 
+    <!-- Player inputs -->
     <div class="grid">
-      <div class="player-container"><div class="player-emoji">🐈‍⬛⚫</div><label id="label1" class="player-label">Crni<br/>(Samir)</label><input id="p1"><div class="desc-box" id="desc-p1"></div></div>
-      <div class="player-container"><div class="player-emoji">🐥🟡</div><label id="label2" class="player-label">Zuti<br/>(Igor)</label><input id="p2"><div class="desc-box" id="desc-p2"></div></div>
-      <div class="player-container"><div class="player-emoji">🐋🔵</div><label id="label3" class="player-label">Plavi<br/>(Viktor)</label><input id="p3"><div class="desc-box" id="desc-p3"></div></div>
-      <div class="player-container"><div class="player-emoji">🦀🔴</div><label id="label4" class="player-label">Crveni<br/>(Radomir)</label><input id="p4"><div class="desc-box" id="desc-p4"></div></div>
-      <div class="player-container"><div class="player-emoji">🐍🟢</div><label id="label5" class="player-label">Zeleni<br/>(Davor)</label><input id="p5"><div class="desc-box" id="desc-p5"></div></div>
-      <div class="player-container"><div class="player-emoji">🍆🟣</div><label id="label6" class="player-label">LJubicasti<br/>(Oliver)</label><input id="p6"><div class="desc-box" id="desc-p6"></div></div>
-      <div class="player-container"><div class="player-emoji">⚠️⚠️</div><label id="label7" class="player-label">Voditelj</label><input id="p7"><div class="desc-box" id="desc-p7"></div></div>
+      <div class="player-box">
+        <div class="player-emoji">🐈‍⬛⚫</div>
+        <label id="label1" class="player-label">Crni (Samir)</label>
+        <input id="p1">
+        <div class="hint-box" id="desc-p1"></div>
+      </div>
+      <div class="player-box">
+        <div class="player-emoji">🐥🟡</div>
+        <label id="label2" class="player-label">Žuti (Igor)</label>
+        <input id="p2">
+        <div class="hint-box" id="desc-p2"></div>
+      </div>
+      <div class="player-box">
+        <div class="player-emoji">🐋🔵</div>
+        <label id="label3" class="player-label">Plavi (Viktor)</label>
+        <input id="p3">
+        <div class="hint-box" id="desc-p3"></div>
+      </div>
+      <div class="player-box">
+        <div class="player-emoji">🦀🔴</div>
+        <label id="label4" class="player-label">Crveni (Radomir)</label>
+        <input id="p4">
+        <div class="hint-box" id="desc-p4"></div>
+      </div>
+      <div class="player-box">
+        <div class="player-emoji">🐍🟢</div>
+        <label id="label5" class="player-label">Zeleni (Davor)</label>
+        <input id="p5">
+        <div class="hint-box" id="desc-p5"></div>
+      </div>
+      <div class="player-box">
+        <div class="player-emoji">🍆🟣</div>
+        <label id="label6" class="player-label">Ljubičasti (Oliver)</label>
+        <input id="p6">
+        <div class="hint-box" id="desc-p6"></div>
+      </div>
+      <div class="player-box">
+        <div class="player-emoji">⚠️</div>
+        <label id="label7" class="player-label">Voditelj</label>
+        <input id="p7">
+        <div class="hint-box" id="desc-p7"></div>
+      </div>
     </div>
 
-    <div style="margin-top:10px">
-      <label style="color:var(--gold)">Globalni brojevi</label>
-      <input id="p-globalNumbers">
-      <div class="desc-box" id="desc-p-globalNumbers"></div>
+    <!-- Global flags -->
+    <div class="globals-row">
+      <label>Globalni brojevi (flagovi)</label>
+      <input id="p-globalNumbers" placeholder="npr. 80021, 90031, 100001">
+      <div class="hint-box" id="desc-p-globalNumbers"></div>
     </div>
 
+    <!-- Evaluate button -->
     <div class="controls">
       <button id="evalBtn">⚖️ Evaluiraj</button>
     </div>
 
-    <h3 style="color:var(--gold)">Rezultati</h3>
+    <!-- Results -->
+    <h3>Rezultati</h3>
     <div id="result"></div>
 
-    <h4 style="color:var(--gold)">Debug</h4>
+    <!-- Debug -->
+    <h4>Debug</h4>
     <pre id="debug">—</pre>
 
   </div>
 </div>
 
 <script>
+// ============================================================
+// STATE - cachevi koji se pune pri loadu
+// ============================================================
+let rulesCache   = [];  // rules.json
+let settingsCache = []; // settings.json
+let playerCache  = {};  // { p1: {icon,n,g,...}, Player1: {icon,n,g,...}, ... }
+let roomMap      = {};  // { "8001": "8000", "8002": "8000", ... } child→parent
 
-  let rulesCache = [];
-  let settingsCache = [];
-  let roomMap = {}; // broj -> parent soba broj (string)
+// ============================================================
+// LOAD - učitaj sve JSON fileove
+// ============================================================
+async function loadGameFiles() {
+  const [settingsRes, itemsRes, rulesRes] = await Promise.all([
+    fetch("settings.json"),
+    fetch("items.json"),
+    fetch("rules.json"),
+  ]);
+  settingsCache = await settingsRes.json();
+  rulesCache    = await rulesRes.json();
+  const items   = await itemsRes.json();
 
-  async function loadGameFiles(){
-    const [settingsRes, itemsRes, rulesRes] = await Promise.all([
-      fetch("settings.json"),
-      fetch("items.json"),
-      fetch("rules.json")
-    ]);
-    rulesCache = await rulesRes.json();
-    settingsCache = await settingsRes.json();
-    processPlayers(settingsCache);
-    processRooms(settingsCache);
+  buildPlayerCache(settingsCache);
+  buildRoomMap(settingsCache);
+
+  return { items, rules: rulesCache };
+}
+
+// ============================================================
+// SETTINGS PROCESSING
+// ============================================================
+
+// Gradi playerCache iz settings.json
+// { p1: "Samir", attr: { icon, n, g, ... } } → playerCache["p1"] = attr
+function buildPlayerCache(settings) {
+  playerCache = {};
+  settings.forEach(obj => {
+    for (const key in obj) {
+      if (key.startsWith("p") && !isNaN(key.slice(1))) {
+        const idx = parseInt(key.slice(1));
+        playerCache[key]           = obj.attr;
+        playerCache["Player" + idx] = obj.attr;
+        // Postavi ime i boju u UI
+        setPlayerLabel(idx, obj[key]);
+        if (obj.color) setPlayerColor(idx, obj.color);
+      }
+    }
+  });
+}
+
+// Gradi roomMap iz settings.json
+// { "rooms": { "8000": ["8001","8002",...] } } → roomMap["8001"] = "8000"
+function buildRoomMap(settings) {
+  roomMap = {};
+  settings.forEach(obj => {
+    if (!obj.rooms) return;
+    Object.entries(obj.rooms).forEach(([parent, children]) => {
+      children.forEach(child => {
+        roomMap[child.toString()] = parent.toString();
+      });
+    });
+  });
+}
+
+// ============================================================
+// PLAYER INPUT
+// ============================================================
+
+// Čita inpute igrača, vraća array of (array of strings | null)
+function readPlayerInputs() {
+  return Array.from(document.querySelectorAll("[id^='p']")).map(input => {
+    const v = input.value.trim();
+    if (!v) return null;
+    return v.split(/[;,]/).map(x => x.trim()).filter(Boolean);
+  });
+}
+
+// Za svakog igrača dodaje parent sobu ako je unio podbroj
+// npr. "8001" → dodaje i "8000"
+function expandWithParentRooms(players) {
+  return players.map(vals => {
+    if (!vals) return null;
+    const expanded = new Set(vals);
+    vals.forEach(v => {
+      const parent = roomMap[v];
+      if (parent) expanded.add(parent);
+    });
+    return Array.from(expanded);
+  });
+}
+
+// ============================================================
+// NUMBER MAP
+// Gradi mapu: broj → [indeksi igrača koji imaju taj broj]
+// Globalni flagovi se tretiraju kao da ih ima svaki prisutni igrač
+// ============================================================
+function buildNumberMap(players, globals) {
+  const map = {};
+
+  players.forEach((vals, i) => {
+    if (!vals) return;
+    vals.forEach(n => {
+      if (!map[n]) map[n] = new Set();
+      map[n].add(i);
+    });
+  });
+
+  globals.forEach(g => {
+    if (!map[g]) map[g] = new Set();
+    players.forEach((v, i) => { if (v) map[g].add(i); });
+  });
+
+  // Pretvori Setove u arraye
+  const out = {};
+  Object.keys(map).forEach(k => out[k] = Array.from(map[k]));
+  return out;
+}
+
+// ============================================================
+// RULE EVALUATOR
+// Parsira cond string i vraća funkciju evaluate(context)
+// Podržava: brojeve, p1-p6, min/maxNp, AND, OR, NOT
+// ============================================================
+function makeEvaluator(condString) {
+  const s = (condString || '').replace(/\s+/g, ' ').trim();
+
+  // Izvuci sve tokene iz uvjeta
+  const numTokens    = [...new Set(s.match(/\b\d+\b/g)   || [])];
+  const playerTokens = [...new Set((s.match(/\bp\d+\b/ig) || []).map(t => t.toLowerCase()))];
+  const minMaxTokens = [...new Set((s.match(/\b(min|max)\d+p\b/ig) || []).map(t => t.toLowerCase()))];
+
+  return function evaluate({ players, numberMap }) {
+
+    // --- Za svaki broj: koji igrači ga imaju ---
+    const playersForNumber = {};
+    numTokens.forEach(n => {
+      playersForNumber[n] = numberMap[n] || [];
+    });
+
+    // combinedSet = svi igrači koji imaju bilo koji od traženih brojeva
+    const combinedSet = new Set();
+    numTokens.forEach(n => playersForNumber[n].forEach(i => combinedSet.add(i)));
+
+    // --- varMap: token → boolean ---
+    const varMap = {};
+
+    // Brojevi: true ako ih ima barem jedan igrač
+    numTokens.forEach(n => {
+      varMap[n] = playersForNumber[n].length > 0;
+    });
+
+    // Igrači: true ako je igrač prisutan (ima unos), neovisno o brojevima
+    playerTokens.forEach(pt => {
+      const idx = parseInt(pt.slice(1), 10) - 1;
+      varMap[pt] = players[idx] !== null;
+    });
+
+    // min/maxNp: true ako je broj igrača u combinedSet >= ili <= N
+    minMaxTokens.forEach(tok => {
+      const m = tok.match(/(min|max)(\d+)p/i);
+      if (!m) return;
+      const n = parseInt(m[2], 10);
+      varMap[tok] = m[1] === 'min' ? combinedSet.size >= n : combinedSet.size <= n;
+    });
+
+    // --- Zamijeni tokene u expression stringu ---
+    let expr = s
+      .replace(/\bNOT\b/ig, '!')
+      .replace(/\bAND\b/ig, '&&')
+      .replace(/\bOR\b/ig,  '||');
+
+    // Sortiraj tokene od najduljeg prema najkraćem da izbjegnemo parcijalne zamjene
+    const allTokens = [...minMaxTokens, ...playerTokens, ...numTokens]
+      .sort((a, b) => b.length - a.length);
+
+    allTokens.forEach(tok => {
+      const re  = new RegExp('\\b' + tok.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'ig');
+      const val = varMap[tok] ?? false;
+      expr = expr.replace(re, val ? 'true' : 'false');
+    });
+
+    // Zamijeni preostale p-tokene i brojeve s false
+    expr = expr
+      .replace(/\bp\d+\b/ig, 'false')
+      .replace(/\b\d+\b/g, m => (varMap[m] ? 'true' : 'false'))
+      .replace(/\s+/g, ' ');
+
+    // --- Evaluiraj ---
+    let passed = false;
+    let evalError = null;
+    try {
+      passed = Function('"use strict"; return (' + expr + ');')();
+    } catch (e) {
+      evalError = e.toString();
+    }
+
+    // --- Odredi assignedPlayers ---
+    // Ako postoje playerTokeni → assignaj te igrače (koji su prisutni)
+    // Ako samo brojevi → assignaj igrače iz combinedSet
+    // Inače → svi prisutni igrači
+    let assigned;
+    if (playerTokens.length > 0) {
+      assigned = playerTokens
+        .map(pt => parseInt(pt.slice(1), 10) - 1)
+        .filter(i => i >= 0 && i < players.length && players[i] !== null);
+    } else if (numTokens.length > 0) {
+      assigned = [...combinedSet].sort((a, b) => a - b);
+    } else {
+      assigned = players.map((v, i) => v !== null ? i : -1).filter(i => i >= 0);
+    }
+
+    // Makni igrače koji su eksplicitno isključeni s NOT p#
+    const notMatches = s.match(/\bNOT\s+p\d+\b/ig) || [];
+    notMatches.forEach(m => {
+      const idx = parseInt(m.match(/\d+/)[0], 10) - 1;
+      assigned = assigned.filter(x => x !== idx);
+    });
 
     return {
-      settings: settingsCache,
-      items: await itemsRes.json(),
-      rules: rulesCache
+      passed,
+      expr,
+      evalError,
+      assignedPlayers: assigned.map(i => 'Player' + (i + 1)),
     };
-  }
+  };
+}
 
-  let playerCache = {};
+// ============================================================
+// PLACEHOLDER ZAMJENA
+// ${winner} / ${winnerN} / ${winnerG} / ... → ime pobjednika u padežu
+// ============================================================
+function replacePlaceholders(text, winnerPlayerName) {
+  if (!winnerPlayerName) return text;
+  const idx = parseInt(winnerPlayerName.replace("Player", ""));
+  const p   = playerCache["p" + idx];
+  if (!p) return text;
 
-  function processPlayers(settings) {
-    settings.forEach(obj=>{
-      for(let key in obj){
-        if(key.startsWith("p")){
-          const idx=parseInt(key.slice(1));
-          playerCache[key] = obj.attr;
-          playerCache["Player" + idx] = obj.attr;
-        }
+  return text
+    .replace(/\$\{winner\}/g,  `"${p.icon} ${p.n}"`)
+    .replace(/\$\{winnerN\}/g, `"${p.icon} ${p.n}"`)
+    .replace(/\$\{winnerG\}/g, `"${p.icon} ${p.g}"`)
+    .replace(/\$\{winnerD\}/g, `"${p.icon} ${p.d}"`)
+    .replace(/\$\{winnerA\}/g, `"${p.icon} ${p.a}"`)
+    .replace(/\$\{winnerV\}/g, `"${p.icon} ${p.v}"`)
+    .replace(/\$\{winnerL\}/g, `"${p.icon} ${p.l}"`)
+    .replace(/\$\{winnerI\}/g, `"${p.icon} ${p.i}"`);
+}
+
+// ============================================================
+// ROOM BROADCAST
+// Za talk iteme: pronađi sve igrače koji su u istoj sobi
+// s triggeriranim igračima i pošalji im poruku
+// ============================================================
+function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
+  // 1. Skupi sve parent sobe triggeriranih igrača
+  const sharedRooms = new Set();
+  triggeredPlayers.forEach(pName => {
+    const idx = parseInt(pName.replace("Player", "")) - 1;
+    Object.entries(numberMap).forEach(([num, playerIdxs]) => {
+      if (playerIdxs.includes(idx)) {
+        sharedRooms.add(roomMap[num] || num); // parent ili sam broj ako nema parenta
       }
-    });
-  }
-
-  // Gradi roomMap iz settings.json objekta koji ima "rooms" key
-  // rooms: { "8000": [8001, 8002, 8003, ...], "4000": [4001, 4002, ...], ... }
-  function processRooms(settings) {
-    roomMap = {};
-    settings.forEach(obj => {
-      if(obj.rooms) {
-        Object.keys(obj.rooms).forEach(parentRoom => {
-          const children = obj.rooms[parentRoom];
-          children.forEach(child => {
-            roomMap[child.toString()] = parentRoom.toString();
-          });
-        });
-      }
-    });
-    console.log("roomMap:", JSON.stringify(roomMap, null, 2));
-  }
-
-  // Za svakog igrača expandaj njegove brojeve s parent sobama
-  // Ako igrač ima 8001 i roomMap["8001"] = "8000", dodaj "8000" u njegov set
-  function expandPlayerNumbers(players) {
-    return players.map(vals => {
-      if(!vals) return null;
-      const expanded = new Set(vals);
-      vals.forEach(v => {
-        const parent = roomMap[v.toString()];
-        if(parent && !expanded.has(parent)) {
-          expanded.add(parent);
-        }
-      });
-      return Array.from(expanded);
-    });
-  }
-
-  function getPlayers() {
-    const playerInputs = document.querySelectorAll("[id^='p']");
-    return Array.from(playerInputs).map(input => {
-      const v = input.value.trim();
-      if(!v) return null;
-      return v.split(/[;,]/)
-        .map(x => x.trim())
-        .filter(x => x.length > 0);
-    });
-  }
-
-  function parseList(s){
-    if(!s)return[];
-    return s.split(',').map(x=>x.trim()).filter(x=>x);
-  }
-
-  function buildNumberMap(players, globals){
-    const map={};
-    players.forEach((vals,i)=>{
-      if(!vals)return;
-      vals.forEach(n=>{
-        if(!map[n]) map[n]=new Set();
-        map[n].add(i);
-      });
-    });
-    globals.forEach(g=>{
-      if(!map[g])map[g]=new Set();
-      players.forEach((v,i)=>{if(v)map[g].add(i);});
-    });
-    const out={};
-    Object.keys(map).forEach(k=>out[k]=Array.from(map[k]));
-    return out;
-  }
-
-  function setPlayerName(i,name){
-    document.getElementById("label"+i).innerText=name;
-  }
-
-  function setPlayerColor(i,color){
-    document.getElementsByClassName("player-container")[i-1].style.background=color;
-  }
-
-  function copyText(t){
-    navigator.clipboard.writeText(t);
-    alert("Copied!");
-  }
-
-  function replaceWinnerPlaceholder(text,winner){
-    if(!winner)return text;
-    const winnerIdx = parseInt(winner.replace("Player", ""));
-    const p = playerCache["p"+winnerIdx];
-
-    // short nominativ replace (backwards compat)
-    const winnerName = "\"" + p.icon + " " + p.n + "\"";
-    text = text.replace(/\$\{winner\}/g, winnerName);
-
-    // all cases replaces
-    const winnerNameN = "\"" + p.icon + " " + p.n + "\"";
-    text = text.replace(/\$\{winnerN\}/g, winnerNameN);
-
-    const winnerNameG = "\"" + p.icon + " " + p.g + "\"";
-    text = text.replace(/\$\{winnerG\}/g, winnerNameG);
-
-    const winnerNameD = "\"" + p.icon + " " + p.d + "\"";
-    text = text.replace(/\$\{winnerD\}/g, winnerNameD);
-
-    const winnerNameA = "\"" + p.icon + " " + p.a + "\"";
-    text = text.replace(/\$\{winnerA\}/g, winnerNameA);
-
-    const winnerNameV = "\"" + p.icon + " " + p.v + "\"";
-    text = text.replace(/\$\{winnerV\}/g, winnerNameV);
-
-    const winnerNameL = "\"" + p.icon + " " + p.l + "\"";
-    text = text.replace(/\$\{winnerL\}/g, winnerNameL);
-
-    const winnerNameI = "\"" + p.icon + " " + p.i + "\"";
-    text = text.replace(/\$\{winnerI\}/g, winnerNameI);
-
-    return text;
-  }
-
-  function updateInputDescriptions(input){
-    const values = input.value
-      .split(/[;,]/)
-      .map(v=>v.trim())
-      .filter(v=>v);
-    const descBox = document.getElementById("desc-"+input.id);
-
-    if(values.length===0){
-      descBox.innerHTML="";
-      return;
-    }
-    const descs = [];
-    values.forEach(v=>{
-      rulesCache.forEach(r=>{
-        if(r.cond === v && r.desc){
-          descs.push(r.desc);
-        }
-      });
-    });
-    descBox.innerHTML = descs.map(d=>`<div>${d}</div>`).join("");
-  }
-
-  document.querySelectorAll("[id^='p']").forEach(input=>{
-    let timer=null;
-    input.addEventListener("input",()=>{
-      clearTimeout(timer);
-      timer=setTimeout(()=>{
-        updateInputDescriptions(input);
-      },300);
     });
   });
 
-  function makeEvaluator(condString) {
-    let s = condString ? condString.replace(/\s+/g,' ').trim() : '';
-    const numTokens = Array.from(new Set((s.match(/\b\d+\b/g) || [])));
-    const playerTokens = Array.from(new Set((s.match(/\bp\d+\b/ig) || []).map(t=>t.toLowerCase())));
-    const minMaxTokens = Array.from(new Set((s.match(/\b(min|max)\d+p\b/ig) || []).map(t=>t.toLowerCase())));
-
-    return function evaluate(context){
-      const numberMap = context.numberMap;
-      const playersForNumber = {};
-      numTokens.forEach(n => {
-        playersForNumber[n] = (numberMap[n] || []).slice();
-      });
-
-      let combinedSet = new Set();
-      numTokens.forEach(n => {
-        (playersForNumber[n] || []).forEach(i => combinedSet.add(i));
-      });
-      const countCombined = combinedSet.size;
-
-      const varMap = {};
-      numTokens.forEach(n => varMap[n] = (playersForNumber[n] && playersForNumber[n].length>0));
-
-      const players = context.players;
-      playerTokens.forEach(pt => {
-        const num = parseInt(pt.slice(1),10);
-        const idx = num-1;
-        // Uvijek gledamo je li igrac prisutan (ima unos), neovisno o numTokens
-        // combinedSet ovisi samo o numTokenima pa nije pouzdan za playerTokene
-        varMap[pt] = players[idx] !== null;
-      });
-
-      minMaxTokens.forEach(tok => {
-        const m = tok.match(/(min|max)(\d+)p/i);
-        if(m){
-          const typ = m[1].toLowerCase();
-          const n = parseInt(m[2],10);
-          if(typ === 'min') varMap[tok] = (countCombined >= n);
-          else varMap[tok] = (countCombined <= n);
-        }
-      });
-
-      let expr = s;
-      expr = expr.replace(/\bNOT\b/ig, '!');
-      expr = expr.replace(/\bAND\b/ig, '&&');
-      expr = expr.replace(/\bOR\b/ig, '||');
-
-      const allTokens = minMaxTokens.concat(playerTokens).concat(numTokens);
-      allTokens.sort((a,b)=>b.length-a.length);
-
-      allTokens.forEach(tok=>{
-        const re = new RegExp('\\b' + tok.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\b', 'ig');
-        const val = (tok in varMap) ? varMap[tok] : false;
-        expr = expr.replace(re, val ? 'true' : 'false');
-      });
-
-      expr = expr.replace(/\bp\d+\b/ig, 'false');
-      expr = expr.replace(/\b\d+\b/g, function(m){
-        return (m in varMap && varMap[m]) ? 'true' : 'false';
-      });
-
-      expr = expr.replace(/\s+/g,' ');
-
-      let passed = false;
-      let evalError = null;
-      try {
-        passed = Function('"use strict"; return (' + expr + ');')();
-      } catch(e){
-        evalError = e.toString();
-        passed = false;
-      }
-
-      let assigned = [];
-      if(playerTokens.length>0){
-        // Ako ima playerTokena, assignaj te igrače (koji su prisutni)
-        assigned = playerTokens
-          .map(pt => parseInt(pt.slice(1),10)-1)
-          .filter(i=>i>=0 && i<players.length && players[i]!==null);
-      } else if(numTokens.length>0){
-        assigned = Array.from(combinedSet).sort((a,b)=>a-b);
-      } else {
-        assigned = players.map((v,i)=> v!==null ? i : -1).filter(i=>i>=0);
-      }
-
-      const notPlayerMatches = s.match(/\bNOT\s+p\d+\b/ig) || s.match(/\bnot\s+p\d+\b/ig) || [];
-      notPlayerMatches.forEach(m=>{
-        const p = m.match(/\d+/);
-        if(p){
-          const idx = parseInt(p[0],10)-1;
-          assigned = assigned.filter(x=>x !== idx);
-        }
-      });
-
-      const assignedPlayers = assigned.map(i => 'Player' + (i+1));
-
-      return {
-        passed,
-        expr,
-        evalError,
-        numTokens,
-        playerTokens,
-        minMaxTokens,
-        playersForNumber,
-        combinedPlayers: Array.from(combinedSet),
-        assignedPlayers
-      };
-    };
-  }
-
-  document.getElementById("evalBtn").addEventListener("click", async ()=>{
-
-    const {settings, items, rules} = await loadGameFiles();
-
-    const rawPlayers = getPlayers();
-    const globals = parseList(document.getElementById("p-globalNumbers").value);
-
-    // ROOM EXPANSION - expandaj parent sobe za svakog igrača
-    const players = expandPlayerNumbers(rawPlayers);
-
-    // Debug: pokaži što je expandano
-    const expansionDebug = rawPlayers.map((raw, i) => {
-      if(!raw) return null;
-      const expanded = players[i];
-      const added = expanded ? expanded.filter(x => !raw.includes(x)) : [];
-      return added.length > 0 ? `Player${i+1} +rooms: [${added.join(', ')}]` : null;
-    }).filter(Boolean);
-
-    const numberMap = buildNumberMap(players, globals);
-    console.log('numberMap:', JSON.stringify(numberMap, null, 2));
-
-    const itemMap={};
-    items.forEach(obj=>itemMap[obj.key]=obj);
-
-    const playerCards={};
-    players.forEach((v,i)=>{
-      playerCards["Player"+(i+1)]=[];
-    });
-
-    // SETTINGS - imena i boje
-    settings.forEach(obj=>{
-      for(let key in obj){
-        if(key.startsWith("p")){
-          const idx=parseInt(key.slice(1));
-          setPlayerName(idx,obj[key]);
-          if(obj.color)setPlayerColor(idx,obj.color);
-        }
+  // 2. Pronađi sve igrače koji su u bilo kojoj od tih soba
+  const result = new Set(triggeredPlayers);
+  allPlayers.forEach((vals, i) => {
+    if (!vals) return;
+    const arr = Array.isArray(vals) ? vals : [vals];
+    arr.forEach(v => {
+      if (sharedRooms.has(roomMap[v] || v)) {
+        result.add("Player" + (i + 1));
       }
     });
-
-    let debugLines=[];
-
-    if(expansionDebug.length > 0) {
-      debugLines.push('=== ROOM EXPANSION ===');
-      expansionDebug.forEach(l => debugLines.push(l));
-      debugLines.push('');
-    }
-
-    debugLines.push('=== RULES ===');
-
-    // RULES
-    const outputs = [];
-    rules.forEach((r, idx) => {
-      const cond = (r.cond || '').toString();
-      const out = r.out || ('out_'+idx);
-      const evaler = makeEvaluator(cond);
-      const res = evaler({players, numberMap});
-      debugLines.push(`Rule ${idx+1}: cond="${cond}" out="${out}"`);
-      debugLines.push(' -> expr: ' + res.expr);
-      if(res.evalError) debugLines.push(' -> eval error: ' + res.evalError);
-      debugLines.push(' -> passed: ' + res.passed);
-      debugLines.push(' -> assigned: ' + JSON.stringify(res.assignedPlayers));
-      debugLines.push('');
-
-      if(res.passed){
-        outputs.push({out, players: res.assignedPlayers, admin: r.admin || null});
-      }
-    });
-
-    // Pomoćna funkcija: za talk iteme pronađi sve igrače koji su u istoj sobi s triggeriranim igračima
-    function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
-      // Skupi sve sobe koje triggerani igrači dijele
-      const sharedRooms = new Set();
-      triggeredPlayers.forEach(pName => {
-        const idx = parseInt(pName.replace("Player","")) - 1;
-        Object.keys(numberMap).forEach(num => {
-          if(roomMap[num] !== undefined || num in Object.fromEntries(Object.entries(roomMap).map(([k,v])=>[v,k]))) {
-            // je li ovo parent soba
-          }
-          const numPlayers = Array.isArray(numberMap[num]) ? numberMap[num] : [];
-          if(numPlayers.includes(idx)) {
-            // provjeri je li parent soba
-            const parent = roomMap[num] || num;
-            sharedRooms.add(parent);
-          }
-        });
-      });
-      // Pronađi sve igrače koji su u bilo kojoj od tih soba
-      const result = new Set(triggeredPlayers);
-      allPlayers.forEach((vals, i) => {
-        if(!vals) return;
-        const valsArr = Array.isArray(vals) ? vals : [vals];
-        valsArr.forEach(v => {
-          const parent = roomMap[v] || v;
-          if(sharedRooms.has(parent)) {
-            result.add("Player" + (i+1));
-          }
-        });
-      });
-      return Array.from(result);
-    }
-
-    outputs.forEach(({out, players, admin}) => {
-      const triggeredPlayers = players;
-      if(triggeredPlayers.length===0)return;
-
-      // Ako rule ima admin direktno, ispiši voditelju
-      if(admin) playerCards["Player7"].push(admin);
-
-      const eventObj=itemMap[out];
-      if(!eventObj)return;
-
-      if(eventObj.type==="event"){
-        const involved=[...triggeredPlayers];
-        let winnerIdx=null;
-
-        if(eventObj.logic?.winnerStrategy==="priorityList"){
-          const priority=eventObj.logic.priorityList;
-          for(let p of priority){
-            const idx=p.replace("p","Player");
-            if(involved.includes(idx)){
-              winnerIdx=idx;
-              break;
-            }
-          }
-        }
-
-        if(winnerIdx && eventObj.output.winner){
-          playerCards[winnerIdx].push(eventObj.output.winner);
-        }
-
-        involved.forEach(involvedPlayer=>{
-          if(involvedPlayer!==winnerIdx && eventObj.output.others){
-            const txt=replaceWinnerPlaceholder(eventObj.output.others, winnerIdx);
-            playerCards[involvedPlayer].push(txt);
-          }
-        });
-
-        Object.keys(eventObj.output).forEach(key=>{
-          if(key==="winner"||key==="others")return;
-          if(key.startsWith("p")){
-            const idx=parseInt(key.slice(1));
-            if(playerCards["Player"+idx]){
-              const txt=replaceWinnerPlaceholder(eventObj.output[key], winnerIdx);
-              playerCards["Player"+idx].push(txt);
-            }
-          }
-        });
-
-      } else {
-        // Za talk iteme - proširi na sve igrače u istoj sobi
-        const isTalkItem = out.startsWith('talk');
-        const recipients = isTalkItem
-          ? getPlayersInSameRoom(triggeredPlayers, numberMap, players)
-          : triggeredPlayers;
-
-        // običan item - šalje value svim primateljima
-        recipients.forEach(playerName=>{
-          playerCards[playerName].push(eventObj.value||out);
-        });
-        // specifični igrači i admin
-        if(eventObj.admin) playerCards["Player7"].push(eventObj.admin);
-        if(eventObj.p1)    playerCards["Player1"].push(eventObj.p1);
-        if(eventObj.p2)    playerCards["Player2"].push(eventObj.p2);
-        if(eventObj.p3)    playerCards["Player3"].push(eventObj.p3);
-        if(eventObj.p4)    playerCards["Player4"].push(eventObj.p4);
-        if(eventObj.p5)    playerCards["Player5"].push(eventObj.p5);
-        if(eventObj.p6)    playerCards["Player6"].push(eventObj.p6);
-        if(eventObj.p7)    playerCards["Player7"].push(eventObj.p7);
-      }
-    });
-
-    let html="";
-    Object.keys(playerCards).forEach(p=>{
-      if(playerCards[p].length===0)return;
-      const text=playerCards[p].join("\n\n");
-      const idx=parseInt(p.replace("Player",""));
-      const name=document.getElementById("label"+idx).innerText;
-      html+=`
-    <div class="result-player" style="background:#ffffff">
-      <div class="result-header">
-        <strong>${name}</strong>
-        <button onclick="copyText(\`${text.replace(/`/g,"'")}\`)">Copy</button>
-      </div>
-      <div class="result-cards">
-        ${playerCards[p].map(c=>`<div>${c}</div>`).join("")}
-      </div>
-    </div>`;
-    });
-
-    document.getElementById("result").innerHTML=html||"Nema rezultata.";
-    document.getElementById('debug').innerText = debugLines.join('\n');
-
   });
+
+  return Array.from(result);
+}
+
+// ============================================================
+// ITEM DISPATCH
+// Procesira jedan triggerirani output i upisuje u playerCards
+// ============================================================
+function dispatchItem(eventObj, triggeredPlayers, playerCards, players, numberMap, out) {
+
+  // --- Event tip (pištolj, injekcija...) ---
+  if (eventObj.type === "event") {
+    const involved = [...triggeredPlayers];
+
+    // Odredi pobjednika prema priorityList
+    let winner = null;
+    if (eventObj.logic?.winnerStrategy === "priorityList") {
+      for (const p of eventObj.logic.priorityList) {
+        const pName = p.replace("p", "Player");
+        if (involved.includes(pName)) { winner = pName; break; }
+      }
+    }
+
+    // Pobjednik dobiva winner tekst
+    if (winner && eventObj.output.winner) {
+      playerCards[winner].push(eventObj.output.winner);
+    }
+
+    // Ostali dobivaju others tekst
+    involved.forEach(p => {
+      if (p !== winner && eventObj.output.others) {
+        playerCards[p].push(replacePlaceholders(eventObj.output.others, winner));
+      }
+    });
+
+    // Specifični igrači (p3, p7...) u output objektu
+    Object.entries(eventObj.output).forEach(([key, val]) => {
+      if (key === "winner" || key === "others") return;
+      if (key.startsWith("p")) {
+        const pName = "Player" + parseInt(key.slice(1));
+        if (playerCards[pName]) {
+          playerCards[pName].push(replacePlaceholders(val, winner));
+        }
+      }
+    });
+
+  // --- Obični item ---
+  } else {
+    // Talk itemi → svi u istoj sobi čuju; ostali → samo triggerirani
+    const isTalk     = out.startsWith("talk");
+    const recipients = isTalk
+      ? getPlayersInSameRoom(triggeredPlayers, numberMap, players)
+      : triggeredPlayers;
+
+    // Svim primateljima šalje value
+    recipients.forEach(p => playerCards[p].push(eventObj.value || out));
+
+    // Specifične poruke po igračima (p1-p7) i admin
+    [1,2,3,4,5,6,7].forEach(n => {
+      const key  = "p" + n;
+      const pName = "Player" + n;
+      if (eventObj[key] && playerCards[pName]) {
+        playerCards[pName].push(eventObj[key]);
+      }
+    });
+    if (eventObj.admin) playerCards["Player7"].push(eventObj.admin);
+  }
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function setPlayerLabel(i, name) {
+  const el = document.getElementById("label" + i);
+  if (el) el.innerText = name;
+}
+function setPlayerColor(i, color) {
+  const boxes = document.getElementsByClassName("player-box");
+  if (boxes[i - 1]) boxes[i - 1].style.background = color;
+}
+function copyText(t) {
+  navigator.clipboard.writeText(t);
+  alert("Kopirano!");
+}
+
+// Hint box ispod inputa — prikazuje desc iz rules kad upisuješ broj
+function updateHints(input) {
+  const vals = input.value.split(/[;,]/).map(v => v.trim()).filter(Boolean);
+  const box  = document.getElementById("desc-" + input.id);
+  if (!box) return;
+  const hints = vals.flatMap(v =>
+    rulesCache.filter(r => r.cond === v && r.desc).map(r => r.desc)
+  );
+  box.innerHTML = hints.map(d => `<div>${d}</div>`).join("");
+}
+
+// Debounced input listener za hint boxove
+document.querySelectorAll("[id^='p']").forEach(input => {
+  let timer = null;
+  input.addEventListener("input", () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => updateHints(input), 300);
+  });
+});
+
+// ============================================================
+// RENDER RESULTS
+// ============================================================
+function renderResults(playerCards) {
+  let html = "";
+  Object.entries(playerCards).forEach(([pName, cards]) => {
+    if (cards.length === 0) return;
+    const idx  = parseInt(pName.replace("Player", ""));
+    const name = document.getElementById("label" + idx)?.innerText || pName;
+    const text = cards.join("\n\n");
+    html += `
+      <div class="result-card">
+        <div class="result-card-header">
+          <strong>${name}</strong>
+          <button onclick="copyText(\`${text.replace(/`/g, "'")}\`)">Copy</button>
+        </div>
+        <div class="result-card-body">
+          ${cards.map(c => `<div>${c}</div>`).join("")}
+        </div>
+      </div>`;
+  });
+  document.getElementById("result").innerHTML = html || "Nema rezultata.";
+}
+
+// ============================================================
+// MAIN - klik na Evaluiraj
+// ============================================================
+document.getElementById("evalBtn").addEventListener("click", async () => {
+
+  // 1. Učitaj fileove
+  const { items, rules } = await loadGameFiles();
+
+  // 2. Čitaj inpute
+  const rawPlayers = readPlayerInputs();
+  const globals    = (document.getElementById("p-globalNumbers").value || "")
+    .split(",").map(x => x.trim()).filter(Boolean);
+
+  // 3. Expandaj sobe (8001 → dodaj i 8000)
+  const players   = expandWithParentRooms(rawPlayers);
+  const numberMap = buildNumberMap(players, globals);
+
+  // 4. Pripremi item lookup mapu
+  const itemMap = {};
+  items.forEach(obj => { if (obj.key) itemMap[obj.key] = obj; });
+
+  // 5. Pripremi kartice rezultata (jedna po igraču)
+  const playerCards = {};
+  players.forEach((_, i) => playerCards["Player" + (i + 1)] = []);
+
+  // 6. Debug info
+  const debugLines = [];
+
+  // Room expansion info
+  rawPlayers.forEach((raw, i) => {
+    if (!raw) return;
+    const added = (players[i] || []).filter(x => !raw.includes(x));
+    if (added.length > 0) debugLines.push(`Player${i+1} +rooms: [${added.join(", ")}]`);
+  });
+  if (debugLines.length) { debugLines.push(""); }
+
+  // 7. Evaluiraj pravila
+  const outputs = [];
+  rules.forEach((rule, idx) => {
+    if (!rule.cond) return; // preskoči story komentare
+
+    const cond    = rule.cond.toString();
+    const out     = rule.out || ("out_" + idx);
+    const evaluate = makeEvaluator(cond);
+    const result  = evaluate({ players, numberMap });
+
+    debugLines.push(`Rule ${idx+1}: cond="${cond}" out="${out}"`);
+    debugLines.push(`  expr:     ${result.expr}`);
+    debugLines.push(`  passed:   ${result.passed}`);
+    debugLines.push(`  assigned: ${JSON.stringify(result.assignedPlayers)}`);
+    if (result.evalError) debugLines.push(`  ERROR:    ${result.evalError}`);
+    debugLines.push("");
+
+    if (result.passed) {
+      outputs.push({
+        out,
+        players:  result.assignedPlayers,
+        admin:    rule.admin || null,
+      });
+    }
+  });
+
+  // 8. Dispatch — za svaki triggerirani output upiši u playerCards
+  outputs.forEach(({ out, players: triggered, admin }) => {
+    if (triggered.length === 0) return;
+
+    // Admin iz rule direktno ide Voditelju
+    if (admin) playerCards["Player7"].push(admin);
+
+    const item = itemMap[out];
+    if (!item) return;
+
+    dispatchItem(item, triggered, playerCards, players, numberMap, out);
+  });
+
+  // 9. Renderiraj rezultate i debug
+  renderResults(playerCards);
+  document.getElementById("debug").innerText = debugLines.join("\n");
+});
 </script>
 </body>
 </html>
