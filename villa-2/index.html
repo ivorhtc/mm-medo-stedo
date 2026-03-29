@@ -443,12 +443,18 @@ function replacePlaceholders(text, winnerPlayerName) {
 function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
   // 1. Za svakog triggeriranog igrača skupi njegove sobe
   const roomsPerPlayer = {};
+  // Skupi sve parent sobe (sve vrijednosti u roomMap)
+  const allParentRooms = new Set(Object.values(roomMap));
+
   triggeredPlayers.forEach(pName => {
     const idx = parseInt(pName.replace("Player", "")) - 1;
     roomsPerPlayer[pName] = new Set();
     Object.entries(numberMap).forEach(([num, playerIdxs]) => {
-      if (playerIdxs.includes(idx)) {
-        roomsPerPlayer[pName].add(roomMap[num] || num);
+      if (!playerIdxs.includes(idx)) return;
+      const parent = roomMap[num] || num;
+      // Ignoriraj globalne flagove - prihvati samo prave sobe (parent sobe ili podbroje soba)
+      if (allParentRooms.has(parent) || roomMap[num]) {
+        roomsPerPlayer[pName].add(parent);
       }
     });
   });
