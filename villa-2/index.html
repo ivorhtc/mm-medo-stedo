@@ -451,21 +451,19 @@ function replacePlaceholders(text, winnerPlayerName) {
 // s triggeriranim igračima i pošalji im poruku
 // ============================================================
 function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
-  // 1. Za svakog triggeriranog igrača skupi njegove sobe
-  const roomsPerPlayer = {};
-  // Skupi sve parent sobe (sve vrijednosti u roomMap)
-  const allParentRooms = new Set(Object.values(roomMap));
+  // Skup svih validnih soba (childovi i parenti iz roomMap)
+  const validRooms = getValidRooms();
 
+  // 1. Za svakog triggeriranog igrača skupi njegove sobe (ignoriraj globalne flagove)
+  const roomsPerPlayer = {};
   triggeredPlayers.forEach(pName => {
     const idx = parseInt(pName.replace("Player", "")) - 1;
     roomsPerPlayer[pName] = new Set();
     Object.entries(numberMap).forEach(([num, playerIdxs]) => {
       if (!playerIdxs.includes(idx)) return;
+      if (!validRooms.has(num)) return; // ignoriraj globalne flagove
       const parent = roomMap[num] || num;
-      // Ignoriraj globalne flagove - prihvati samo prave sobe (parent sobe ili podbroje soba)
-      if (allParentRooms.has(parent) || roomMap[num]) {
-        roomsPerPlayer[pName].add(parent);
-      }
+      roomsPerPlayer[pName].add(parent);
     });
   });
 
