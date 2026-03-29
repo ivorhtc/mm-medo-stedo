@@ -720,7 +720,7 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
         // Uzmi samo igrače koji su unijeli jedan od numTokena iz uvjeta
         const roomPlayers = new Set();
         result.numTokens.forEach(n => {
-          (numberMap[n] || []).forEach(i => roomPlayers.add(Player + (i + 1)));
+          (numberMap[n] || []).forEach(i => roomPlayers.add("Player" + (i + 1)));
         });
         // Presjek s assignedPlayers
         recipients = result.assignedPlayers.filter(p => roomPlayers.has(p));
