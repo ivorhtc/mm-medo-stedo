@@ -19,7 +19,7 @@
   { "key": "8006p2p6", "value": "Zvonimir leži na boku na kauču. Na desnoj strani glave ima vidljivu ozljedu — tup udarac, jak. Oko njega nema ničega što bi moglo biti oružje. Tko god ga je udario — ponio je to sa sobom.", "p2": "🧠 Znaš točno što se dogodilo. Udario si ga zlatnom polugom kad se probudio. Poluga je još u kombiju u garaži.", "p6": "🧠 Ozljeda nije kompatibilna s padom. Netko ga je udario tupim predmetom s preciznim zamahom. Oružja nema u sobi — ubojica ga je ponio sa sobom. Tražiš dalje." },
 
   { "story": "KUHINJA - injekcija, kompleksna logika s flagovima 1001771 i 88772" },
-  { "key": "1000", "value": "Prostrana moderna kuhinja s ladicama, policama i velikim srebrnim frižiderom. Možete pretražiti: ladice (1001), police sa začinima i čašama (1002), frižider (1003), sudoper (1004)." },
+  { "key": "1000", "value": "Prostrana moderna kuhinja s ladicama, policama i velikim srebrnim frižiderom. Možete pretražiti: ladice (1001), police sa začinima i čašama (1002), frižider (1003), sudoper (1004).", "p2": "🧠 U kuhinji u ladici se nalazi injekcija kojom si ubrizgao otrov. Ako pretražuješ ladicu sam ili s nekim ces spremiti injekciju u džep." },
   { "key": "1001", "value": "U ladicama su noževi i kuhinjski pribor.", "p2": "Spremaš injekciju u džep bez da itko vidi.", "admin": "Global +1001771" },
   { "key": "1001881", "value": "U ladicama uz noževe i kuhinjski pribor nalazite praznu injekciju.", "admin": "Global +88772" },
   { "key": "1001882", "value": "U ladicama su noževi i kuhinjski pribor." },
