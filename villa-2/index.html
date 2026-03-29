@@ -488,6 +488,37 @@
       }
     });
 
+    // Pomoćna funkcija: za talk iteme pronađi sve igrače koji su u istoj sobi s triggeriranim igračima
+    function getPlayersInSameRoom(triggeredPlayers, numberMap, allPlayers) {
+      // Skupi sve sobe koje triggerani igrači dijele
+      const sharedRooms = new Set();
+      triggeredPlayers.forEach(pName => {
+        const idx = parseInt(pName.replace("Player","")) - 1;
+        Object.keys(numberMap).forEach(num => {
+          if(roomMap[num] !== undefined || num in Object.fromEntries(Object.entries(roomMap).map(([k,v])=>[v,k]))) {
+            // je li ovo parent soba
+          }
+          if(numberMap[num].includes(idx)) {
+            // provjeri je li parent soba
+            const parent = roomMap[num] || num;
+            sharedRooms.add(parent);
+          }
+        });
+      });
+      // Pronađi sve igrače koji su u bilo kojoj od tih soba
+      const result = new Set(triggeredPlayers);
+      allPlayers.forEach((vals, i) => {
+        if(!vals) return;
+        vals.forEach(v => {
+          const parent = roomMap[v] || v;
+          if(sharedRooms.has(parent)) {
+            result.add("Player" + (i+1));
+          }
+        });
+      });
+      return Array.from(result);
+    }
+
     outputs.forEach(({out, players, admin}) => {
       const triggeredPlayers = players;
       if(triggeredPlayers.length===0)return;
@@ -536,8 +567,14 @@
         });
 
       } else {
-        // običan item - šalje value svim triggeriranim igračima
-        triggeredPlayers.forEach(playerName=>{
+        // Za talk iteme - proširi na sve igrače u istoj sobi
+        const isTalkItem = out.startsWith('talk');
+        const recipients = isTalkItem
+          ? getPlayersInSameRoom(triggeredPlayers, numberMap, players)
+          : triggeredPlayers;
+
+        // običan item - šalje value svim primateljima
+        recipients.forEach(playerName=>{
           playerCards[playerName].push(eventObj.value||out);
         });
         // specifični igrači i admin
