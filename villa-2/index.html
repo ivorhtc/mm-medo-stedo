@@ -337,11 +337,9 @@
       playerTokens.forEach(pt => {
         const num = parseInt(pt.slice(1),10);
         const idx = num-1;
-        if(numTokens.length>0){
-          varMap[pt] = combinedSet.has(idx);
-        } else {
-          varMap[pt] = players[idx] !== null;
-        }
+        // Uvijek gledamo je li igrac prisutan (ima unos), neovisno o numTokens
+        // combinedSet ovisi samo o numTokenima pa nije pouzdan za playerTokene
+        varMap[pt] = players[idx] !== null;
       });
 
       minMaxTokens.forEach(tok => {
