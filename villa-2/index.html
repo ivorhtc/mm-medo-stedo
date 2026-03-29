@@ -770,17 +770,7 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
       pushVoditeljInfo(rule, playerCards);  // global i admin iz rule
       recipients.forEach(p => playerCards[p].push(item.value || out));
     } else {
-      // Posebna logika za vinski podrum
-      let resolvedOut = out;
-      let resolvedTriggered = triggered;
-      if (out === "10000a") {
-        const podrum = resolvePodrumScenario(triggered, numberMap);
-        resolvedOut = "10000" + podrum.scenario;
-        resolvedTriggered = podrum.players;
-      }
-
-      const resolvedItem = itemMap[resolvedOut] || item;
-      dispatchItem(resolvedItem, resolvedTriggered, playerCards, players, numberMap, resolvedOut);
+      dispatchItem(item, triggered, playerCards, players, numberMap, out);
       if (rule.global || rule.admin) pushVoditeljInfo(rule, playerCards);
     }
   });
