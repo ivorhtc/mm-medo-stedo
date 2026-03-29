@@ -683,7 +683,12 @@ document.getElementById("evalBtn").addEventListener("click", async () => {
     dispatchItem(item, triggered, playerCards, players, numberMap, out);
   });
 
-  // 9. Renderiraj rezultate i debug
+  // 9. Deduplikacija - makni duplikate po igraču (zadržava redosljed)
+  Object.keys(playerCards).forEach(p => {
+    playerCards[p] = [...new Set(playerCards[p])];
+  });
+
+  // 10. Renderiraj rezultate i debug
   renderResults(playerCards);
   document.getElementById("debug").innerText = debugLines.join("\n");
 });
