@@ -106,10 +106,6 @@
       <div class="player-container"><div class="player-emoji">🐍🟢</div><label id="label5" class="player-label">Zeleni<br/>(Davor)</label><input id="p5"><div class="desc-box" id="desc-p5"></div></div>
       <div class="player-container"><div class="player-emoji">🍆🟣</div><label id="label6" class="player-label">LJubicasti<br/>(Oliver)</label><input id="p6"><div class="desc-box" id="desc-p6"></div></div>
       <div class="player-container"><div class="player-emoji">⚠️⚠️</div><label id="label7" class="player-label">Voditelj</label><input id="p7"><div class="desc-box" id="desc-p7"></div></div>
-
-      <!--<div class="player-container"><div class="player-emoji">🐑⚪</div><label id="label6" class="player-label">Player6</label><input id="p6"></div>
-      <div class="player-container"><div class="player-emoji">🐫🟠</div><label id="label7" class="player-label">Player7</label><input id="p7"></div>
-      <div class="player-container"><div class="player-emoji">🐷🩷</div><label id="label9" class="player-label">Player9</label><input id="p9"></div>-->
     </div>
 
     <div style="margin-top:10px">
@@ -135,7 +131,8 @@
 
   let rulesCache = [];
   let settingsCache = [];
-  
+  let roomMap = {}; // broj -> parent soba broj (string)
+
   async function loadGameFiles(){
     const [settingsRes, itemsRes, rulesRes] = await Promise.all([
       fetch("settings.json"),
@@ -145,16 +142,17 @@
     rulesCache = await rulesRes.json();
     settingsCache = await settingsRes.json();
     processPlayers(settingsCache);
-    
+    processRooms(settingsCache);
+
     return {
-      settings: await settingsCache,
+      settings: settingsCache,
       items: await itemsRes.json(),
       rules: rulesCache
     };
   }
-  
+
   let playerCache = {};
-  
+
   function processPlayers(settings) {
     settings.forEach(obj=>{
       for(let key in obj){
@@ -165,15 +163,46 @@
         }
       }
     });
-    console.log("playerCache: ", JSON.stringify(playerCache, null, 2));
+  }
+
+  // Gradi roomMap iz settings.json objekta koji ima "rooms" key
+  // rooms: { "8000": [8001, 8002, 8003, ...], "4000": [4001, 4002, ...], ... }
+  function processRooms(settings) {
+    roomMap = {};
+    settings.forEach(obj => {
+      if(obj.rooms) {
+        Object.keys(obj.rooms).forEach(parentRoom => {
+          const children = obj.rooms[parentRoom];
+          children.forEach(child => {
+            roomMap[child.toString()] = parentRoom.toString();
+          });
+        });
+      }
+    });
+    console.log("roomMap:", JSON.stringify(roomMap, null, 2));
+  }
+
+  // Za svakog igrača expandaj njegove brojeve s parent sobama
+  // Ako igrač ima 8001 i roomMap["8001"] = "8000", dodaj "8000" u njegov set
+  function expandPlayerNumbers(players) {
+    return players.map(vals => {
+      if(!vals) return null;
+      const expanded = new Set(vals);
+      vals.forEach(v => {
+        const parent = roomMap[v.toString()];
+        if(parent && !expanded.has(parent)) {
+          expanded.add(parent);
+        }
+      });
+      return Array.from(expanded);
+    });
   }
 
   function getPlayers() {
-    const playerInputs = document.querySelectorAll("[id^='p']"); // Select all elements with IDs starting with 'p'
+    const playerInputs = document.querySelectorAll("[id^='p']");
     return Array.from(playerInputs).map(input => {
-      const v = input.value.trim();   
+      const v = input.value.trim();
       if(!v) return null;
-
       return v.split(/[;,]/)
         .map(x => x.trim())
         .filter(x => x.length > 0);
@@ -185,7 +214,7 @@
     return s.split(',').map(x=>x.trim()).filter(x=>x);
   }
 
-  function buildNumberMap(players,globals){
+  function buildNumberMap(players, globals){
     const map={};
     players.forEach((vals,i)=>{
       if(!vals)return;
@@ -219,26 +248,8 @@
   function replaceWinnerPlaceholder(text,winner){
     if(!winner)return text;
     const winnerIdx = parseInt(winner.replace("Player", ""));
-    console.log('winnerIdx:', winnerIdx);
-    //const winnerName=document.getElementById("label"+winnerIdx).innerText;
-    // short nominativ replace
-    const winnerName="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].n + "\"" ;
+    const winnerName="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].n + "\"";
     return text.replace(/\$\{winner\}/g,winnerName);
-    // all cases replaces
-    const winnerNameN="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].n + "\"" ;
-    return text.replace(/\$\{winnerN\}/g,winnerName);
-    const winnerNameG="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].g + "\"" ;
-    return text.replace(/\$\{winnerN\}/g,winnerName);
-    const winnerNameD="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].d + "\"" ;
-    return text.replace(/\$\{winnerN\}/g,winnerName);
-    const winnerNameA="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].a + "\"" ;
-    return text.replace(/\$\{winnerN\}/g,winnerName);
-    const winnerNameV="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].v + "\"" ;
-    return text.replace(/\$\{winnerN\}/g,winnerName);
-    const winnerNameL="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].l + "\"" ;
-    return text.replace(/\$\{winnerN\}/g,winnerName);
-    const winnerNameI="\"" + playerCache["p"+winnerIdx].icon + " " + playerCache["p"+winnerIdx].i + "\"" ;
-    return text.replace(/\$\{winnerN\}/g,winnerName);
   }
 
   function updateInputDescriptions(input){
@@ -247,42 +258,32 @@
       .map(v=>v.trim())
       .filter(v=>v);
     const descBox = document.getElementById("desc-"+input.id);
-    
+
     if(values.length===0){
       descBox.innerHTML="";
       return;
     }
     const descs = [];
-
     values.forEach(v=>{
       rulesCache.forEach(r=>{
         if(r.cond === v && r.desc){
-          console.log(r.desc);
           descs.push(r.desc);
         }
       });
     });
-
-    descBox.innerHTML = descs
-      .map(d=>`<div>${d}</div>`)
-      .join("");
+    descBox.innerHTML = descs.map(d=>`<div>${d}</div>`).join("");
   }
 
   document.querySelectorAll("[id^='p']").forEach(input=>{
-
-  let timer=null;
-
-  input.addEventListener("input",()=>{
-    clearTimeout(timer);
-
-    timer=setTimeout(()=>{
+    let timer=null;
+    input.addEventListener("input",()=>{
+      clearTimeout(timer);
+      timer=setTimeout(()=>{
         updateInputDescriptions(input);
-      },300); // debounce
+      },300);
     });
-
   });
 
-  // makeEvaluator (same robust evaluator you provided)
   function makeEvaluator(condString) {
     let s = condString ? condString.replace(/\s+/g,' ').trim() : '';
     const numTokens = Array.from(new Set((s.match(/\b\d+\b/g) || [])));
@@ -290,7 +291,6 @@
     const minMaxTokens = Array.from(new Set((s.match(/\b(min|max)\d+p\b/ig) || []).map(t=>t.toLowerCase())));
 
     return function evaluate(context){
-      const playersCount = context.players.length;
       const numberMap = context.numberMap;
       const playersForNumber = {};
       numTokens.forEach(n => {
@@ -395,9 +395,21 @@
 
     const {settings, items, rules} = await loadGameFiles();
 
-    const players=getPlayers();
-    const globals=parseList(document.getElementById("p-globalNumbers").value);
-    const numberMap=buildNumberMap(players,globals);
+    const rawPlayers = getPlayers();
+    const globals = parseList(document.getElementById("p-globalNumbers").value);
+
+    // ROOM EXPANSION - expandaj parent sobe za svakog igrača
+    const players = expandPlayerNumbers(rawPlayers);
+
+    // Debug: pokaži što je expandano
+    const expansionDebug = rawPlayers.map((raw, i) => {
+      if(!raw) return null;
+      const expanded = players[i];
+      const added = expanded ? expanded.filter(x => !raw.includes(x)) : [];
+      return added.length > 0 ? `Player${i+1} +rooms: [${added.join(', ')}]` : null;
+    }).filter(Boolean);
+
+    const numberMap = buildNumberMap(players, globals);
     console.log('numberMap:', JSON.stringify(numberMap, null, 2));
 
     const itemMap={};
@@ -408,9 +420,7 @@
       playerCards["Player"+(i+1)]=[];
     });
 
-
-
-    // SETTINGS
+    // SETTINGS - imena i boje
     settings.forEach(obj=>{
       for(let key in obj){
         if(key.startsWith("p")){
@@ -422,54 +432,48 @@
     });
 
     let debugLines=[];
+
+    if(expansionDebug.length > 0) {
+      debugLines.push('=== ROOM EXPANSION ===');
+      expansionDebug.forEach(l => debugLines.push(l));
+      debugLines.push('');
+    }
+
+    debugLines.push('=== RULES ===');
+
     // RULES
-    const outputs = []; // {out:..., players: [...]}
+    const outputs = [];
     rules.forEach((r, idx) => {
       const cond = (r.cond || '').toString();
       const out = r.out || ('out_'+idx);
       const evaler = makeEvaluator(cond);
       const res = evaler({players, numberMap});
       debugLines.push(`Rule ${idx+1}: cond="${cond}" out="${out}"`);
-      debugLines.push(' -> expr (after replace): ' + res.expr);
+      debugLines.push(' -> expr: ' + res.expr);
       if(res.evalError) debugLines.push(' -> eval error: ' + res.evalError);
-      debugLines.push(' -> numTokens: ' + JSON.stringify(res.numTokens));
-      debugLines.push(' -> playerTokens: ' + JSON.stringify(res.playerTokens));
-      debugLines.push(' -> minMaxTokens: ' + JSON.stringify(res.minMaxTokens));
-      debugLines.push(' -> playersForNumber: ' + JSON.stringify(res.playersForNumber));
-      debugLines.push(' -> combinedPlayers: ' + JSON.stringify(res.combinedPlayers));
       debugLines.push(' -> passed: ' + res.passed);
-      debugLines.push(' -> assigned players: ' + JSON.stringify(res.assignedPlayers));
+      debugLines.push(' -> assigned: ' + JSON.stringify(res.assignedPlayers));
       debugLines.push('');
 
       if(res.passed){
         outputs.push({out, players: res.assignedPlayers});
       }
     });
-    console.log('outputs:', JSON.stringify(outputs, null, 2));
 
     outputs.forEach(({out, players}) => {
       const triggeredPlayers = players;
-
-      if(triggeredPlayers.size===0)return;
+      if(triggeredPlayers.length===0)return;
 
       const eventObj=itemMap[out];
-      console.log('0 - eventObj:', JSON.stringify(eventObj, null, 2));
       if(!eventObj)return;
 
-      // === EVENT TYPE ===
-      console.log('0 - eventObj.type:', JSON.stringify(eventObj.type, null, 2));
       if(eventObj.type==="event"){
-
         const involved=[...triggeredPlayers];
-
         let winnerIdx=null;
 
-        console.log('eventObj:', JSON.stringify(eventObj, null, 2));
-        console.log('involved:', JSON.stringify(involved, null, 2));
         if(eventObj.logic?.winnerStrategy==="priorityList"){
           const priority=eventObj.logic.priorityList;
           for(let p of priority){
-            console.log('p of priority:', JSON.stringify(p, null, 2));
             const idx=p.replace("p","Player");
             if(involved.includes(idx)){
               winnerIdx=idx;
@@ -478,67 +482,42 @@
           }
         }
 
-        // winner text
         if(winnerIdx && eventObj.output.winner){
           playerCards[winnerIdx].push(eventObj.output.winner);
         }
 
-        // others text
         involved.forEach(involvedPlayer=>{
           if(involvedPlayer!==winnerIdx && eventObj.output.others){
-            const txt=replaceWinnerPlaceholder(
-                    eventObj.output.others,
-                    winnerIdx
-            );
+            const txt=replaceWinnerPlaceholder(eventObj.output.others, winnerIdx);
             playerCards[involvedPlayer].push(txt);
           }
         });
 
-        // specific player outputs (p3, p7, etc.)
         Object.keys(eventObj.output).forEach(key=>{
           if(key==="winner"||key==="others")return;
           if(key.startsWith("p")){
             const idx=parseInt(key.slice(1));
             if(playerCards["Player"+idx]){
-              const txt=replaceWinnerPlaceholder(
-                      eventObj.output[key],
-                      winnerIdx
-              );
+              const txt=replaceWinnerPlaceholder(eventObj.output[key], winnerIdx);
               playerCards["Player"+idx].push(txt);
             }
           }
         });
 
-      }else{
-        // obični tekstualni item
+      } else {
+        // običan item - šalje value svim triggeriranim igračima
         triggeredPlayers.forEach(playerName=>{
-          playerCards[playerName]
-                  .push(eventObj.value||out);
+          playerCards[playerName].push(eventObj.value||out);
         });
-        if (eventObj.admin) {
-          playerCards["Player7"].push(eventObj.admin);
-        }
-        if (eventObj.p1) {
-          playerCards["Player1"].push(eventObj.p1);
-        }
-        if (eventObj.p2) {
-          playerCards["Player2"].push(eventObj.p2);
-        }
-        if (eventObj.p3) {
-          playerCards["Player3"].push(eventObj.p3);
-        }
-        if (eventObj.p4) {
-          playerCards["Player4"].push(eventObj.p4);
-        }
-        if (eventObj.p5) {
-          playerCards["Player5"].push(eventObj.p5);
-        }
-        if (eventObj.p6) {
-          playerCards["Player6"].push(eventObj.p6);
-        }
-        if (eventObj.p7) {
-          playerCards["Player7"].push(eventObj.p7);
-        }
+        // specifični igrači i admin
+        if(eventObj.admin) playerCards["Player7"].push(eventObj.admin);
+        if(eventObj.p1)    playerCards["Player1"].push(eventObj.p1);
+        if(eventObj.p2)    playerCards["Player2"].push(eventObj.p2);
+        if(eventObj.p3)    playerCards["Player3"].push(eventObj.p3);
+        if(eventObj.p4)    playerCards["Player4"].push(eventObj.p4);
+        if(eventObj.p5)    playerCards["Player5"].push(eventObj.p5);
+        if(eventObj.p6)    playerCards["Player6"].push(eventObj.p6);
+        if(eventObj.p7)    playerCards["Player7"].push(eventObj.p7);
       }
     });
 
@@ -552,7 +531,7 @@
     <div class="result-player" style="background:#ffffff">
       <div class="result-header">
         <strong>${name}</strong>
-        <button onclick="copyText(\`${text}\`)">Copy</button>
+        <button onclick="copyText(\`${text.replace(/`/g,"'")}\`)">Copy</button>
       </div>
       <div class="result-cards">
         ${playerCards[p].map(c=>`<div>${c}</div>`).join("")}
