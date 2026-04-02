@@ -1,0 +1,85 @@
+[
+  {"type": "story", "story": "=== SALON / BAR (2000) === Glavna prostorija jahte. Kauči, niski stol, minibар, TV. Ovdje je bila večera i koktel sat. Gordana je ovdje sjedila s Valentinom — zadnji put kad ju je vijeće vidjelo živu."},
+
+  {"type": "rule", "cond": "2000", "out": "2000", "desc": "Salon — ulaz"},
+  {"type": "rule", "cond": "2001", "out": "2001", "desc": "Minibar i stol za piće"},
+  {"type": "rule", "cond": "2001 AND 88771", "out": "20011", "desc": "Minibar — otisci"},
+  {"type": "rule", "cond": "2002", "out": "2002", "desc": "Kauči i niski stol"},
+  {"type": "rule", "cond": "2002 AND 88771", "out": "20021", "desc": "Niski stol — otisci"},
+  {"type": "rule", "cond": "2003", "out": "2003", "desc": "Ormarić s brodskim mapama i papirima"},
+
+  {"type": "item", "key": "2000", "value": "Salon jahte. Kauči od bijele kože, niski stol od stakla. Na stolu ostaci večere — tanjur s koricama kruha, čaše, salvete. Minibar je otvoren. Ovdje miriši na parfem i cigarete. Možete pregledati: minibar (2001), niski stol (2002) ili ormarić s papirima (2003).",
+    "p6": "🧠 Ovdje si sjedila s Valentinom sinoć oko 22h. Popili ste vino zajedno. Tada si je — dok je otišla u WC — ubacila tablete u čašu.",
+    "p7": "Voditelju: salon je ključna scena zločina. Gordana je ovdje drogirala Valentinu, a Valentina se povukla u kabinu misleći da je samo umorna."
+  },
+
+  {"type": "item", "key": "2001", "value": "Minibar. Nekoliko boca piva, miniature whiskija, tonic. Jedna polica je prazna — kao da je netko brzopotezno uzeo nešto. Na dnu minibara leži smotana salveta.",
+    "p4": "🧠 Ta polica je bila puna malih boca gin-tonika koje si ti koristio za... pripremu. Jedna je nestala. Nisi siguran je li to važno.",
+    "p7": "Voditelju: salveta nije ključni trag ali igrači mogu provesti dosta vremena na njoj — dobra crvena haringa."
+  },
+  {"type": "item", "key": "20011", "value": "Otisci prstiju na minibaru: 🔴 Rico, 🟣 Gordana. Gordanini otisci su svježi."},
+
+  {"type": "item", "key": "2002", "value": "Niski stakleni stol. Na njemu dvije čaše za vino — jedna s tragom ružičastog ruža na rubu, druga čista. Između čaša, zaboravljena papirna salveta s nečim zapisanim kemijskom.",
+    "p7": "Voditelju: salveta s natpisom je KLJUČAN trag. Sadrži broj — koji je Gordana slučajno ostavila. To je broj bankovnog računa na koji je htjela prebaciti novac nakon što preuzme Valentinin udio u kompaniji."
+  },
+
+  {"type": "rule", "cond": "2002 AND NOT 20022", "out": "2002event", "desc": "Niski stol — salveta s brojem, još nije uzeta"},
+  {"type": "rule", "cond": "2002 AND 20022", "out": "2002b", "desc": "Niski stol — salveta već uzeta"},
+
+  {"type": "event", "key": "2002event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p3", "p5", "p2", "p1", "p4", "p6"]},
+    "output": {
+      "winner": "Uzimate salvetu. Na njoj je ispisano: 'HR76 2340 0091 1102 3456 7' — IBAN broj. I ispod, manjim slovima: 'G.B. — osobni'. Gordana Bolf?",
+      "others": "Vidite kako ${winnerN} uzima salvetu s niskog stola i proučava je.",
+      "p7": "Daj ${winnerD} salvetu (kartica 20022). Global +20022. Ovo je Gordanin privatni račun. Zašto ga je pisala u salonu sinoć?",
+      "kartica": "🧾 SALVETA S IBANOM — Ispisano kemijskom: 'HR76 2340 0091 1102 3456 7 — G.B. osobni'. Gordana Bolf? Zašto je sinoć u salonu pisala broj svojeg privatnog računa?"
+    }
+  },
+  {"type": "item", "key": "2002b", "value": "Niski stol. Dvije čaše za vino. Salveta je već uzeta."},
+
+  {"type": "rule", "cond": "2002 AND 88771", "out": "20021", "desc": "Niski stol — otisci"},
+  {"type": "item", "key": "20021", "value": "Otisci prstiju na čašama: na čaši s ružem → 🟣 Gordana i ⚫ Brane. Na drugoj čaši (Valentinina) → 🟣 Gordana i nešto nejasno, možda rukavica?",
+    "p7": "Voditelju: Gordanini otisci na Valentiниной čaši jer je sipala vino. 'Nejasno, možda rukavica' je trag da je netko bio oprezan — ali to je Gordana koja je prstima dotakla rub kad je ubacivala tablete, pa sama sebe teretila. Ironija."
+  },
+
+  {"type": "item", "key": "2003", "value": "Ormarić uz zid. Brodske mape, putni plan, osiguranje jahte. I jedna fascikla s natpisom 'UGOVORI — VALENTINA KRALJ d.o.o.'.",
+    "p2": "🧠 Ta fascikla — to su možda dokumenti o kojima pričaш. Možda su tu i kompromitirајući materijali o tebi.",
+    "p6": "🧠 Znаš da u toj fascikli nije ono što Zlatko traži. Valentina je pametno skrivala dokumente — svaki na drugom mjestu."
+  },
+
+  {"type": "rule", "cond": "2003 AND NOT 20031", "out": "2003event", "desc": "Fascikla — prvi pregled"},
+  {"type": "rule", "cond": "2003 AND 20031", "out": "2003b", "desc": "Fascikla — već pregledana"},
+
+  {"type": "event", "key": "2003event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p2", "p5", "p3", "p1", "p6", "p4"]},
+    "output": {
+      "winner": "Otvarate fasciklu. Ugovori s brendovima, nekoliko faktura, jedan ugovor o osnivanju tvrtke iz 2018. Nema ničeg osobito kompromitirajućeg — ali nedostaje stranica 4 iz ugovora o osnivanju. Netko ju je izvadio.",
+      "others": "Vidite kako ${winnerN} otvara fasciklu i pregledava papire.",
+      "p7": "Global +20031. Stranica 4 je negdje drugdje — u Gordaninoj kabini. Sadrži klauzulu koja Gordani daje pravo preuzeti Valentinin udio u slučaju njezine smrti.",
+      "kartica": "📁 FASCIKLA UGOVORA — Ugovor o osnivanju tvrtke iz 2018. Nedostaje stranica 4. Tko ju je izvadio i zašto?"
+    }
+  },
+  {"type": "item", "key": "2003b", "value": "Ormarić. Brodske mape, fascikla je već pregledana. Stranica 4 ugovora o osnivanju nedostaje."},
+
+  {"type": "story", "story": "--- RAZGOVORI U SALONU ---"},
+
+  {"type": "rule", "cond": "p4 AND p6 AND NOT 146001", "out": "talk_p4p6_1", "global": "146001", "desc": "Rico+Gordana razgovor 1"},
+  {"type": "rule", "cond": "p4 AND p6 AND 146001 AND NOT 146002", "out": "talk_p4p6_2", "global": "146002", "desc": "Rico+Gordana razgovor 2"},
+  {"type": "rule", "cond": "p4 AND p6 AND 146002 AND NOT 146003", "out": "talk_p4p6_3", "global": "146003", "desc": "Rico+Gordana razgovor 3"},
+
+  {"type": "item", "key": "talk_p4p6_1", "value": "🔴 Rico, tiho: 'Gordana. Što se zapravo dogodilo sinoć?' 🟣 Gordana, hladno: 'Valentina je umrla. Tragično.' Kratka pauza."},
+  {"type": "item", "key": "talk_p4p6_2", "value": "🔴 Rico: 'Ona mi je prijetila. Znala je za... robu. Jesi li ti znala?' 🟣 Gordana: 'Valentina je znala puno toga o svima nama, Rico. To je bio njezin hobi.'"},
+  {"type": "item", "key": "talk_p4p6_3", "value": "🔴 Rico, nervozno: 'Ako carinarnici netko javi...' 🟣 Gordana ga prekine: 'Nitko neće javiti. Ja se brinem da tvoje stvari ostanu tvoje, a ti... se brineš za kuhinu.' Pogleda ga ravno u oči.",
+    "p4": "🧠 Je li Gordana prijetila tebi sad? Ili ti nudi zaštitu? Ne možeš procijeniti — i to te plaši više nego policija.",
+    "p6": "🧠 Rico je koristan. Ako mu budeš trebati, ima razloga šutjeti o tebi. A ti imaš razloga šutjeti o njemu."
+  },
+
+  {"type": "rule", "cond": "p1 AND p3 AND NOT 113001", "out": "talk_p1p3_1", "global": "113001", "desc": "Brane+Tina razgovor 1"},
+  {"type": "rule", "cond": "p1 AND p3 AND 113001 AND NOT 113002", "out": "talk_p1p3_2", "global": "113002", "desc": "Brane+Tina razgovor 2"},
+
+  {"type": "item", "key": "talk_p1p3_1", "value": "🔵 Tina: 'Kapetane, kad ste zadnji put vidjeli Valentinu živu?' ⚫ Brane zastane malo predugo: 'Na večeri. Kao i svi.'"},
+  {"type": "item", "key": "talk_p1p3_2", "value": "🔵 Tina: 'Netko mi je rekao da ste bili bliski.' ⚫ Brane: 'Na brodu sam odgovoran za sve putnike. Naravno da sam bio bliski.' Tina ga samo gleda.",
+    "p1": "🧠 Tina je pametna. Zna nešto ili sumnja nešto. Ne smiješ biti pretjerano defenzivan — to samo pogorašava situaciju.",
+    "p3": "🧠 Brane laže. Ili barem ne govori sve. Ali je li to važno? Fokusiraj se: tablete. Tko ih je uzeo iz moje torbe?"
+  }
+]

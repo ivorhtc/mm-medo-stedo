@@ -1,0 +1,160 @@
+[
+  {"type": "story", "story": "=== KUHINJA (3000) === Ricova teritorija. Ovdje se skriva trag o švercu — i korisni predmeti za istragu."},
+
+  {"type": "rule", "cond": "3000", "out": "3000", "desc": "Kuhinja — ulaz"},
+  {"type": "rule", "cond": "3001", "out": "3001", "desc": "Hladnjak i namirnice"},
+  {"type": "rule", "cond": "3001 AND 88771", "out": "30011", "desc": "Hladnjak — otisci"},
+  {"type": "rule", "cond": "3002", "out": "3002", "desc": "Ricov ormar i ladice"},
+  {"type": "rule", "cond": "3003", "out": "3003", "desc": "Brodska ostava — začini i pribor"},
+
+  {"type": "item", "key": "3000", "value": "Brodska kuhinja. Čista, profesionalna — Rico drži stvari urednima. Miris začina. Na stolu posuda s narezanim povrćem, nož, daска za rezanje. Možete pregledati: hladnjak (3001), Ricov ormar (3002) ili ostavu (3003).",
+    "p4": "🧠 Tvoja kuhinja, tvoja pravila. I tvoji tajni. Drži se podalje od ladica.",
+    "p7": "Voditelju: Rico je bio u kuhinji od 21h do ponoći — konobar ga potvrđuje. Čisti alibi za vrijeme ubojstva."
+  },
+
+  {"type": "item", "key": "3001", "value": "Hladnjak. Namirnice, vino, prehrambena roba. I na dnu, iza kutije s povrćem, jedna neprovoza vrećica u vakuumu s oznakom 'TRUFFLE OIL — IMPORT'. Čudno mjesto za tartufovo ulje."},
+  {"type": "item", "key": "30011", "value": "Otisci prstiju na hladnjaku: 🔴 Rico (svugdje — normalno), i jedan set otisaka koje sustav ne može identificirati. Nepoznata osoba ili rukavice."},
+
+  {"type": "rule", "cond": "3001 AND NOT 70001", "out": "3001event", "desc": "Hladnjak — vrećica, još nije uzeta"},
+  {"type": "rule", "cond": "3001 AND 70001", "out": "3001b", "desc": "Hladnjak — vrećica već uzeta"},
+
+  {"type": "event", "key": "3001event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p3", "p5", "p2", "p1", "p6", "p4"]},
+    "output": {
+      "winner": "Uzimate vrećicu. Teška je — 'tartufovo ulje' se ne osjeća kao ulje. Otvarate — unutra su satovi. Luksuzni sat, još u originalnoj kutijici. Švercana roba.",
+      "others": "Vidite kako ${winnerN} uzima čudnu vrećicu s dna hladnjaka.",
+      "p4": "🧠 NEEEE. To je bio tvoj sanduk sigurnosti. Sad su ga našli.",
+      "p7": "Daj ${winnerD} vrećicu (kartica 70001). Global +70001. Ricov šverc je otkriven — sad ima JAKO jak razlog biti kooperativan ili jako jak razlog biti neprijateljan.",
+      "kartica": "⌚ ŠVERCAN SAT — Luksuzni Rolex u originalnoj kutijici, unutar vakuumske vrećice označene kao 'tartufovo ulje'. Ricov šverc? Valentina je to znala i ucjenjivala ga."
+    }
+  },
+  {"type": "item", "key": "3001b", "value": "Hladnjak. Vrećica je već uzeta — Ricov tajni sadržaj je otkriven."},
+
+  {"type": "item", "key": "3002", "value": "Ricov osobni ormar. Ključ je u bravi — otvoren. Unutra: radna odjeća, kuharski noževi, i jedna mapa s računima. Između računa — novčanica od 500 eura s natpisom 'GORDANA' olovkom na rubu.",
+    "p4": "🧠 Tu novčanicu ti je dala Gordana sinoć — za 'šutnju o onom što možda vidiš'. Uzeo si je. Sad ti je teret.",
+    "p7": "Voditelju: ovo direktno veže Gordanu i Rica — ona ga je podmitila za šutnju. Oba su sada upliteni."
+  },
+
+  {"type": "rule", "cond": "3002 AND NOT 30020", "out": "3002event", "desc": "Ricov ormar — novčanica"},
+  {"type": "rule", "cond": "3002 AND 30020", "out": "3002b", "desc": "Ricov ormar — novčanica već uzeta"},
+
+  {"type": "event", "key": "3002event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p5", "p3", "p2", "p1", "p6", "p4"]},
+    "output": {
+      "winner": "Između računa nailazite na novčanicu od 500 eura. Na rubu, olovkom: 'GORDANA'. Netko je potpisao novčanicu? Ili... to je bila oznaka od koga dolazi?",
+      "others": "Vidite kako ${winnerN} pregledava Ricov ormar i izvlači nešto iz mape.",
+      "p4": "🧠 Gotovo. Sad imaju dokaz da te je Gordana plaćala.",
+      "p7": "Daj ${winnerD} novčanicu (kartica 30020). Global +30020. Gordana je podmitila Rica za šutnju — ovo ih oboje kompromitira.",
+      "kartica": "💶 NOVČANICA 500€ s POTPISOM — Nađena u Ricovom ormaru. Na rubu olovkom: 'GORDANA'. Podmićivanje? Gordana je platila Ricu — za što?"
+    }
+  },
+  {"type": "item", "key": "3002b", "value": "Ricov ormar. Novčanica je već uzeta."},
+
+  {"type": "item", "key": "3003", "value": "Ostava. Začini, ulja, konzerve. Na polici — kutija s prvom pomoći i pribor za uzimanje otisaka prstiju (brodski sigurnosni komplet).",
+    "p7": "Voditelju: ovo je izvor pribora za otiske! Kad igrači uzmu pribor, aktivira se flag 88771 i mogu početi nalaziti otiske u sobama."
+  },
+
+  {"type": "rule", "cond": "3003 AND NOT 88771", "out": "3003event", "desc": "Ostava — pribor za otiske, još nije uzet"},
+  {"type": "rule", "cond": "3003 AND 88771", "out": "3003b", "desc": "Ostava — pribor već uzet"},
+
+  {"type": "event", "key": "3003event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p3", "p1", "p5", "p2", "p4", "p6"]},
+    "output": {
+      "winner": "Nalazite brodski komplet za uzimanje otisaka prstiju. Prašak, trake, uputstvo. Možete početi uzimati otiske u svim prostorijama!",
+      "others": "Vidite kako ${winnerN} uzima komplet za uzimanje otisaka iz ostave.",
+      "p7": "Daj ${winnerD} pribor (kartica 88771). Global +88771. Od sada su aktivni svi otisci u svim sobama — igrači mogu istražiti svaku sobu s novim informacijama.",
+      "kartica": "🔬 PRIBOR ZA OTISKE — Brodski komplet za forenziku. Sad možete uzimati otiske u svim sobama. Koristite ga brzo — dokazi se mogu izgubiti."
+    }
+  },
+  {"type": "item", "key": "3003b", "value": "Ostava. Pribor za otiske je već uzet."},
+
+  {"type": "story", "story": "--- RAZGOVORI U KUHINJI ---"},
+  {"type": "rule", "cond": "p4 AND p5 AND NOT 145001", "out": "talk_p4p5_1", "global": "145001", "desc": "Rico+Ana razgovor 1"},
+  {"type": "rule", "cond": "p4 AND p5 AND 145001 AND NOT 145002", "out": "talk_p4p5_2", "global": "145002", "desc": "Rico+Ana razgovor 2"},
+
+  {"type": "item", "key": "talk_p4p5_1", "value": "🔴 Rico, nervozno miješajući nešto: 'Ana. Bio sam u kuhinji cijelu večer. Konobar to može potvrditi. Samo da znaš.' 🟢 Ana: 'Nitko tebe nije optužio, Rico.'"},
+  {"type": "item", "key": "talk_p4p5_2", "value": "🔴 Rico zastane. 'Valentina je bila... kompleksna osoba. Ali nije zaslužila ovo.' 🟢 Ana, tiho: 'Ne. Nije.' Kratka tišina. 🔴 Rico: 'Ako trebaš nešto... samo reci.'",
+    "p5": "🧠 Rico je jedini koji je bio iskren s tobom danas. Možda i on nešto zna — ali se boji."
+  },
+
+  {"type": "story", "story": "=== KAPETANOVA KABINA (4000) === Braneova teritorija. Brodski dnevnik i ključevi."},
+
+  {"type": "rule", "cond": "4000", "out": "4000", "desc": "Kapetanova kabina — ulaz"},
+  {"type": "rule", "cond": "4001", "out": "4001", "desc": "Brodski dnevnik i pisaći stol"},
+  {"type": "rule", "cond": "4002", "out": "4002", "desc": "Ormarić s ključevima kabina"},
+
+  {"type": "item", "key": "4000", "value": "Kapetanova kabina. Uredna, funkcionalna. Na zidu nautička karta, kompas, fotografija broda. Pisaći stol s brodskim dnevnikom. Ormarić s kopijama svih ključeva kabina.",
+    "p1": "🧠 Tvoja kabina. Tvoja utočišta. Ovdje nema ničeg što te kompromitira... nadam se.",
+    "p7": "Voditelju: u dnevniku je Braneov zapis o večeri — piše 'posjetio poštovanu putnica V.K. radi provjere stanja, 22:45-23:15'. Prizna posjet ali opisuje ga formalno."
+  },
+
+  {"type": "item", "key": "4001", "value": "Brodski dnevnik. Debela, uredna knjiga. Zadnji unos je od sinoć: '22:45 — Provjera stanja putnica V.K. na njezin zahtjev. Kabina uredna, putnica zadovoljna. 23:15 — povratak na dužnost.' Kapetan Branimir Kovač, potpis.",
+    "p1": "🧠 Zapisao si što je bilo — ali ne sve. Ne znaš bi li potpun zapis pomogao ili odmogu.",
+    "p2": "🧠 Brane je bio u Valentininoj kabini od 22:45 do 23:15. To je pola sata. A Gordana je ušla... kad?",
+    "p7": "Voditelju: Brane je bio tamo od 22:45-23:15. Gordana je ušla oko 23:30 (kad je Ana vidjela). Dakle Brane je otišao 15 min prije ubojice."
+  },
+
+  {"type": "rule", "cond": "4001 AND NOT 60001", "out": "4001event", "desc": "Dnevnik — uzimanje"},
+  {"type": "rule", "cond": "4001 AND 60001", "out": "4001b", "desc": "Dnevnik — već uzet"},
+
+  {"type": "event", "key": "4001event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p5", "p3", "p2", "p4", "p6", "p1"]},
+    "output": {
+      "winner": "Uzimate brodski dnevnik. Zadnji unos: Brane je bio kod Valentine od 22:45-23:15. I ovo je u dnevniku! Zašto bi kapetan bilježio posjet ako nije htio ostaviti trag?",
+      "others": "Vidite kako ${winnerN} uzima brodski dnevnik sa stola.",
+      "p1": "🧠 Ako su uzeli dnevnik — bolje da im objasniš sam nego da čekaju zaključke.",
+      "p7": "Daj ${winnerD} dnevnik (kartica 60001). Global +60001.",
+      "kartica": "📖 BRODSKI DNEVNIK — Braneov zapis: '22:45 — Provjera putnice V.K. — 23:15 povratak.' Kapetan je bio u Valentininoj kabini pola sata sinoć. Kako to protumačiti?"
+    }
+  },
+  {"type": "item", "key": "4001b", "value": "Pisaći stol. Dnevnik je već uzet."},
+
+  {"type": "item", "key": "4002", "value": "Ormarić s rezervnim ključevima svih kabina. Svi ključevi na mjestima... osim jednog. Vješalica za kabinu 5000 — Valentininu kabinu — je prazna.",
+    "p1": "🧠 Ti imaš taj ključ. U džepu. Trebao si ga vratiti jutros kad si otišao — ali zaboravio si.",
+    "p7": "Voditelju: ovo je jak trag za Branea — ali nije ubojica. Ako igrači pritisnu Branea i on prizna aferu, to samo jača lažnu sumnju na njega."
+  },
+
+  {"type": "story", "story": "=== SERVISNI HODNIK (7000) === Hodnik između kabina. Gdje je Ana vidjela Gordanu."},
+
+  {"type": "rule", "cond": "7000", "out": "7000", "desc": "Servisni hodnik — ulaz"},
+  {"type": "rule", "cond": "7001", "out": "7001", "desc": "Pod hodnika — tragovi kretanja"},
+  {"type": "rule", "cond": "7001 AND 88771", "out": "70011", "desc": "Hodnik — otisci"},
+  {"type": "rule", "cond": "7002", "out": "7002", "desc": "Ormić za čišćenje na kraju hodnika"},
+
+  {"type": "item", "key": "7000", "value": "Uski servisni hodnik. Kabine su s obje strane. Slabo osvijetljeno — jedna žarulja trepće. Vrata kabine 5000 su ravno pred vama. Na podu — sitnica.",
+    "p5": "🧠 Tu si stajala sinoć oko ponoći. Čekala si Valentinu da izađe. I tada si vidjela Gordanu — išla je prema kabini 5000.",
+    "p7": "Voditelju: ovo je Anino ključno svjedočanstvo. Pitanje je hoće li to reći svima — ili samo nekome."
+  },
+
+  {"type": "item", "key": "7001", "value": "Pod hodnika. Tepih. Tamo gdje je Ana stajala sinoć — vidljiv je njen trag (otpuhao se puder s cipela, lagani otisak). I smjer kretanja prema kabini 5000: nekako je tepih pritisnut, kao da je netko brzo prošao.",
+    "p5": "🧠 Tvoj trag. I trag onoga tko je prošao prema kabini."
+  },
+  {"type": "item", "key": "70011", "value": "Otisci prstiju na zidnoj lampi hodnika: 🟢 Ana (dohvaćала je lampu za ravnotežu — bila je u tami), 🟣 Gordana (na prekidaču lampe — ugasila je!). Gordana je ugasila svjetlo u hodniku kad je išla prema kabini.",
+    "p6": "🧠 Ugasila si svjetlo. Samo mjera predostrožnosti. Tko bi to vidio?",
+    "p5": "🧠 Zato ti nisi mogla jasno vidjeti lice! Ali figura, hod — prepoznala si je. Gordana."
+  },
+
+  {"type": "item", "key": "7002", "value": "Ormarić za čišćenje. Sredstva za čišćenje, metla, krpe. I na podu ormarića — mala staklena bočica bez etikete, gotovo prazna. Miris je... kemijski, oštar.",
+    "p3": "🧠 Ta bočica. To nije sredstvo za čišćenje. To je... uspoređuješ miris mentalno s farmaceutskim katalogom. Možda otapalo? Za tablete?",
+    "p7": "Voditelju: bočica je crvena haringa — to je stvarno sredstvo za čišćenje koje miriši kemijski. Ali neka igrači troše vrijeme na nju."
+  },
+
+  {"type": "story", "story": "--- RAZGOVOR U HODNIKU ---"},
+  {"type": "rule", "cond": "p5 AND p6 AND NOT 156001", "out": "talk_p5p6_1", "global": "156001", "desc": "Ana+Gordana razgovor 1 — napeti susret"},
+  {"type": "rule", "cond": "p5 AND p6 AND 156001 AND NOT 156002", "out": "talk_p5p6_2", "global": "156002", "desc": "Ana+Gordana razgovor 2"},
+  {"type": "rule", "cond": "p5 AND p6 AND 156002 AND NOT 156003", "out": "talk_p5p6_3", "global": "156003", "desc": "Ana+Gordana razgovor 3"},
+
+  {"type": "item", "key": "talk_p5p6_1", "value": "🟢 Ana se zaustavi kad vidi Gordanu u hodniku. Kratka tišina. 🟣 Gordana: 'Ana. Kako si?' 🟢 Ana: 'Čula sam da si bila na ovom hodniku sinoć oko ponoći.'"},
+  {"type": "item", "key": "talk_p5p6_2", "value": "🟣 Gordana, bez trepnuća: 'Bila sam. Provjeravala sam je li Valentina u redu. Bila je zabrinuta za nju — popila je puno sinoć.' 🟢 Ana: 'Zabrinuta.' Ponovi tu riječ ravno, bez emocije."},
+  {"type": "item", "key": "talk_p5p6_3", "value": "🟣 Gordana napravi korak bliže: 'Ana. Znam da si je voljela. I znam da si uznemirena. Ali nemoj donositi zaključke na temelju emocija.' 🟢 Ana je gleda dugo. 'Ne brini. Ja se ne vodim emocijama kad su dokazi pred mnom.'",
+    "p5": "🧠 To je bila prijetnja. Nježna, ali jasna. Gordana zna da znaš.",
+    "p6": "🧠 Ana je problem. Zna previše. Ali ako je optužiš, to samo skreće pažnju na tebe."
+  },
+
+  {"type": "story", "story": "=== BRODSKI MANIFEST — POSEBAN DOKUMENT ==="},
+  {"type": "rule", "cond": "88774", "out": "manifest", "desc": "Brodski manifest — aktivira se kad ga igrači nađu (u salonu ili kapetanovoj kabini)"},
+
+  {"type": "item", "key": "manifest", "value": "BRODSKI MANIFEST — JAHTA 'SUNČANA'\n\nPutnici:\n• Valentina Kralj, 15.04.1988. — domaćin\n• Zlatko Modrić, 02.11.1979.\n• Gordana Bolf, 07.03.1987.\n• dr. Tina Horvat, 22.08.1985.\n• Ana Petek, 14.06.1995.\n• Kapetan Branimir Kovač, 30.09.1972.\n• Rico Barać, 11.01.1983. — posada\n\nPlan puta: Split → Hvar → Vis → povratak Split (4 dana)",
+    "p7": "Voditelju: manifest je ključan za dvije stvari — (1) datum rođenja svih, pa igrači mogu otkriti kod za Gordaninu torbu (1987), (2) potvrđuje tko je bio na brodu."
+  }
+]

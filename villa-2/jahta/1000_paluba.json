@@ -1,0 +1,98 @@
+[
+  {"type": "story", "story": "=== PALUBA (1000) === Gornja paluba jahte. Pogled na more, šank za piće, ležaljke. Mjesto gdje su svi bili na večer ubojstva — ili su tvrdili da su bili."},
+
+  {"type": "rule", "cond": "1000", "out": "1000", "desc": "Paluba — ulaz"},
+  {"type": "rule", "cond": "1001", "out": "1001", "desc": "Šank na palubi"},
+  {"type": "rule", "cond": "1002", "out": "1002", "desc": "Ležaljke i pogled na more"},
+  {"type": "rule", "cond": "1003", "out": "1003", "desc": "Stepenice prema donjoj palubi"},
+  {"type": "rule", "cond": "1003 AND 88771", "out": "10031", "desc": "Stepenice — otisci"},
+
+  {"type": "item", "key": "1000", "value": "Gornja paluba jahte 'Sunčana'. Jutarnje sunce već žari. Na šanku ostaci večerašnje večere — prazne čaše, posuda s maslinama. Pred vama se prostire: šank (1001), ležaljke (1002) i stepenice dolje (1003).",
+    "p5": "🧠 Ovdje si bila sinoć oko ponoći kad si vidjela Gordanu. Pokušaj se sjetiti točno gdje je išla.",
+    "p7": "Voditelju: paluba je jedino mjesto gdje igrači mogu sresti jedni druge slobodno. Svi su navodno bili tu oko 22-23h."
+  },
+
+  {"type": "item", "key": "1001", "value": "Šank je pun praznih čaša. Barmen je otišao spavati. Na dasci iza šanka vidite red boca — vino, gin, viski. Jedna boca crnog vina je gotovo prazna i odvojena od ostalih, s papirićem koji kaže 'Valentina — rezervirano'.",
+    "p1": "🧠 Ti si osobno donio to vino Valentini ranije večeras. Znao si da ga voli.",
+    "p6": "🧠 To je boca iz koje si sipala vino Valentini. Naravno, tablete su već bile u čaši, ne u boci.",
+    "p7": "Voditelju: ako igrači uzmu bocu na analizu (flag 10011), utvrditi će da je vino čisto — otrov je bio direktno u čaši."
+  },
+
+  {"type": "rule", "cond": "1001 AND NOT 10011", "out": "1001event", "desc": "Šank — boca vina, još nije uzeta"},
+  {"type": "rule", "cond": "1001 AND 10011", "out": "1001b", "desc": "Šank — boca već uzeta"},
+
+  {"type": "event", "key": "1001event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p3", "p1", "p5", "p2", "p6", "p4"]},
+    "output": {
+      "winner": "Uzimate bocu vina za analizu. Nema mirisa ni sedimenta — vino izgleda čisto.",
+      "others": "Vidite kako ${winnerN} uzima bocu vina sa šanka za pobliži pregled.",
+      "p7": "Daj ${winnerD} bocu (kartica 10011). Global +10011. Analiza će pokazati da je boca čista — otrov je bio u čaši.",
+      "kartica": "🍷 BOCA VINA 'Valentina — rezervirano' — Na analizi: vino je čisto, bez tragova otrova. Otrov je dakle dodan direktno u čašu, ne u bocu."
+    }
+  },
+
+  {"type": "item", "key": "1001b", "value": "Šank. Boca crnog vina je već uzeta. Ostale boce, prazne čaše."},
+
+  {"type": "item", "key": "1002", "value": "Ležaljke uz ogradu palube. Na jednoj leži zaboravljen šal — ružičast, svilen. Nečiji. Na podu kraj ležaljke pepeljara s dva opuška.",
+    "p2": "🧠 Prepoznaješ taj šal. Valentinin je. Sjedili ste ovdje zajedno sinoć i svađali se oko razvoda.",
+    "p3": "🧠 Jedan od tih opušaka je tvoj. Sjela si ovdje oko 23h i pušila dok si čekala da Valentina izađe — htjela si razgovarati s njom, ali nije došla.",
+    "p7": "Voditelju: šal je važan trag — Valentina ga je skinula kad je sinoć krenula unutra, što znači da je bila na palubi još navečer."
+  },
+
+  {"type": "rule", "cond": "1002 AND NOT 10021", "out": "1002event", "desc": "Ležaljke — šal, još nije uzet"},
+  {"type": "rule", "cond": "1002 AND 10021", "out": "1002b", "desc": "Ležaljke — šal već uzet"},
+
+  {"type": "event", "key": "1002event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p5", "p2", "p3", "p1", "p6", "p4"]},
+    "output": {
+      "winner": "Uzimate šal. Miriše na parfem — Valentinin parfem, prepoznajete ga. Bio je tu sinoć.",
+      "others": "Vidite kako ${winnerN} uzima ružičasti svileni šal s ležaljke.",
+      "p7": "Daj ${winnerD} šal (kartica 10021). Global +10021.",
+      "kartica": "🧣 VALENTININ ŠAL — Pronađen na palubi. Miriše na njezin parfem. Ona je bila na palubi sinoć, ali je otišla unutra bez šala. Svjedoci? Tko ju je vidio kako odlazi?"
+    }
+  },
+
+  {"type": "item", "key": "1002b", "value": "Ležaljke uz ogradu. Pepeljara s opušcima. Šal je već uzet."},
+
+  {"type": "item", "key": "1003", "value": "Stepenice prema unutrašnjosti jahte. Metalna ograda, gumene podloge. Spuštate se prema salonu i kabinama."},
+  {"type": "item", "key": "10031", "value": "Otisci prstiju na metalnoj ogradi stepenica: ⚫ Kapetan Brane, 🟢 Ana, 🟣 Gordana. Sva tri skupa — svi su prolazili ovuda kasno navečer.",
+    "p7": "Voditelju: ovo je važan trag — Gordanini otisci potvrđuju da je išla prema kabinama kasno."
+  },
+
+  {"type": "story", "story": "--- RAZGOVORI NA PALUBI ---"},
+
+  {"type": "rule", "cond": "p1 AND p2 AND NOT 112001", "out": "talk_p1p2_1", "global": "112001", "desc": "Brane+Zlatko razgovor 1"},
+  {"type": "rule", "cond": "p1 AND p2 AND 112001 AND NOT 112002", "out": "talk_p1p2_2", "global": "112002", "desc": "Brane+Zlatko razgovor 2"},
+  {"type": "rule", "cond": "p1 AND p2 AND 112002 AND NOT 112003", "out": "talk_p1p2_3", "global": "112003", "desc": "Brane+Zlatko razgovor 3"},
+
+  {"type": "item", "key": "talk_p1p2_1", "value": "⚫ Brane: 'Zlatko, nisi mi rekao da dolaziš. Valentina nije bila oduševljena kada te je ugledala na ukrcaju.'"},
+  {"type": "item", "key": "talk_p1p2_2", "value": "🟡 Zlatko: 'Imam pravo biti tu. Moja odvjetnica mi je rekla da moram osobno preuzeti te dokumente. Nije mi imala što reći.' Stisne čeljust."},
+  {"type": "item", "key": "talk_p1p2_3", "value": "⚫ Brane, tiše: 'Kakvi dokumenti?' 🟡 Zlatko odmahne rukom: 'Stare stvari. Ništa što bi tebe trebalo zanimati, kapetane.'"},
+
+  {"type": "rule", "cond": "p1 AND p5 AND NOT 115001", "out": "talk_p1p5_1", "global": "115001", "desc": "Brane+Ana razgovor 1"},
+  {"type": "rule", "cond": "p1 AND p5 AND 115001 AND NOT 115002", "out": "talk_p1p5_2", "global": "115002", "desc": "Brane+Ana razgovor 2"},
+
+  {"type": "item", "key": "talk_p1p5_1", "value": "🟢 Ana, nervozno: 'Kapetane, sinoć... vidjela sam nekoga u hodniku ispred Valentinine kabine. Kasno je bilo, oko ponoći.'"},
+  {"type": "item", "key": "talk_p1p5_2", "value": "⚫ Brane se ukočio, ali brzo se sabrao: 'Koga si vidjela?' 🟢 Ana: 'Nisam sigurna. Bilo je tamno. Ali... mislim da znam.' Zastane.",
+    "p5": "🧠 Ti si vidjela Gordanu. Jasno. Ali bojиш se reći naglas — što ako si u krivu? Ili što ako te netko čuje?",
+    "p1": "🧠 Znаш da je Ana možda vidjela tebe. Bio si tamo oko 23h. Ali otišao si PRIJE ponoći."
+  },
+
+  {"type": "rule", "cond": "p3 AND p6 AND NOT 136001", "out": "talk_p3p6_1", "global": "136001", "desc": "Tina+Gordana razgovor 1"},
+  {"type": "rule", "cond": "p3 AND p6 AND 136001 AND NOT 136002", "out": "talk_p3p6_2", "global": "136002", "desc": "Tina+Gordana razgovor 2"},
+  {"type": "rule", "cond": "p3 AND p6 AND 136002 AND NOT 136003", "out": "talk_p3p6_3", "global": "136003", "desc": "Tina+Gordana razgovor 3"},
+
+  {"type": "item", "key": "talk_p3p6_1", "value": "🔵 Tina: 'Gordana, rekla mi je da Valentina nije dobro spavala. Jesi li primijetila da je bila pod stresom?' 🟣 Gordana: 'Pod stresom? Valentina je uvijek pod stresom. To je njezin brand.'"},
+  {"type": "item", "key": "talk_p3p6_2", "value": "🔵 Tina: 'Propisala sam joj tablete za spavanje. Nadam se da ih nije uzela sve odjednom, znaš kako je ona... neoprezna.' 🟣 Gordana, kratko: 'Nisam čuvarka njezinih lijekova.'"},
+  {"type": "item", "key": "talk_p3p6_3", "value": "🔵 Tina primijeti da je Gordana blijeda. 'Gordana, sve je s tobom u redu?' 🟣 Gordana se okrene prema moru: 'Malo mi je muka od valova. Ispričaj me.'",
+    "p3": "🧠 Tina ne zna da su njezine tablete bile oruđe ubojstva. Ali primjećuje da je Gordana danas čudno nervozna."
+  },
+
+  {"type": "rule", "cond": "p2 AND p5 AND NOT 125001", "out": "talk_p2p5_1", "global": "125001", "desc": "Zlatko+Ana razgovor 1"},
+  {"type": "rule", "cond": "p2 AND p5 AND 125001 AND NOT 125002", "out": "talk_p2p5_2", "global": "125002", "desc": "Zlatko+Ana razgovor 2"},
+
+  {"type": "item", "key": "talk_p2p5_1", "value": "🟡 Zlatko: 'Ti si njena asistentica. Znаš gdje ona drži dokumente? Ugovor iz 2019, nešto o kompaniji.' 🟢 Ana se napne: 'Valentina mi nije davala pristup svim stvarima.'"},
+  {"type": "item", "key": "talk_p2p5_2", "value": "🟡 Zlatko: 'Naravno da nije. Jer te je kontrolirala, kao i sve ostale.' Pauza. 'Žao mi je. Znam da si je voljela.' 🟢 Ana odmahne pogledom prema moru.",
+    "p5": "🧠 Jesi li je voljela? Da. I zato te boli svaka ova sekunda."
+  }
+]

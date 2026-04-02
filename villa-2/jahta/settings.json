@@ -1,0 +1,39 @@
+{
+  "title": "Smrt na Jadranskom moru",
+  "players": {
+    "p1": { "color": "⚫", "colorName": "Crni", "name": "Kapetan Brane", "role": "Kapetan jahte" },
+    "p2": { "color": "🟡", "colorName": "Žuti", "name": "Zlatko Modrić", "role": "Bivši muž" },
+    "p3": { "color": "🔵", "colorName": "Plavi", "name": "dr. Tina Horvat", "role": "Liječnica" },
+    "p4": { "color": "🔴", "colorName": "Crveni", "name": "Rico Barać", "role": "Kuhar" },
+    "p5": { "color": "🟢", "colorName": "Zeleni", "name": "Ana Petek", "role": "Asistentica" },
+    "p6": { "color": "🟣", "colorName": "Ljubičasti", "name": "Gordana Bolf", "role": "Menadžerica" }
+  },
+  "rooms": {
+    "1000": ["1001", "1002", "1003"],
+    "2000": ["2001", "2002", "2003"],
+    "3000": ["3001", "3002", "3003"],
+    "4000": ["4001", "4002"],
+    "5000": ["5001", "5002", "5003", "5004", "8000"],
+    "6000": ["6001"],
+    "7000": ["7001", "7002"],
+    "9000": ["9001", "9002"],
+    "10000": ["10001", "10002"]
+  },
+  "flags": {
+    "88771": "Pribor za uzimanje otisaka pronađen",
+    "88772": "Prazna bočica tableta nađena",
+    "88773": "Valentinin telefon otključan",
+    "88774": "Brodski manifest pregledan",
+    "50001": "Gordanina torba pretražena — bočica nađena",
+    "50010": "Valentinina čaša s otiscima osigurana",
+    "50020": "Tajni dokument (ucjena) pronađen",
+    "60001": "Kapetanov dnevnik pronađen",
+    "70001": "Ricov sanduk otvoren — šverc otkriven",
+    "80011": "Valentinin telefon pronađen",
+    "80021": "Gordanin raspored kretanja rekonstruiran",
+    "90001": "Anaino svjedočanstvo zabilježeno",
+    "90002": "Ana pronašla Gordanin ruž na podu hodnika"
+  },
+  "globalStart": [],
+  "notes": "Jahta 'Sunčana', Jadransko more. Valentina Kralj pronađena mrtva u svojoj kabini jutro drugog dana. Ubila ju je Gordana Bolf otrovom (usipala tablete za spavanje u vino). Kapetan Brane bio je u kabini ranije te večeri — afera — ali je otišao prije ubojstva. Ana Petek vidjela je Gordanu u hodniku."
+}

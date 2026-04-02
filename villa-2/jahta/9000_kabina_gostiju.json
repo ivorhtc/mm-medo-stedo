@@ -1,0 +1,101 @@
+[
+  {"type": "story", "story": "=== KABINA ZA GOSTE (9000) === Gordana i Zlatko dijele ovu kabinu (odvojeni kreveti). Gordanina strana je uredna do paranoje. Zlatkova strana — kaos. Ovdje se kriju ključni dokazi."},
+
+  {"type": "rule", "cond": "9000", "out": "9000", "desc": "Kabina — ulaz"},
+  {"type": "rule", "cond": "9001", "out": "9001", "desc": "Gordanina strana — ormar i torba"},
+  {"type": "rule", "cond": "9001 AND 88771", "out": "90011", "desc": "Gordanina strana — otisci"},
+  {"type": "rule", "cond": "9002", "out": "9002", "desc": "Zlatkova strana — aktovka i kaos"},
+  {"type": "rule", "cond": "9002 AND 88771", "out": "90021", "desc": "Zlatkova strana — otisci"},
+
+  {"type": "item", "key": "9000", "value": "Kabina za goste. Dva odvojena kreveta, uski prolaz između. Desna strana savršeno uredna — Gordanina. Lijeva — aktovka otvorena na podu, kravata bačena na krevet — Zlatkova. Na zajedničkom nočnom ormariću između kreveta stoji boca vode i jedna naušnica — srebrna, polumjesec.",
+    "p6": "🧠 Naušnica! Izgubila si je. Gdje si je izgubila? Jesi li bila... na balkonu? Srce ti se stegne.",
+    "p7": "Voditelju: naušnica ovdje je DRUGI primjerak iz para — jedna je na Valentininom balkonu, ova je ostala u kabini. Gordana nosi par srebrnih polumjeseca."
+  },
+
+  {"type": "rule", "cond": "9000 AND NOT 90001", "out": "9000event", "desc": "Zajednički ormarić — naušnica, još nije uzeta"},
+  {"type": "rule", "cond": "9000 AND 90001", "out": "9000b", "desc": "Zajednički ormarić — naušnica već uzeta"},
+
+  {"type": "event", "key": "9000event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p5", "p3", "p2", "p1", "p4", "p6"]},
+    "output": {
+      "winner": "Uzimate naušnicu s ormarića. Srebrna, polumjesec. Gravura: 'G'. Identična onoj s balkona?",
+      "others": "Vidite kako ${winnerN} uzima naušnicu s noćnog ormarića između kreveta.",
+      "p7": "Daj ${winnerD} naušnicu (kartica 90001). Global +90001. Ovo je drugi par naušnice s balkona. Gordana nosi srebrne polumjesece — i jedna joj je ostala ovdje, dok je drugu izgubila na Valentininom balkonu.",
+      "kartica": "🌙 NAUŠNICA (DRUGI PRIMJERAK) — Nađena u kabini gostiju, Gordanina strana. Identična naušnici s Valentinibog balkona. Gordana nosi par srebrnih polumjeseca s gravurom 'G'."
+    }
+  },
+  {"type": "item", "key": "9000b", "value": "Kabina. Naušnica s ormarića je već uzeta."},
+
+  {"type": "item", "key": "9001", "value": "Gordanina strana kabine. Krevet bez nabora, odjeća pažljivo položena. U ormaru: odijela, haljine, jedna tamna torba zaključana kombinacijskom bravom.",
+    "p6": "🧠 U torbi je sve — stranica 4 ugovora, Valentinin USB backup koji si uzela ranije, i... tvoj bilježnik s planom. Ništa ne smiju naći.",
+    "p7": "Voditelju: torba je zaključana (kombinacija: 1987 — Gordanina godina rođenja). Unutra je stranica 4 ugovora i Gordanin osobni bilježnik s planom."
+  },
+
+  {"type": "rule", "cond": "9001 AND NOT 50001", "out": "9001event", "desc": "Gordanina torba — zaključana, pokušaj otvaranja"},
+  {"type": "rule", "cond": "9001 AND 50001", "out": "9001open", "desc": "Gordanina torba — otvorena"},
+
+  {"type": "event", "key": "9001event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p5", "p3", "p2", "p1", "p4", "p6"]},
+    "output": {
+      "winner": "Pokušavate otvoriti torbu — kombinacijska brava. Trebate kod. Četiri znamenke.",
+      "others": "Vidite kako ${winnerN} pokušava otvoriti Gordaninu zaključanu torbu.",
+      "p7": "Nitko ne dobiva torbu još — trebaju naći kod. Hint: Gordanin osobni podatak. Godina rođenja je 1987. Ako igrači to pogode ili nađu negdje (brodski manifest ima datum rođenja svih putnika), Global +50001.",
+      "kartica": "🔒 GORDANINA ZAKLJUČANA TORBA — Kombinacijska brava, 4 znamenke. Potreban kod."
+    }
+  },
+
+  {"type": "rule", "cond": "9001 AND 50001", "out": "9001open"},
+  {"type": "item", "key": "9001open", "value": "Gordanina torba je otvorena. Unutra: stranica 4 ugovora o osnivanju tvrtke (klauzula o preuzimanju udjela u slučaju smrti!), jedan USB stick s oznakom 'V-backup', i tamno plavi bilježnik.",
+    "p6": "🧠 Gotovo. Našli su sve. Sve je tu.",
+    "p7": "Voditelju: ovo je smoking gun. Stranica 4 daje Gordani pravo preuzeti 100% tvrtke u slučaju Valentinine smrti. USB je Valentinin backup koji je Gordana uzela kako bi uništila kopije. Bilježnik sadrži Gordanin plan — datumi, napomene, 'V. — problem riješen do kraja tjedna'."
+  },
+
+  {"type": "rule", "cond": "9001 AND 50001 AND NOT 50010", "out": "9001bilj", "desc": "Bilježnik u torbi"},
+  {"type": "event", "key": "9001bilj",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p5", "p3", "p2", "p1", "p4", "p6"]},
+    "output": {
+      "winner": "Uzimate bilježnik. Gordanin rukopis. Datumi, napomene poslovne... i jedna rečenica zaokružena crvenom: 'V. — problem riješen do kraja tjedna'. Datum: prekjučer.",
+      "others": "Vidite kako ${winnerN} lista Gordanin bilježnik.",
+      "p7": "Daj ${winnerD} bilježnik (kartica 50010). Global +50010.",
+      "kartica": "📓 GORDANIN BILJEŽNIK — Poslovna bilješka s datumom: 'V. — problem riješen do kraja tjedna.' Zaokruženo crvenom. 'V.' = Valentina?"
+    }
+  },
+
+  {"type": "item", "key": "90011", "value": "Otisci prstiju na ormaru: samo 🟣 Gordana. Nitko drugi nije dirao ovu stranu kabine."},
+
+  {"type": "item", "key": "9002", "value": "Zlatkova strana kabine. Aktovka otvorena na podu — puna papira. Kravata na krevetu. Na stolu uz ogledalo — Zlatkove tablete za tlak, brijač, i mobitel.",
+    "p2": "🧠 Tvoj mobitel. U njemu su poruke od Valentinine odvjetnice — ona ti je slala prijetnje o razvodu. Nitko to ne smije vidjeti.",
+    "p7": "Voditelju: Zlatkove poruke su crvena haringa — daju mu motiv ali nije ubojica. Koristite ih za napetost."
+  },
+
+  {"type": "rule", "cond": "9002 AND NOT 90020", "out": "9002event", "desc": "Zlatkova aktovka — pregled"},
+  {"type": "rule", "cond": "9002 AND 90020", "out": "9002b", "desc": "Zlatkova aktovka — već pregledana"},
+
+  {"type": "event", "key": "9002event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p3", "p5", "p1", "p2", "p4", "p6"]},
+    "output": {
+      "winner": "Pretražujete aktovku. Ugovori, tužbe, jedno pismo od odvjetnice: 'Valentina posjeduje dokaze o financijskim manipulacijama iz 2016. Ako izađu u javnost, suočavate se s kaznenom prijavom.' I razredana fotografija — mlada Valentina i mladi Zlatko, sretni.",
+      "others": "Vidite kako ${winnerN} pretražuje Zlatkovu otvorenu aktovku.",
+      "p7": "Global +90020. Zlatko ima JAKI motiv — financijske manipulacije. Ali nije ubojica. Ovo je zlatna crvena haringa.",
+      "kartica": "📂 ZLATKOVA AKTOVKA — Pismo odvjetnice: 'Valentina posjeduje dokaze o financijskim manipulacijama iz 2016. Kaznena prijava moguća.' Zlatko je imao razlog željeti je mrtvu. Ali je li je ubio?"
+    }
+  },
+  {"type": "item", "key": "9002b", "value": "Zlatkova strana. Aktovka je već pretražena. Papiri su svuda."},
+  {"type": "item", "key": "90021", "value": "Otisci prstiju na Zlatkovoj aktovci: 🟡 Zlatko, 🔵 Tina (bila je tu jutros kad je tražila Zlatka), 🟣 Gordana (svježi — bila je u aktovci?). Gordanini otisci na Zlatkovoj aktovci — zašto?",
+    "p6": "🧠 Bila si u aktovci sinoć — tražila si svoju stranicu 4 da provjeriš je li Zlatko slučajno uzeo. Nije bio tu.",
+    "p7": "Voditelju: ovo je još jedan trag koji veže Gordanu — bila je u Zlatkovoj aktovci bez njegova znanja."
+  },
+
+  {"type": "story", "story": "--- RAZGOVORI U KABINI ---"},
+
+  {"type": "rule", "cond": "p2 AND p6 AND NOT 126001", "out": "talk_p2p6_1", "global": "126001", "desc": "Zlatko+Gordana razgovor 1"},
+  {"type": "rule", "cond": "p2 AND p6 AND 126001 AND NOT 126002", "out": "talk_p2p6_2", "global": "126002", "desc": "Zlatko+Gordana razgovor 2"},
+  {"type": "rule", "cond": "p2 AND p6 AND 126002 AND NOT 126003", "out": "talk_p2p6_3", "global": "126003", "desc": "Zlatko+Gordana razgovor 3"},
+
+  {"type": "item", "key": "talk_p2p6_1", "value": "🟡 Zlatko, tiho: 'Gordana. Moram znati — jesi li imala ikakve veze s tim?' 🟣 Gordana mirno folda rukave: 'Kakve veze s čim, Zlatko?'"},
+  {"type": "item", "key": "talk_p2p6_2", "value": "🟡 Zlatko: 'S Valentinom. S njezinim... odlaskom.' 🟣 Gordana zastane, pa se osmijehne: 'Valentina je imala puno neprijatelja. Kao i ti.' Pauza. 'A ti si imao puno razloga.'"},
+  {"type": "item", "key": "talk_p2p6_3", "value": "🟡 Zlatko: 'Znaš li što — ako si nešto napravila, sami smo se upropastili.' 🟣 Gordana: 'Opusti se. Drži se priče da smo bili zajedno na palubi od 22 do ponoći. Zar ne?' Zlatko je gleda dugo. Pa kimne.",
+    "p2": "🧠 Gordana od tebe traži lažni alibi. Ako ga daš, štitis je — i sebe. Ako ne daš, ona će možda izvući tvoje financijske skandale.",
+    "p6": "🧠 Zlatko je tvoj osigurač. Ima razloge šutjeti — i ты znaš za njega previše."
+  }
+]

@@ -1,0 +1,119 @@
+[
+  {"type": "story", "story": "=== VALENTININA KABINA (5000) === Mjesto zločina. Valentina pronađena mrtva u svom krevetu jutro drugog dana. Kabina je bogato uređena — njezin mali kingdom na jahti. Balkon (8000) je podsoba."},
+
+  {"type": "rule", "cond": "5000 AND NOT 50000", "out": "5000locked", "desc": "Kabina — zaključana (jutro, prije nego voditelj 'otvori' istragu)"},
+  {"type": "rule", "cond": "5000 AND 50000", "out": "5000", "desc": "Kabina — otvorena, istraga počela"},
+  {"type": "rule", "cond": "5001 AND 50000", "out": "5001", "desc": "Krevet i noćni ormarić"},
+  {"type": "rule", "cond": "5001 AND 50000 AND 88771", "out": "50011", "desc": "Krevet — otisci"},
+  {"type": "rule", "cond": "5002 AND 50000", "out": "5002", "desc": "Toaletni stol i kupaonica"},
+  {"type": "rule", "cond": "5002 AND 50000 AND 88771", "out": "50021", "desc": "Toaletni stol — otisci"},
+  {"type": "rule", "cond": "5003 AND 50000", "out": "5003", "desc": "Garderoba i ormar"},
+  {"type": "rule", "cond": "5004 AND 50000", "out": "5004", "desc": "Stol uz prozor — Valentinin laptop"},
+  {"type": "rule", "cond": "8000 AND 50000", "out": "8000", "desc": "Balkon Valentinine kabine"},
+  {"type": "rule", "cond": "8000 AND 50000 AND 88771", "out": "80001", "desc": "Balkon — otisci"},
+
+  {"type": "item", "key": "5000locked", "value": "Vrata Valentinine kabine su zatvorena. Kapetan ih je zapečatio jutros kad je tijelo pronađeno. Potrebno je njegovo odobrenje za ulaz.",
+    "p1": "🧠 Ti imaš ključ. Možeš otvoriti kabinu — ali ako to učiniš, svi će znati da si imao pristup.",
+    "p7": "Voditelju: kabina se otvara kad ti odlučiš — kad je dramatski pravi trenutak. Postavi global +50000 kad si spreman otvoriti istragu."
+  },
+
+  {"type": "item", "key": "5000", "value": "Valentinina kabina. Luksuzno uređena — bijeli posteljina, ružičaste jastučnice, parfemi na toaletnom stolu. Valentina leži na krevetu, mirna kao da spava. Mrlja od vina na jastuku pored nje. Možete pregledati: krevet i noćni ormarić (5001), toaletni stol i kupaonicu (5002), garderobu (5003) ili laptop na stolu (5004). Balkon je na (8000).",
+    "p3": "🧠 Kao liječnica, primjećuješ: nema znakova borbe, nema povreda. Izraz lica miran. Trovanje? Predioziranje? Tvoje tablete...",
+    "p5": "🧠 Valentinin miris je svuda. Gubiš koncentraciju. Skupi se — ona bi htjela da nađeš što se stvarno dogodilo.",
+    "p7": "Voditelju: Valentina je otrovana tabletama za spavanje (predioziranje), pojačano alkoholom. Smrt je nastupila između ponoći i 2h ujutro."
+  },
+
+  {"type": "item", "key": "5001", "value": "Valentinin krevet. Bijela posteljina, dva jastuka. Jedan jastuк ima mrlju od crvenog vina — polukružna, kao da je čaša pala i razlila se. Na noćnom ormariću: bočica vode (prazna), knjiga okrenuta naopako na stranici 247, ružičasti mobitel.",
+    "p2": "🧠 Knjiga — 'Razvod bez žrtava'. Ironija.",
+    "p7": "Voditelju: mobitel je ključan trag (flag 80011). Sadrži poruke između Valentine i Gordane — uključujući prijetnje."
+  },
+
+  {"type": "rule", "cond": "5001 AND 50000 AND NOT 80011", "out": "5001event", "desc": "Noćni ormarić — mobitel, još nije uzet"},
+  {"type": "rule", "cond": "5001 AND 50000 AND 80011", "out": "5001b", "desc": "Noćni ormarić — mobitel već uzet"},
+
+  {"type": "event", "key": "5001event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p5", "p3", "p1", "p2", "p4", "p6"]},
+    "output": {
+      "winner": "Uzimate Valentinin mobitel. Zaključan je — ali na ekranu se vidi notifikacija: 'Gordana: Znaš što trebaš napraviti. Nema pregovaranja.' Poruka od jučer u 19:43.",
+      "others": "Vidite kako ${winnerN} uzima Valentinin ružičasti mobitel s noćnog ormarića.",
+      "p7": "Daj ${winnerD} mobitel (kartica 80011). Global +80011. Mobitel je zaključan ali notifikacija je vidljiva. Ako netko zna šifru (p5 zna — Valentinin rođendan 0412), mogu pročitati sve poruke.",
+      "kartica": "📱 VALENTININ MOBITEL — Zaključan. Na ekranu: notifikacija od 'Gordana': 'Znaš što trebaš napraviti. Nema pregovaranja.' Jučer u 19:43. Šifra? Možda nekko zna."
+    }
+  },
+  {"type": "item", "key": "5001b", "value": "Krevet. Mrlja od vina, knjiga. Mobitel je već uzet."},
+  {"type": "item", "key": "50011", "value": "Otisci prstiju na noćnom ormariću: ⚫ Kapetan Brane (svježi!), 🟢 Ana, 🟣 Gordana. Braneovi otisci su na gornjem dijelu — dohvačao je nešto? Ili je ostavio nešto?",
+    "p1": "🧠 Tvoji otisci su tamo jer si uzeo čašu vode i dао joj sinoć kad si bio u kabini. To je sve. Zar ne?",
+    "p7": "Voditelju: Brane je bio tu — istina. Ali otišao je živ i Valentina živa. Gordanini otisci su od posjeta sinoć navečer kad je 'provjerila je li Valentini dobro'."
+  },
+
+  {"type": "item", "key": "5002", "value": "Toaletni stol s ogledalom. Red parfema, kistovi za šminku, krema. Na rubu stola — prazna kutijica za tablete s receptom: 'dr. Tina Horvat — tablete za spavanje, max. 1 na dan'. Kutijica bi trebala imati 10 tableta. Prazna je.",
+    "p3": "🧠 Propisala si joj 10 tableta. Ako ih je uzela sve odjednom — posebno s alkoholom — to bi bilo dovoljno. To bi bilo... savršeno tiho ubojstvo. Tko bi to znao?",
+    "p6": "🧠 Prazna kutijica. Dobro. Nema tableta, nema dokaza gdje su završile.",
+    "p7": "Voditelju: kutijica je prazna jer je Gordana uzela tablete ranije (iz Tinine torbe) i usipala ih u Valentininu čašu u salonu. Forensički dokaz: Valentinina krv ima visoke razine sedativa."
+  },
+
+  {"type": "rule", "cond": "5002 AND 50000 AND NOT 88772", "out": "5002event", "desc": "Toaletni stol — kutijica tableta, prvi put"},
+  {"type": "rule", "cond": "5002 AND 50000 AND 88772", "out": "5002b", "desc": "Toaletni stol — kutijica već uzeta"},
+
+  {"type": "event", "key": "5002event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p3", "p5", "p2", "p1", "p4", "p6"]},
+    "output": {
+      "winner": "Uzimate praznu kutijicu tableta. Dr. Tina Horvat je propisala tablete — sve su nestale. Ali... zar se može umrijeti od tih tableta? Pogledajte dozu.",
+      "others": "Vidite kako ${winnerN} uzima praznu kutijicu lijekova s toaletnog stola.",
+      "p7": "Daj ${winnerD} kutijicu (kartica 88772). Global +88772. Ovo je ključni trag — prazna kutijica tableta koje je Gordana uzela iz Tinine torbe i usipala u Valentininu čašu.",
+      "kartica": "💊 PRAZNA KUTIJICA TABLETA — Recept: 'dr. Tina Horvat — Nitrazepam 5mg, max. 1 tableta na dan.' Trebalo je biti 10 tableta. Prazno. 10 tableta + alkohol = smrtonosna kombinacija."
+    }
+  },
+  {"type": "item", "key": "5002b", "value": "Toaletni stol. Parfemi, kistovi. Kutijica tableta je već uzeta — bila je prazna."},
+  {"type": "item", "key": "50021", "value": "Otisci prstiju na toaletnom stolu: 🟢 Ana (svugdje — ona je sređivала Valentinine stvari), 🟣 Gordana (na rubu gdje je stajala kutijica). Nitko drugi.",
+    "p7": "Voditelju: Gordanini otisci na toаletnom stolu jer je uzimala kutijicu — ili je lagala da 'provjerava tablete'. Oba su ista krivnja."
+  },
+
+  {"type": "item", "key": "5003", "value": "Garderoba. Haljine, cipele, torbe. Na podu kutija bez oznake — unutra hrpa papira i USB stick.",
+    "p5": "🧠 Ta kutija — Valentina mi je rekla da nikad ne diram kutiju na podu garderobe. Nikad. Ovo je prvi put da nema tko me zaustavi.",
+    "p7": "Voditelju: USB stick sadrži kopije svih kompromitirајućih materijala — snimke Gordane, dokaze o Ricovom švercu, Zlatkove lažne financije. Valentina je bila savjesna ucjenjivarica."
+  },
+
+  {"type": "rule", "cond": "5003 AND 50000 AND NOT 50030", "out": "5003event", "desc": "Garderoba — kutija s USB-om, još nije uzeta"},
+  {"type": "rule", "cond": "5003 AND 50000 AND 50030", "out": "5003b", "desc": "Garderoba — kutija već otvorena"},
+
+  {"type": "event", "key": "5003event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p5", "p2", "p3", "p1", "p4", "p6"]},
+    "output": {
+      "winner": "Otvarate kutiju. Papiri — printani razgovori, fotografije, printani bankarski izvodi. I USB stick. Ovo je... Valentinin arkiv. Sve što je znala o svima.",
+      "others": "Vidite kako ${winnerN} otvara kutiju na podu garderobe i izvlači gomilu papira.",
+      "p7": "Daj ${winnerD} USB (kartica 50030). Global +50030. USB sadrži: snimke Gordane kako govori o 'preuzimanju branda', Ricove poruke o švercu, Zlatkove lažne financije. Valentina je bila temeljita.",
+      "kartica": "💾 VALENTININ USB — Kopije svega što je znala o svima. Razgovori, fotografije, bankarski izvodi. Tko je imao motiv ukrasti ovo — ili uništiti?"
+    }
+  },
+  {"type": "item", "key": "5003b", "value": "Garderoba. Kutija je otvorena i pregledana. USB je uzet."},
+
+  {"type": "item", "key": "5004", "value": "Laptop na stolu uz prozor. Otvoren, u sleep modu. Na ekranu — kada ga budite — otvoreni tab: 'Prijenos udjela d.o.o. — procedura'. I u draftu emaila, nedovršena poruka odvjetniku: 'Dragi Ante, trebam hitno promijeniti klauzulu o nasljedstvu. Gordana ne smije...' Nedovršeno.",
+    "p6": "🧠 Znala je. Valentina je znala da planiraš nešto. Zato si morala biti brza.",
+    "p5": "🧠 'Gordana ne smije...' Što? Ovo je posljednja stvar koju je Valentina pisala.",
+    "p7": "Voditelju: ovo je jasan dokaz da je Valentina sumnjala u Gordanu i planirala je isključiti iz nasljedstva. Gordana je imala razlog žuriti."
+  },
+
+  {"type": "item", "key": "8000", "value": "Balkon Valentinine kabine. Mali, s pogledom na pučinu. Metalna ograda. Na podu balkona — nedotaknuta cigareta, nikad zapaljena. I jedna naušnica — srebrna, u obliku polumjeseca.",
+    "p1": "🧠 Ta naušnica je Gordanina. Viđao si je kako je nosi.",
+    "p5": "🧠 Gordana ne puši, ali bila je na ovom balkonu sinoć. Zašto?",
+    "p7": "Voditelju: naušnica je ključni fizički dokaz koji direktno vezuje Gordanu za Valentininu kabinu sinoć. Gordana je izašla na balkon nakon što je dala Valentini vino — provjeravala je stanje."
+  },
+
+  {"type": "rule", "cond": "8000 AND 50000 AND NOT 80001e", "out": "8000event", "desc": "Balkon — naušnica, još nije uzeta"},
+  {"type": "rule", "cond": "8000 AND 50000 AND 80001e", "out": "8000b", "desc": "Balkon — naušnica već uzeta"},
+
+  {"type": "event", "key": "8000event",
+    "logic": {"winnerStrategy": "priorityList", "priorityList": ["p5", "p3", "p1", "p2", "p4", "p6"]},
+    "output": {
+      "winner": "Uzimate naušnicu. Srebrna, polumjesec. Na unutarnjoj strani gravura: 'G'. Nije Valentinina.",
+      "others": "Vidite kako ${winnerN} uzima nešto s poda balkona.",
+      "p7": "Daj ${winnerD} naušnicu (kartica 80001e). Global +80001e. Gordanina naušnica na Valentininom balkonu — fizički dokaz prisustva.",
+      "kartica": "🌙 SREBRNA NAUŠNICA — Pronađena na balkonu Valentinine kabine. Gravura: 'G'. Nije Valentinina. Čija je? Tko je bio na ovom balkonu sinoć?"
+    }
+  },
+  {"type": "item", "key": "8000b", "value": "Balkon. Cigareta na podu, nikad zapaljena. Naušnica je već uzeta."},
+  {"type": "item", "key": "80001", "value": "Otisci prstiju na ogradi balkona: 🟣 Gordana (čisti, svježi), ⚫ Kapetan Brane (stariji, možda od ranije). Samo ta dva.",
+    "p7": "Voditelju: Gordanini svježi otisci na balkonu potvrđuju da je bila tu sinoć — nakon što je Valentinu otrovala."
+  }
+]
