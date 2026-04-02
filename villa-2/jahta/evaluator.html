@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8">
+  <title>Murder Mystery Evaluator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg1: #171414;
+      --bg2: #2a1c1c;
+      --card: #000000;
+      --accent: #c84b4b;
+      --gold: #d4b46e;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at 10% 10%, var(--bg2), var(--bg1));
+    }
+    .wrap { max-width: 1200px; margin: 28px auto; padding: 20px; }
+    .card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    }
+    h1 { color: var(--gold); margin: 0 0 4px; }
+    h3, h4 { color: var(--gold); margin: 16px 0 8px; }
+    .subtitle { color: #888; font-size: 13px; margin-bottom: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .player-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+    .player-emoji { font-size: 32px; line-height: 1.2; }
+    .player-label { font-weight: bold; display: block; margin: 6px 0 8px; color: #eee; font-size: 13px; }
+    .player-box input {
+      width: 100%;
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #111;
+      color: #fff;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .player-box input:focus { outline: none; border-color: var(--gold); }
+    .hint-box {
+      font-size: 11px;
+      margin-top: 5px;
+      text-align: left;
+    }
+    .hint-box div {
+      background: #222;
+      color: #aaa;
+      padding: 3px 6px;
+      border-radius: 5px;
+      margin-bottom: 2px;
+    }
+    .globals-row { margin-top: 12px; }
+    .globals-row label { color: var(--gold); display: block; margin-bottom: 5px; font-size: 14px; }
+    .globals-row input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #111;
+      color: #fff;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    .globals-row input:focus { outline: none; border-color: var(--gold); }
+    .globals-hint {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .flag-chip {
+      background: #1e1a2e;
+      border: 1px solid #444;
+      color: #bbb;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .flag-chip:hover { border-color: var(--gold); color: var(--gold); }
+    .flag-chip.active { background: #2e1a1a; border-color: var(--accent); color: var(--accent); }
+    .controls { margin-top: 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    button {
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: opacity 0.15s;
+    }
+    button:hover { opacity: 0.85; }
+    button.secondary {
+      background: #333;
+      color: #ccc;
+      font-size: 12px;
+      padding: 7px 14px;
+    }
+    .result-card {
+      margin-top: 12px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .result-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: #1a1a1a;
+      border-bottom: 1px solid #333;
+    }
+    .result-card-header strong { color: #eee; font-size: 14px; }
+    .result-card-header button { font-size: 11px; padding: 4px 10px; }
+    .result-card-body { padding: 12px 14px; }
+    .msg-block {
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .msg-public { background: #1a1a1a; color: #ddd; border-left: 3px solid #555; }
+    .msg-private { background: #1a1e10; color: #c8e6a0; border-left: 3px solid #5a8a30; }
+    .msg-admin { background: #1e1510; color: #e6c87a; border-left: 3px solid #a07030; }
+    .msg-global { background: #1e1020; color: #c8a8e6; border-left: 3px solid #7040a0; }
+    .msg-kartica { background: #101e1e; color: #80d0d0; border-left: 3px solid #2080a0; }
+    .msg-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 4px; }
+    pre {
+      background: #0d0b0b;
+      color: #888;
+      padding: 12px;
+      border-radius: 8px;
+      max-height: 300px;
+      overflow: auto;
+      font-size: 11px;
+    }
+    #loadStatus {
+      color: var(--gold);
+      font-size: 12px;
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: #111;
+      border-radius: 6px;
+    }
+    .room-files-input { margin-top: 10px; }
+    .room-files-input label { color: var(--gold); display: block; margin-bottom: 5px; font-size: 13px; }
+    .room-files-input textarea {
+      width: 100%;
+      background: #111;
+      color: #aaa;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 12px;
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 60px;
+    }
+    .section-sep { border: none; border-top: 1px solid #222; margin: 18px 0; }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 6px;
+    }
+    .badge-red { background: #3a1515; color: #e88; }
+    .badge-green { background: #152a15; color: #8e8; }
+    .badge-purple { background: #1e1530; color: #c8a; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>🎩 Murder Mystery Evaluator</h1>
+    <div class="subtitle">Smrt na Jadranskom moru</div>
+
+    <!-- Room files config -->
+    <div class="room-files-input">
+      <label>📁 Room fileovi (jedan po liniji, bez .json):</label>
+      <textarea id="roomFilesList">1000_paluba
+2000_salon
+3000_4000_7000_ostalo
+5000_valentinina_kabina
+9000_kabina_gostiju</textarea>
+    </div>
+
+    <div id="loadStatus">Klikni Evaluiraj za učitavanje...</div>
+
+    <hr class="section-sep">
+
+    <!-- Player inputs -->
+    <div class="grid" id="playerGrid">
+      <!-- generirano iz settings.json -->
+      <div class="player-box" id="box-p1">
+        <div class="player-emoji">⚫</div>
+        <label class="player-label" id="label-p1">Crni</label>
+        <input id="p1" placeholder="npr. 1000, 1001">
+        <div class="hint-box" id="desc-p1"></div>
+      </div>
+      <div class="player-box" id="box-p2">
+        <div class="player-emoji">🟡</div>
+        <label class="player-label" id="label-p2">Žuti</label>
+        <input id="p2" placeholder="">
+        <div class="hint-box" id="desc-p2"></div>
+      </div>
+      <div class="player-box" id="box-p3">
+        <div class="player-emoji">🔵</div>
+        <label class="player-label" id="label-p3">Plavi</label>
+        <input id="p3" placeholder="">
+        <div class="hint-box" id="desc-p3"></div>
+      </div>
+      <div class="player-box" id="box-p4">
+        <div class="player-emoji">🔴</div>
+        <label class="player-label" id="label-p4">Crveni</label>
+        <input id="p4" placeholder="">
+        <div class="hint-box" id="desc-p4"></div>
+      </div>
+      <div class="player-box" id="box-p5">
+        <div class="player-emoji">🟢</div>
+        <label class="player-label" id="label-p5">Zeleni</label>
+        <input id="p5" placeholder="">
+        <div class="hint-box" id="desc-p5"></div>
+      </div>
+      <div class="player-box" id="box-p6">
+        <div class="player-emoji">🟣</div>
+        <label class="player-label" id="label-p6">Ljubičasti</label>
+        <input id="p6" placeholder="">
+        <div class="hint-box" id="desc-p6"></div>
+      </div>
+      <div class="player-box" id="box-p7">
+        <div class="player-emoji">⚠️</div>
+        <label class="player-label" id="label-p7">Voditelj</label>
+        <input id="p7" placeholder="">
+        <div class="hint-box" id="desc-p7"></div>
+      </div>
+    </div>
+
+    <!-- Globals -->
+    <div class="globals-row">
+      <label>🏁 Aktivni flagovi (globalni brojevi):</label>
+      <input id="globalNumbers" placeholder="npr. 88771, 50000, 80011">
+      <div class="globals-hint" id="flagChips"></div>
+    </div>
+
+    <div class="controls">
+      <button id="evalBtn">⚖️ Evaluiraj rundu</button>
+      <button class="secondary" id="clearBtn">🗑 Očisti inpute</button>
+      <button class="secondary" id="toggleDebug">🐛 Debug</button>
+    </div>
+
+    <hr class="section-sep">
+
+    <h3>Rezultati</h3>
+    <div id="result"></div>
+
+    <h4 id="debugTitle" style="display:none">Debug log</h4>
+    <pre id="debug" style="display:none">—</pre>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+let rulesCache  = [];
+let itemMap     = {};
+let roomMap     = {};        // child → parent
+let flagDefs    = {};        // flag id → opis
+let playerDefs  = {};        // p1..p7 → { colorName, name, role, color }
+let gameTitle   = "";
+
+// ============================================================
+// LOAD
+// ============================================================
+async function loadGameFiles() {
+  const status = document.getElementById('loadStatus');
+  status.textContent = '⏳ Učitavanje...';
+
+  // 1. settings.json
+  let settings;
+  try {
+    settings = await fetch('game_files/settings.json').then(r => r.json());
+  } catch(e) {
+    status.textContent = '❌ settings.json nije pronađen: ' + e.message;
+    throw e;
+  }
+
+  // Parsiraj settings
+  gameTitle = settings.title || "Murder Mystery";
+  document.querySelector('h1').textContent = '🎩 ' + gameTitle;
+  document.querySelector('.subtitle').textContent = '';
+
+  // Players iz settings.players
+  playerDefs = {};
+  if (settings.players) {
+    Object.entries(settings.players).forEach(([key, p]) => {
+      playerDefs[key] = p;
+      const idx = parseInt(key.slice(1));
+      const label = document.getElementById('label-' + key);
+      if (label) label.textContent = (p.color || '') + ' ' + (p.name || p.colorName || key);
+    });
+  }
+
+  // Flag definicije iz settings.flags
+  flagDefs = settings.flags || {};
+  renderFlagChips();
+
+  // Room map iz settings.rooms (parent → [children])
+  roomMap = {};
+  if (settings.rooms) {
+    Object.entries(settings.rooms).forEach(([parent, children]) => {
+      (children || []).forEach(child => {
+        roomMap[child.toString()] = parent.toString();
+      });
+    });
+  }
+
+  // 2. Room fileovi
+  const roomFilesList = document.getElementById('roomFilesList').value
+    .split('\n').map(l => l.trim()).filter(Boolean);
+
+  const loaded = [];
+  const failed = [];
+  for (const name of roomFilesList) {
+    try {
+      const data = await fetch(`game_files/rooms/${name}.json`).then(r => r.json());
+      loaded.push({ name, data });
+    } catch(e) {
+      failed.push(name);
+    }
+  }
+
+  // Spoji rules i items
+  rulesCache = [];
+  itemMap    = {};
+
+  loaded.forEach(({ data }) => {
+    data.forEach(obj => {
+      if (obj.type === 'rule')  rulesCache.push(obj);
+      if (obj.type === 'item')  { if (obj.key) itemMap[obj.key] = obj; }
+      if (obj.type === 'event') { if (obj.key) itemMap[obj.key] = obj; }
+      // 'story' se ignorira
+    });
+  });
+
+  let statusMsg = `✅ ${rulesCache.length} rules, ${Object.keys(itemMap).length} items iz ${loaded.length} soba`;
+  if (failed.length) statusMsg += ` | ❌ Nije nađeno: ${failed.join(', ')}`;
+  status.textContent = statusMsg;
+
+  // Postavi hint listenere
+  setupHintListeners();
+
+  return true;
+}
+
+// ============================================================
+// FLAG CHIPS
+// ============================================================
+function renderFlagChips() {
+  const container = document.getElementById('flagChips');
+  container.innerHTML = '';
+  Object.entries(flagDefs).forEach(([flagId, desc]) => {
+    const chip = document.createElement('span');
+    chip.className = 'flag-chip';
+    chip.title = desc;
+    chip.textContent = flagId;
+    chip.dataset.flagId = flagId;
+    chip.addEventListener('click', () => toggleFlag(chip, flagId));
+    container.appendChild(chip);
+  });
+  // Sync chip state s inputom
+  document.getElementById('globalNumbers').addEventListener('input', syncChipStates);
+}
+
+function toggleFlag(chip, flagId) {
+  const input = document.getElementById('globalNumbers');
+  const current = input.value.split(',').map(x => x.trim()).filter(Boolean);
+  const idx = current.indexOf(flagId);
+  if (idx === -1) {
+    current.push(flagId);
+    chip.classList.add('active');
+  } else {
+    current.splice(idx, 1);
+    chip.classList.remove('active');
+  }
+  input.value = current.join(', ');
+}
+
+function syncChipStates() {
+  const input = document.getElementById('globalNumbers');
+  const active = new Set(input.value.split(',').map(x => x.trim()).filter(Boolean));
+  document.querySelectorAll('.flag-chip').forEach(chip => {
+    chip.classList.toggle('active', active.has(chip.dataset.flagId));
+  });
+}
+
+// ============================================================
+// HINT LISTENERS
+// ============================================================
+function setupHintListeners() {
+  ['p1','p2','p3','p4','p5','p6','p7'].forEach(pid => {
+    const input = document.getElementById(pid);
+    if (!input) return;
+    input.removeEventListener('input', input._hintHandler);
+    input._hintHandler = () => updateHints(pid);
+    input.addEventListener('input', input._hintHandler);
+  });
+}
+
+function updateHints(pid) {
+  const input = document.getElementById(pid);
+  const box   = document.getElementById('desc-' + pid);
+  if (!input || !box) return;
+  const vals = input.value.split(/[;,\s]+/).map(v => v.trim()).filter(Boolean);
+  const hints = [];
+  vals.forEach(v => {
+    // Provjeri je li to flag
+    if (flagDefs[v]) hints.push(`🏁 ${v}: ${flagDefs[v]}`);
+    // Provjeri rules
+    rulesCache.forEach(r => {
+      if (r.cond === v && r.desc) hints.push(r.desc);
+    });
+  });
+  box.innerHTML = [...new Set(hints)].map(d => `<div>${d}</div>`).join('');
+}
+
+// ============================================================
+// READ INPUTS
+// ============================================================
+function readInputs() {
+  const players = ['p1','p2','p3','p4','p5','p6','p7'].map(pid => {
+    const input = document.getElementById(pid);
+    if (!input) return null;
+    const v = input.value.trim();
+    if (!v) return null;
+    return v.split(/[;,\s]+/).map(x => x.trim()).filter(Boolean);
+  });
+
+  const globals = (document.getElementById('globalNumbers').value || '')
+    .split(/[,\s]+/).map(x => x.trim()).filter(Boolean);
+
+  return { players, globals };
+}
+
+// ============================================================
+// EXPAND WITH PARENT ROOMS
+// ============================================================
+function expandWithParents(players) {
+  return players.map(vals => {
+    if (!vals) return null;
+    const expanded = new Set(vals);
+    vals.forEach(v => {
+      const parent = roomMap[v.toString()];
+      if (parent) expanded.add(parent);
+    });
+    return Array.from(expanded);
+  });
+}
+
+// ============================================================
+// BUILD NUMBER MAP
+// numberMap[num] = [playerIndex, ...]  (0-based)
+// ============================================================
+function buildNumberMap(players, globals) {
+  const map = {};
+
+  players.forEach((vals, i) => {
+    if (!vals) return;
+    vals.forEach(n => {
+      if (!map[n]) map[n] = new Set();
+      map[n].add(i);
+    });
+  });
+
+  // Global flagovi — dodaju se svim prisutnim igračima (koji imaju bilo koji unos)
+  const presentIndices = players.map((v, i) => v ? i : -1).filter(i => i >= 0);
+  globals.forEach(g => {
+    if (!map[g]) map[g] = new Set();
+    presentIndices.forEach(i => map[g].add(i));
+  });
+
+  const out = {};
+  Object.keys(map).forEach(k => out[k] = Array.from(map[k]));
+  return out;
+}
+
+// ============================================================
+// VALID ROOMS (sve parent + child sobe iz roomMap)
+// ============================================================
+function getValidRooms() {
+  const valid = new Set();
+  Object.keys(roomMap).forEach(k => valid.add(k));
+  Object.values(roomMap).forEach(v => valid.add(v));
+  return valid;
+}
+
+// ============================================================
+// RULE EVALUATOR
+// ============================================================
+function makeEvaluator(condString) {
+  const s = (condString || '').toString().replace(/\s+/g, ' ').trim();
+
+  const numTokens    = [...new Set((s.match(/\b\d+\b/g)     || []))];
+  const playerTokens = [...new Set((s.match(/\bp\d+\b/ig)   || []).map(t => t.toLowerCase()))];
+
+  return function evaluate({ players, numberMap }) {
+    const varMap = {};
+
+    // Numerički flagovi / sobe
+    numTokens.forEach(n => {
+      varMap[n] = (numberMap[n] || []).length > 0;
+    });
+
+    // Igrači: p1..p7
+    const validRooms = getValidRooms();
+    const roomNums   = numTokens.filter(n => validRooms.has(n));
+
+    playerTokens.forEach(pt => {
+      const idx = parseInt(pt.slice(1), 10) - 1;
+      if (roomNums.length > 0) {
+        // p4 znači "p4 je u nekoj od navedenih soba"
+        varMap[pt] = roomNums.some(n => (numberMap[n] || []).includes(idx));
+      } else {
+        // p4 znači "p4 je upisao bilo što (prisutan)"
+        varMap[pt] = players[idx] !== null;
+      }
+    });
+
+    // Izgradi izraz
+    let expr = s
+      .replace(/\bNOT\b/ig, '!')
+      .replace(/\bAND\b/ig, '&&')
+      .replace(/\bOR\b/ig,  '||');
+
+    // Zamijeni tokene — dulje tokene prvo (izbjegni parcijalne zamjene)
+    const allTokens = [...playerTokens, ...numTokens]
+      .sort((a, b) => b.length - a.length);
+
+    allTokens.forEach(tok => {
+      const re  = new RegExp('(?<![\\d])' + tok.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\d])', 'ig');
+      const val = varMap[tok.toLowerCase()] ?? varMap[tok] ?? false;
+      expr = expr.replace(re, val ? 'true' : 'false');
+    });
+
+    // Fallback za preostale tokene
+    expr = expr
+      .replace(/\bp\d+\b/ig, 'false')
+      .replace(/\b\d+\b/g, m => 'false');
+
+    let passed = false, evalError = null;
+    try {
+      passed = Function('"use strict"; return (' + expr + ');')();
+    } catch(e) {
+      evalError = e.toString();
+    }
+
+    // Odredi kojima igračima ovo ide
+    let assignedIndices;
+    if (roomNums.length > 0) {
+      // Šalje se svima koji su u tim sobama
+      const inRoom = new Set();
+      roomNums.forEach(n => (numberMap[n] || []).forEach(i => inRoom.add(i)));
+      assignedIndices = [...inRoom].sort();
+    } else if (playerTokens.length > 0) {
+      // Šalje se konkretnim igračima
+      assignedIndices = playerTokens
+        .map(pt => parseInt(pt.slice(1), 10) - 1)
+        .filter(i => i >= 0 && i < players.length && players[i] !== null);
+      // Ukloni NOT playere
+      const notMatches = (s.match(/\bNOT\s+p(\d+)\b/ig) || []);
+      notMatches.forEach(m => {
+        const idx = parseInt(m.match(/\d+/)[0], 10) - 1;
+        assignedIndices = assignedIndices.filter(x => x !== idx);
+      });
+    } else {
+      // Nema sobe ni playera — šalje svima prisutnima
+      assignedIndices = players.map((v, i) => v !== null ? i : -1).filter(i => i >= 0);
+    }
+
+    return {
+      passed, expr, evalError,
+      assignedPlayers: assignedIndices.map(i => 'p' + (i + 1)),
+      numTokens, roomNums
+    };
+  };
+}
+
+// ============================================================
+// TALK: odredi sve igrače u istoj sobi
+// ============================================================
+function getPlayersInSameRoom(triggeredPids, numberMap, players) {
+  const validRooms = getValidRooms();
+
+  // Za svakog triggeredPid nađi njegove roome (parent)
+  const roomsPerPlayer = {};
+  triggeredPids.forEach(pid => {
+    const idx = parseInt(pid.slice(1)) - 1;
+    roomsPerPlayer[pid] = new Set();
+    Object.entries(numberMap).forEach(([num, idxs]) => {
+      if (!idxs.includes(idx)) return;
+      if (!validRooms.has(num)) return;
+      const parent = roomMap[num] || num;
+      roomsPerPlayer[pid].add(parent);
+    });
+  });
+
+  if (triggeredPids.length === 0) return [];
+
+  // Presječište soba
+  let shared = roomsPerPlayer[triggeredPids[0]] || new Set();
+  triggeredPids.forEach(pid => {
+    shared = new Set([...shared].filter(r => (roomsPerPlayer[pid] || new Set()).has(r)));
+  });
+
+  if (shared.size === 0) return [];
+
+  // Svi igrači koji su u nekoj od shared soba
+  const result = new Set(triggeredPids);
+  players.forEach((vals, i) => {
+    if (!vals) return;
+    vals.forEach(v => {
+      if (!validRooms.has(v)) return;
+      const parent = roomMap[v] || v;
+      if (shared.has(parent)) result.add('p' + (i + 1));
+    });
+  });
+
+  return Array.from(result);
+}
+
+// ============================================================
+// PLACEHOLDER ZAMJENA — ${winnerN}, ${winnerD} itd.
+// ============================================================
+function replacePlaceholders(text, winnerPid) {
+  if (!winnerPid || !text) return text || '';
+  const p = playerDefs[winnerPid];
+  if (!p) {
+    // Fallback ako nema playerDefs
+    return text.replace(/\$\{winner[NGDAVLI]?\}/g, winnerPid);
+  }
+  const display = (p.color || '') + ' ' + (p.name || p.colorName || winnerPid);
+  return text
+    .replace(/\$\{winnerN\}/g, display)
+    .replace(/\$\{winnerG\}/g, display)
+    .replace(/\$\{winnerD\}/g, display)
+    .replace(/\$\{winnerA\}/g, display)
+    .replace(/\$\{winnerV\}/g, display)
+    .replace(/\$\{winnerL\}/g, display)
+    .replace(/\$\{winnerI\}/g, display)
+    .replace(/\$\{winner\}/g,  display);
+}
+
+// ============================================================
+// DISPATCH ITEM → playerCards
+// playerCards[pid] = [ { type, text } ]
+// ============================================================
+function dispatchItem(itemOrEvent, triggeredPids, playerCards, players, numberMap, outKey, rule) {
+  const obj = itemOrEvent;
+
+  // --- EVENT ---
+  if (obj.type === 'event') {
+    // Odredi pobjednika prema priorityList
+    let winner = null;
+    if (obj.logic?.winnerStrategy === 'priorityList') {
+      for (const p of (obj.logic.priorityList || [])) {
+        if (triggeredPids.includes(p)) { winner = p; break; }
+      }
+    }
+
+    triggeredPids.forEach(pid => {
+      if (pid === winner) {
+        if (obj.output?.winner) {
+          push(playerCards, pid, 'public', replacePlaceholders(obj.output.winner, winner));
+        }
+      } else {
+        if (obj.output?.others) {
+          push(playerCards, pid, 'public', replacePlaceholders(obj.output.others, winner));
+        }
+      }
+    });
+
+    // Privatne poruke po igračima (p1..p6 u outputu)
+    if (obj.output) {
+      Object.entries(obj.output).forEach(([key, val]) => {
+        if (key === 'winner' || key === 'others' || key === 'p7' || key === 'global' || key === 'kartica') return;
+        if (/^p\d+$/.test(key)) {
+          const pid = key;
+          if (triggeredPids.includes(pid)) {
+            push(playerCards, pid, 'private', replacePlaceholders(val, winner));
+          }
+        }
+      });
+
+      // Voditeljev output
+      if (obj.output.p7) {
+        push(playerCards, 'p7', 'admin', replacePlaceholders(obj.output.p7, winner));
+      }
+
+      // Global flag
+      if (obj.output.global) {
+        push(playerCards, 'p7', 'global', 'Global +' + obj.output.global);
+      }
+
+      // Kartica
+      if (obj.output.kartica) {
+        push(playerCards, 'p7', 'kartica', '🃏 KARTICA:\n' + obj.output.kartica);
+      }
+    }
+
+  // --- ITEM (talk ili obično) ---
+  } else {
+    const isTalk = outKey.startsWith('talk');
+
+    let recipients;
+    if (isTalk) {
+      // Talk: svi u istoj sobi (expanded players)
+      const expandedPlayers = expandWithParents(players);
+      recipients = getPlayersInSameRoom(triggeredPids, numberMap, expandedPlayers);
+      if (recipients.length < 2) return; // talk treba barem 2 igrača
+    } else {
+      recipients = triggeredPids;
+    }
+
+    // Glavni tekst svima
+    if (obj.value) {
+      recipients.forEach(pid => {
+        push(playerCards, pid, 'public', obj.value);
+      });
+    }
+
+    // Privatne poruke po igračima
+    ['p1','p2','p3','p4','p5','p6'].forEach(pid => {
+      if (obj[pid] && recipients.includes(pid)) {
+        push(playerCards, pid, 'private', obj[pid]);
+      }
+    });
+
+    // Voditelj
+    if (obj.p7) push(playerCards, 'p7', 'admin', obj.p7);
+
+    // Global / admin na itemu
+    if (obj.global) push(playerCards, 'p7', 'global', 'Global +' + obj.global);
+    if (obj.admin)  push(playerCards, 'p7', 'admin',  obj.admin);
+  }
+
+  // Global / admin na ruleu (ako rule ima global)
+  if (rule?.global) push(playerCards, 'p7', 'global', 'Global +' + rule.global);
+  if (rule?.admin)  push(playerCards, 'p7', 'admin',  rule.admin);
+}
+
+function push(playerCards, pid, type, text) {
+  if (!text) return;
+  if (!playerCards[pid]) playerCards[pid] = [];
+  // Deduplikacija
+  if (playerCards[pid].some(m => m.type === type && m.text === text)) return;
+  playerCards[pid].push({ type, text });
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderResults(playerCards) {
+  let html = '';
+
+  const pidOrder = ['p1','p2','p3','p4','p5','p6','p7'];
+
+  pidOrder.forEach(pid => {
+    const msgs = playerCards[pid];
+    if (!msgs || msgs.length === 0) return;
+
+    const idx     = parseInt(pid.slice(1));
+    const pDef    = playerDefs[pid] || {};
+    const name    = (pDef.color || '') + ' ' + (pDef.name || pDef.colorName || ('Player ' + idx));
+    const allText = msgs.map(m => m.text).join('\n\n');
+
+    html += `
+      <div class="result-card">
+        <div class="result-card-header">
+          <strong>${name}</strong>
+          <button onclick="copyText(\`${allText.replace(/`/g, "'").replace(/\\/g, '\\\\')}\`)">📋 Kopiraj</button>
+        </div>
+        <div class="result-card-body">
+          ${msgs.map(m => renderMsg(m)).join('')}
+        </div>
+      </div>`;
+  });
+
+  document.getElementById('result').innerHTML = html || '<div style="color:#888;padding:10px">Nema rezultata za ovu kombinaciju unosa.</div>';
+}
+
+function renderMsg(m) {
+  const labels = { public: '', private: '🔒 Privatno', admin: '⚠️ Voditelj', global: '🏁 Flag', kartica: '🃏 Kartica' };
+  const labelHtml = labels[m.type] ? `<div class="msg-label">${labels[m.type]}</div>` : '';
+  return `<div class="msg-block msg-${m.type}">${labelHtml}${escHtml(m.text)}</div>`;
+}
+
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function copyText(t) {
+  navigator.clipboard.writeText(t).then(() => {
+    // kratka vizualna potvrda nije nužna
+  });
+}
+
+// ============================================================
+// MAIN EVALUACIJA
+// ============================================================
+async function evaluate() {
+  await loadGameFiles();
+
+  const { players: rawPlayers, globals } = readInputs();
+  const players    = expandWithParents(rawPlayers);
+  const numberMap  = buildNumberMap(players, globals);
+
+  const playerCards = {};
+  ['p1','p2','p3','p4','p5','p6','p7'].forEach(pid => playerCards[pid] = []);
+
+  const debugLines = [];
+
+  // Parent room expansion log
+  rawPlayers.forEach((raw, i) => {
+    if (!raw) return;
+    const added = (players[i] || []).filter(x => !raw.includes(x));
+    if (added.length) debugLines.push(`p${i+1} auto-expand: +[${added.join(', ')}]`);
+  });
+  if (debugLines.length) debugLines.push('');
+
+  // Evaluiraj svaki rule
+  rulesCache.forEach((rule, idx) => {
+    const cond     = (rule.cond || '').toString();
+    const outKey   = (rule.out  || '').toString();
+    const evaluate = makeEvaluator(cond);
+    const result   = evaluate({ players, numberMap });
+
+    debugLines.push(`[${idx+1}] cond="${cond}" out="${outKey}"`);
+    debugLines.push(`  expr: ${result.expr}`);
+    debugLines.push(`  → ${result.passed ? '✅ PASS' : '❌ fail'}  assigned: [${result.assignedPlayers.join(', ')}]`);
+    if (result.evalError) debugLines.push(`  ⚠️ ERROR: ${result.evalError}`);
+    debugLines.push('');
+
+    if (!result.passed) return;
+    if (result.assignedPlayers.length === 0) return;
+
+    const item = itemMap[outKey];
+    if (!item) {
+      debugLines.push(`  ⚠️ Item "${outKey}" ne postoji u itemMap!`);
+      return;
+    }
+
+    dispatchItem(item, result.assignedPlayers, playerCards, players, numberMap, outKey, rule);
+  });
+
+  renderResults(playerCards);
+  document.getElementById('debug').innerText = debugLines.join('\n');
+}
+
+// ============================================================
+// UI EVENTS
+// ============================================================
+document.getElementById('evalBtn').addEventListener('click', evaluate);
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  ['p1','p2','p3','p4','p5','p6','p7'].forEach(pid => {
+    const el = document.getElementById(pid);
+    if (el) el.value = '';
+    const desc = document.getElementById('desc-' + pid);
+    if (desc) desc.innerHTML = '';
+  });
+});
+
+document.getElementById('toggleDebug').addEventListener('click', () => {
+  const pre   = document.getElementById('debug');
+  const title = document.getElementById('debugTitle');
+  const show  = pre.style.display === 'none';
+  pre.style.display   = show ? 'block' : 'none';
+  title.style.display = show ? 'block' : 'none';
+});
+
+// Učitaj settings odmah na startu (za hint listenere i flag chipove)
+loadGameFiles().catch(e => {
+  document.getElementById('loadStatus').textContent = '❌ ' + e.message;
+});
+</script>
+</body>
+</html>
