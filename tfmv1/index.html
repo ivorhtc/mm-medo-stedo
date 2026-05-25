@@ -662,7 +662,7 @@ function renderPips(generations) {
     const active = generations[g];
     const color = active ? GEN_COLORS[g] : null;
     const style = color ? `style="background:${color};box-shadow:0 0 5px ${color}60"` : '';
-    return `<div class="gen-pip ${active ? 'active' : ''}" ${style} title="Gen ${g.slice(3)}">${g.slice(3)}</div>`;
+    return `<div class="gen-pip ${active ? 'active' : ''}" ${style} title="Gen ${g.slice(3)}"></div>`;
   }).join('');
   return `<div class="card-gens">${pips}<span class="gen-label">GEN</span></div>`;
 }
