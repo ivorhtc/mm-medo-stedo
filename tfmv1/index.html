@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terraforming Mars — Card Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg:        #0a0c10;
+    --bg2:       #10131a;
+    --panel:     #141820;
+    --border:    #2a3040;
+    --gold:      #c8962a;
+    --gold-l:    #e8b84b;
+    --red:       #c04030;
+    --red-l:     #e05040;
+    --teal:      #2a8080;
+    --teal-l:    #3db0b0;
+    --text:      #d8cfc0;
+    --text-dim:  #7a7268;
+    --card-w:    240px;   /* ~63.5mm at 96dpi */
+    --card-h:    335px;   /* ~88.5mm at 96dpi */
+
+    /* resource colours */
+    --c-money:      #e8b84b;
+    --c-wood:       #7ab830;
+    --c-asphalt:    #8888aa;
+    --c-population: #e07040;
+    --c-terraform:  #30b0e0;
+    --c-vp:         #d0a0ff;
+    --c-science:    #60d8f0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── starfield ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 50%, rgba(255,255,255,.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 85%, rgba(255,255,255,.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 15%, rgba(255,255,255,.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 60%, rgba(255,255,255,.5) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 5%  5%,  rgba(200,150,42,.8) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 95% 95%, rgba(200,150,42,.6) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── top bar ─── */
+  header {
+    position: relative; z-index: 10;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #0d1018 0%, transparent 100%);
+    padding: 18px 32px 14px;
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-l) 50%, #fff6e0 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    white-space: nowrap;
+  }
+  header h1 span { font-weight: 400; opacity: .7; }
+
+  .controls {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; flex: 1;
+  }
+
+  select, input[type=text] {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  select:hover, input[type=text]:hover,
+  select:focus, input[type=text]:focus { border-color: var(--gold); }
+
+  .count-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .count-badge strong { color: var(--gold-l); }
+
+  /* ─── main layout ─── */
+  main {
+    position: relative; z-index: 1;
+    padding: 28px 28px 60px;
+  }
+
+  /* ─── grid ─── */
+  #grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: flex-start;
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    width: var(--card-w);
+    height: var(--card-h);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0,0,0,.8), 0 0 24px rgba(200,150,42,.18);
+    z-index: 100;
+  }
+
+  /* card chrome border */
+  .card::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    pointer-events: none; z-index: 10;
+    transition: border-color .25s;
+  }
+  .card:hover::before { border-color: var(--gold); }
+
+  /* card inner gradient bg */
+  .card-bg {
+    position: absolute; inset: 0; border-radius: 10px;
+    background: var(--panel);
+    z-index: 0;
+  }
+
+  /* ── type colour accent (top edge line) ── */
+  .card::after {
+    content: '';
+    position: absolute; top: 0; left: 10%; right: 10%; height: 2px;
+    border-radius: 0 0 3px 3px;
+    z-index: 11;
+    background: var(--accent, var(--gold));
+    opacity: .85;
+  }
+
+  /* type accent colours */
+  .card[data-type="finance"]    { --accent: var(--c-money); }
+  .card[data-type="wood"]       { --accent: var(--c-wood); }
+  .card[data-type="asphalt"]    { --accent: var(--c-asphalt); }
+  .card[data-type="population"] { --accent: var(--c-population); }
+  .card[data-type="transport"]  { --accent: var(--c-terraform); }
+  .card[data-type="science"]    { --accent: var(--c-science); }
+  .card[data-type="chaos"]      { --accent: var(--c-vp); }
+  .card[data-type="trade"]      { --accent: var(--gold-l); }
+
+  /* ── card header ── */
+  .card-header {
+    position: relative; z-index: 2;
+    padding: 12px 12px 0;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+
+  .card-no {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #f0e8d8;
+    letter-spacing: .5px;
+    min-height: 30px;
+  }
+
+  /* ── card art placeholder ── */
+  .card-art {
+    position: relative; z-index: 2;
+    margin: 8px 10px;
+    height: 100px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: var(--art-bg, linear-gradient(135deg,#1a2030 0%,#0d1018 100%));
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* type-specific art gradients */
+  .card[data-type="finance"]    .card-art { --art-bg: linear-gradient(135deg,#1a1500 0%,#2a1f00 100%); }
+  .card[data-type="wood"]       .card-art { --art-bg: linear-gradient(135deg,#0a1a08 0%,#152512 100%); }
+  .card[data-type="asphalt"]    .card-art { --art-bg: linear-gradient(135deg,#141420 0%,#1a1a28 100%); }
+  .card[data-type="population"] .card-art { --art-bg: linear-gradient(135deg,#1a0e08 0%,#251508 100%); }
+  .card[data-type="transport"]  .card-art { --art-bg: linear-gradient(135deg,#060e1a 0%,#0a1828 100%); }
+  .card[data-type="science"]    .card-art { --art-bg: linear-gradient(135deg,#040e14 0%,#081820 100%); }
+  .card[data-type="chaos"]      .card-art { --art-bg: linear-gradient(135deg,#100818 0%,#180e20 100%); }
+  .card[data-type="trade"]      .card-art { --art-bg: linear-gradient(135deg,#180e04 0%,#221404 100%); }
+
+  .art-icon { font-size: 40px; opacity: .3; user-select: none; }
+
+  /* ── type badge ── */
+  .card-type-badge {
+    position: absolute; bottom: 6px; right: 7px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent, var(--gold));
+    opacity: .75;
+  }
+
+  /* ── divider ── */
+  .card-divider {
+    position: relative; z-index: 2;
+    height: 1px;
+    margin: 0 12px;
+    background: linear-gradient(90deg, transparent, var(--accent, var(--border)) 30%, var(--accent, var(--border)) 70%, transparent);
+    opacity: .4;
+  }
+
+  /* ── card body ── */
+  .card-body {
+    position: relative; z-index: 2;
+    padding: 8px 12px 0;
+    flex: 1;
+    display: flex; flex-direction: column; gap: 6px;
+    overflow: hidden;
+  }
+
+  /* ── cost row ── */
+  .card-cost {
+    display: flex; align-items: center; gap: 5px;
+    flex-wrap: wrap;
+  }
+  .cost-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    color: var(--text-dim); text-transform: uppercase;
+    margin-right: 2px;
+  }
+  .cost-item {
+    display: inline-flex; align-items: center; gap: 3px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 3px;
+    padding: 2px 5px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cost-color, var(--gold-l));
+  }
+  .cost-item img { width: 13px; height: 13px; object-fit: contain; }
+  .cost-item .icon-fallback { font-size: 10px; }
+  .cost-free {
+    font-size: 9px; color: var(--text-dim);
+    font-style: italic; font-family: 'Rajdhani', sans-serif;
+  }
+
+  /* ── card text ── */
+  .card-text {
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: #c8c0b0;
+    font-weight: 400;
+    flex: 1;
+  }
+  .card-text .icon-token {
+    display: inline-flex; align-items: center; gap: 2px;
+    vertical-align: middle;
+  }
+  .card-text .icon-token img { width: 14px; height: 14px; object-fit: contain; }
+
+  /* ── end-game tag ── */
+  .card-endgame {
+    display: flex; align-items: center; gap: 4px;
+    padding: 4px 7px;
+    margin: 4px 0 0;
+    background: rgba(48,176,224,.08);
+    border-left: 2px solid var(--c-terraform);
+    border-radius: 0 3px 3px 0;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--c-terraform);
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: .5px;
+    white-space: nowrap;
+  }
+  .card-endgame.vp { border-color: var(--c-vp); color: var(--c-vp); background: rgba(208,160,255,.08); }
+
+  /* ── generation pips ── */
+  .card-gens {
+    position: relative; z-index: 2;
+    padding: 0 12px 10px;
+    display: flex; gap: 3px; align-items: center;
+    margin-top: auto;
+  }
+  .gen-pip {
+    width: 14px; height: 5px;
+    border-radius: 2px;
+    background: var(--border);
+    transition: background .2s;
+  }
+  .gen-pip.active { background: var(--accent, var(--gold)); }
+  .gen-label {
+    font-size: 8px; color: var(--text-dim);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: .5px;
+    margin-left: 4px;
+  }
+
+  /* ─── ICON LEGEND ─── */
+  #legend {
+    position: fixed; bottom: 20px; right: 20px;
+    z-index: 200;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    min-width: 220px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.6);
+    display: none;
+  }
+  #legend.open { display: block; }
+  #legend h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .legend-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+  }
+  .legend-row:last-child { border-bottom: none; }
+  .legend-row img { width: 18px; height: 18px; object-fit: contain; }
+  .legend-code {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--gold-l); width: 80px;
+  }
+  .legend-desc { font-size: 11px; color: var(--text-dim); }
+  #legend-toggle {
+    position: fixed; bottom: 20px; right: 20px;
+    z-index: 201;
+    background: var(--panel);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  #legend-toggle:hover { background: rgba(200,150,42,.15); }
+
+  /* ─── print styles ─── */
+  @media print {
+    body { background: white; }
+    body::before { display: none; }
+    header, #legend, #legend-toggle { display: none !important; }
+    main { padding: 4mm; }
+    #grid { gap: 4mm; }
+    .card { break-inside: avoid; box-shadow: none !important; transform: none !important; }
+    .card::before { border: 1pt solid #ccc; }
+    .card-bg { background: white; }
+    .card-title, .card-no { color: #222; }
+    .card-text { color: #333; }
+  }
+
+  /* ─── empty state ─── */
+  #empty {
+    display: none;
+    width: 100%;
+    padding: 80px 0;
+    text-align: center;
+    color: var(--text-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+
+  /* ─── tooltip (full text on hover) ─── */
+  .card-tooltip {
+    position: absolute; z-index: 500;
+    left: 105%; top: 0;
+    width: 220px;
+    background: var(--bg2);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 14px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(8px);
+    transition: opacity .2s, transform .2s;
+    box-shadow: 0 8px 30px rgba(0,0,0,.7);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .card:hover .card-tooltip { opacity: 1; transform: translateX(0); }
+
+  /* scroll animation */
+  .card { animation: cardIn .4s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(12px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>TERRAFORMING MARS <span>/ CARDS</span></h1>
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="🔍 Pretraži kartice…" style="width:200px">
+    <select id="typeFilter">
+      <option value="">Sve vrste</option>
+      <option value="finance">Finance</option>
+      <option value="wood">Wood</option>
+      <option value="asphalt">Asphalt</option>
+      <option value="population">Population</option>
+      <option value="transport">Transport</option>
+      <option value="science">Science</option>
+      <option value="chaos">Chaos</option>
+      <option value="trade">Trade</option>
+    </select>
+    <select id="genFilter">
+      <option value="">Sve generacije</option>
+      <option value="gen1">Gen 1</option>
+      <option value="gen2">Gen 2</option>
+      <option value="gen3">Gen 3</option>
+      <option value="gen4">Gen 4</option>
+      <option value="gen5">Gen 5</option>
+      <option value="gen6">Gen 6</option>
+      <option value="gen7">Gen 7</option>
+    </select>
+    <select id="endgameFilter">
+      <option value="">Sve karte</option>
+      <option value="yes">S endgame bonusom</option>
+      <option value="no">Bez endgame bonusa</option>
+    </select>
+    <span class="count-badge">Prikazano: <strong id="countDisplay">0</strong> karata</span>
+  </div>
+</header>
+
+<main>
+  <div id="grid"></div>
+  <div id="empty">Nema karata koje odgovaraju filteru.</div>
+</main>
+
+<button id="legend-toggle" onclick="toggleLegend()">⬡ Ikone</button>
+<div id="legend">
+  <h3>ICON REFERENCE</h3>
+  <div id="legend-content"></div>
+</div>
+
+<script>
+// ─── ICON REGISTRY ───────────────────────────────────────────────────────────
+// To add a real icon, put the image in ./icons/ folder and update the path.
+// Format of tokens in card text/cost: [iconKey] e.g. [moneyR], [woodP], [terraform]
+const ICONS = {
+  // Resources (stock)
+  moneyR:      { label: 'Money (res)',        color: '#e8b84b', symbol: '₡', folder: 'icons/money-resource.png' },
+  woodR:       { label: 'Wood (res)',          color: '#7ab830', symbol: '🪵', folder: 'icons/wood-resource.png' },
+  asphaltR:    { label: 'Asphalt (res)',       color: '#8888aa', symbol: '⬡', folder: 'icons/asphalt-resource.png' },
+  populationR: { label: 'Population (res)',    color: '#e07040', symbol: '👤', folder: 'icons/population-resource.png' },
+  // Productions
+  moneyP:      { label: 'Money prod.',         color: '#c8962a', symbol: '₡↑', folder: 'icons/money-prod.png' },
+  woodP:       { label: 'Wood prod.',          color: '#5a9820', symbol: '🪵↑', folder: 'icons/wood-prod.png' },
+  asphaltP:    { label: 'Asphalt prod.',       color: '#6868a0', symbol: '⬡↑', folder: 'icons/asphalt-prod.png' },
+  populationP: { label: 'Population prod.',    color: '#b05020', symbol: '👤↑', folder: 'icons/population-prod.png' },
+  // Special
+  terraform:   { label: 'Terraform Rating',    color: '#30b0e0', symbol: '⬆', folder: 'icons/terraform.png' },
+  vp:          { label: 'Victory Point',       color: '#d0a0ff', symbol: '★', folder: 'icons/vp.png' },
+  die:         { label: 'Die roll',            color: '#ffffff', symbol: '🎲', folder: 'icons/die.png' },
+  mars:        { label: 'Mars',                color: '#e04030', symbol: '♂', folder: 'icons/mars.png' },
+};
+
+// ─── ICON EVALUATOR ──────────────────────────────────────────────────────────
+// Parses [tokenName] in any string and replaces with icon HTML
+function evaluateIcons(text, size = 14) {
+  if (!text) return '';
+  return text.replace(/\[([a-zA-Z0-9_]+)\]/g, (match, key) => {
+    const icon = ICONS[key];
+    if (!icon) {
+      // Unknown token — show raw as styled span
+      return `<span style="font-family:monospace;color:#888;font-size:10px">[${key}]</span>`;
+    }
+    // Try image first; if it 404s, the onerror swaps to the symbol fallback
+    return `<span class="icon-token" title="${icon.label}">
+      <img src="${icon.folder}"
+           alt="${icon.label}"
+           width="${size}" height="${size}"
+           style="vertical-align:middle;object-fit:contain"
+           onerror="this.style.display='none';this.nextSibling.style.display='inline'">
+      <span style="display:none;color:${icon.color};font-size:${size-2}px;vertical-align:middle">${icon.symbol}</span>
+    </span>`;
+  });
+}
+
+// ─── TYPE META ───────────────────────────────────────────────────────────────
+const TYPE_META = {
+  finance:    { emoji: '💰', label: 'Finance' },
+  wood:       { emoji: '🪵', label: 'Wood' },
+  asphalt:    { emoji: '⬡',  label: 'Asphalt' },
+  population: { emoji: '👥', label: 'Population' },
+  transport:  { emoji: '🚀', label: 'Transport' },
+  science:    { emoji: '🔬', label: 'Science' },
+  chaos:      { emoji: '⚡', label: 'Chaos' },
+  trade:      { emoji: '📦', label: 'Trade' },
+};
+
+// ─── COST RENDERING ──────────────────────────────────────────────────────────
+const COST_COLORS = {
+  money:      '#e8b84b',
+  wood:       '#7ab830',
+  asphalt:    '#8888aa',
+  population: '#e07040',
+};
+
+function renderCost(cost) {
+  const entries = Object.entries(cost || {});
+  if (entries.length === 0) {
+    return `<span class="cost-free">Besplatno</span>`;
+  }
+  return entries.map(([res, val]) => {
+    const col = COST_COLORS[res] || '#fff';
+    const icon = ICONS[res + 'R'];
+    const iconHtml = icon
+      ? `<img src="${icon.folder}" alt="${res}" onerror="this.style.display='none'">`
+      : `<span class="icon-fallback">${res[0].toUpperCase()}</span>`;
+    return `<span class="cost-item" style="--cost-color:${col}">${iconHtml} ${val}</span>`;
+  }).join('');
+}
+
+// ─── GENERATION PIPS ─────────────────────────────────────────────────────────
+function renderPips(generations) {
+  const gens = ['gen1','gen2','gen3','gen4','gen5','gen6','gen7'];
+  const pips = gens.map(g =>
+    `<div class="gen-pip ${generations[g] ? 'active' : ''}" title="Gen ${g.slice(3)}"></div>`
+  ).join('');
+  return `<div class="card-gens">${pips}<span class="gen-label">GEN</span></div>`;
+}
+
+// ─── BUILD CARD ───────────────────────────────────────────────────────────────
+function buildCard(card) {
+  const meta = TYPE_META[card.projectType] || { emoji: '?', label: card.projectType };
+  const hasCost = Object.keys(card.cost || {}).length > 0;
+  const hasEndgame = card.endGame && card.endGame.trim() !== '';
+  const isVP = hasEndgame && card.endGame.includes('VP');
+
+  const endgameHtml = hasEndgame
+    ? `<div class="card-endgame ${isVP ? 'vp' : ''}">
+        ${isVP ? '★' : '⬆'} ${evaluateIcons(card.endGame, 12)}
+       </div>`
+    : '';
+
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.dataset.type = card.projectType;
+  div.style.setProperty('--accent-delay', Math.random() * 0.3 + 's');
+
+  div.innerHTML = `
+    <div class="card-bg"></div>
+    <div class="card-header">
+      <div class="card-no">#${card.cardNo}</div>
+      <div class="card-title">${card.title}</div>
+    </div>
+    <div class="card-art">
+      <span class="art-icon">${meta.emoji}</span>
+      <div class="card-type-badge">${meta.label}</div>
+    </div>
+    <div class="card-divider"></div>
+    <div class="card-body">
+      <div class="card-cost">
+        <span class="cost-label">Cijena:</span>
+        ${renderCost(card.cost)}
+      </div>
+      <div class="card-text">${evaluateIcons(card.text)}</div>
+      ${endgameHtml}
+    </div>
+    ${renderPips(card.generations)}
+    <div class="card-tooltip">
+      <strong style="font-family:Cinzel,serif;font-size:11px;color:var(--gold)">${card.title}</strong><br>
+      <span style="color:var(--text-dim);font-size:10px">#${card.cardNo} · ${meta.label}</span>
+      <hr style="border-color:var(--border);margin:6px 0">
+      ${evaluateIcons(card.text)}
+      ${hasEndgame ? `<div style="margin-top:6px;color:var(--c-terraform)">🏁 ${card.endGame}</div>` : ''}
+    </div>
+  `;
+  return div;
+}
+
+// ─── LEGEND BUILDER ───────────────────────────────────────────────────────────
+function buildLegend() {
+  const el = document.getElementById('legend-content');
+  el.innerHTML = Object.entries(ICONS).map(([key, icon]) => `
+    <div class="legend-row">
+      <img src="${icon.folder}" alt="${icon.label}"
+           onerror="this.style.display='none';this.nextSibling.style.display='inline-block'">
+      <span style="display:none;color:${icon.color};font-size:16px">${icon.symbol}</span>
+      <span class="legend-code">[${key}]</span>
+      <span class="legend-desc">${icon.label}</span>
+    </div>
+  `).join('');
+}
+
+function toggleLegend() {
+  const legend = document.getElementById('legend');
+  const btn    = document.getElementById('legend-toggle');
+  if (legend.classList.toggle('open')) {
+    btn.style.display = 'none';
+  } else {
+    btn.style.display = '';
+  }
+}
+document.getElementById('legend').addEventListener('click', e => {
+  if (e.target === document.getElementById('legend')) return;
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('legend').classList.remove('open');
+    document.getElementById('legend-toggle').style.display = '';
+  }
+});
+
+// ─── FILTER & RENDER ─────────────────────────────────────────────────────────
+let ALL_CARDS = [];
+
+function render() {
+  const search  = document.getElementById('searchInput').value.toLowerCase();
+  const type    = document.getElementById('typeFilter').value;
+  const gen     = document.getElementById('genFilter').value;
+  const endgame = document.getElementById('endgameFilter').value;
+
+  const filtered = ALL_CARDS.filter(c => {
+    if (search && !c.title.toLowerCase().includes(search) && !c.text.toLowerCase().includes(search)) return false;
+    if (type && c.projectType !== type) return false;
+    if (gen && !c.generations[gen]) return false;
+    if (endgame === 'yes' && !c.endGame) return false;
+    if (endgame === 'no' && c.endGame) return false;
+    return true;
+  });
+
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  grid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    filtered.forEach((c, i) => {
+      const el = buildCard(c);
+      el.style.animationDelay = (i * 18) + 'ms';
+      grid.appendChild(el);
+    });
+  }
+
+  document.getElementById('countDisplay').textContent = filtered.length;
+}
+
+// ─── LOAD JSON ────────────────────────────────────────────────────────────────
+// The JSON is embedded inline so the file is self-contained.
+const DATA = {"cards":[{"cardNo":"001","title":"Marketing Campaign","cost":{"money":4},"text":"Increase your Population production by 1.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":false,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"002","title":"Beech Import","cost":{"money":5},"text":"Increase your Wood production by 1.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"003","title":"Timber Export","cost":{"money":3},"text":"Send Wood equal to your Wood production to Mars.","projectType":"transport","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":false,"gen7":false}},{"cardNo":"004","title":"Asphalt from Argentina","cost":{"money":4},"text":"Gain 5 Asphalt.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"005","title":"Asphalt Factory","cost":{"money":5,"population":1},"text":"Increase your Asphalt production by 1.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"006","title":"Modern Asphalt Plant","cost":{"money":10,"population":2},"text":"Increase your Asphalt production by 2.","projectType":"asphalt","endGame":"","generations":{"gen1":false,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":false,"gen7":false}},{"cardNo":"007","title":"Space Asphalt Research","cost":{"money":8},"text":"Start Phases 2–4 with +1 Asphalt production.","projectType":"science","endGame":"+1 Terraform Rating","generations":{"gen1":true,"gen2":true,"gen3":false,"gen4":false,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"008","title":"World Bank Loan","cost":{},"text":"Gain 10 Money. Reduce your Money production by 1.","projectType":"finance","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"009","title":"Crypto Investment","cost":{"money":6},"text":"Increase your Money production by 2.","projectType":"finance","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"010","title":"Timber Deal with Egypt","cost":{"money":2},"text":"You may sell any amount of Wood. Gain 3 Money for each Wood sold.","projectType":"trade","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"011","title":"Immigration Program","cost":{"money":10},"text":"Gain 5 Population.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"012","title":"Martian Cement Lab","cost":{"money":5,"asphalt":5},"text":"Start Phase 2 with 10 extra Asphalt.","projectType":"science","endGame":"+1 Terraform Rating","generations":{"gen1":true,"gen2":false,"gen3":false,"gen4":false,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"013","title":"Mars Convoy","cost":{"population":5},"text":"Gain 5 Money.","projectType":"transport","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"014","title":"Private Spaceport","cost":{"money":8,"asphalt":4},"text":"Increase your transport efficiency by 1.","projectType":"transport","endGame":"+1 Terraform Rating","generations":{"gen1":false,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"015","title":"Fusion Reactors","cost":{"money":12,"asphalt":3},"text":"Increase Money production by 3.","projectType":"science","endGame":"+2 Terraform Rating","generations":{"gen1":false,"gen2":false,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"016","title":"Corporate Espionage","cost":{"money":7},"text":"Copy another player's production increase.","projectType":"chaos","endGame":"","generations":{"gen1":false,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"017","title":"Dust Storm","cost":{"money":6},"text":"No transport projects can be played this generation.","projectType":"chaos","endGame":"","generations":{"gen1":false,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"018","title":"Orbital Elevator","cost":{"money":15,"asphalt":10,"population":3},"text":"Once per generation, send 3 resources to Mars for free.","projectType":"transport","endGame":"+3 Terraform Rating","generations":{"gen1":false,"gen2":false,"gen3":false,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"019","title":"Nanotech Builders","cost":{"money":8,"population":1},"text":"Your buildings cost 1 fewer resource.","projectType":"science","endGame":"+1 Terraform Rating","generations":{"gen1":false,"gen2":false,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"020","title":"Martian Agriculture","cost":{"money":5,"wood":2},"text":"During Phase 2, Habitats require 1 less Wood.","projectType":"science","endGame":"+1 Terraform Rating","generations":{"gen1":true,"gen2":true,"gen3":false,"gen4":false,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"021","title":"Venture Capital","cost":{"money":4},"text":"Increase your Money production by 1.","projectType":"finance","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"022","title":"Tax Evasion","cost":{"population":1},"text":"Gain 8 Money.","projectType":"finance","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":false,"gen7":false}},{"cardNo":"023","title":"Luxury Housing","cost":{"money":6,"wood":2},"text":"Increase your Population production by 2.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"024","title":"Stock Market Boom","cost":{"money":5},"text":"Gain Money equal to your Money production ×2.","projectType":"finance","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"025","title":"Government Subsidies","cost":{},"text":"Gain 6 Money and 2 Asphalt.","projectType":"finance","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"026","title":"Martian Bonds","cost":{},"text":"Gain 12 Money. Lose 1 Victory Point at end of game.","projectType":"finance","endGame":"-1 VP","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"027","title":"Oil Investments","cost":{"money":4},"text":"Gain 3 Asphalt and 5 Money.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"028","title":"Corporate Downsizing","cost":{},"text":"Lose 2 Population. Gain 10 Money.","projectType":"finance","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"029","title":"Orbital Casino","cost":{"money":3},"text":"Roll a die: 1–3 gain 3 Money, 4–6 gain 10 Money.","projectType":"finance","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"030","title":"Black Market Trade","cost":{"population":2},"text":"Gain 5 Wood and 5 Money.","projectType":"trade","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"031","title":"Canadian Lumber","cost":{"money":5},"text":"Gain 4 Wood.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":false,"gen7":false}},{"cardNo":"032","title":"Scandinavian Forestry","cost":{"money":6},"text":"Increase your Wood production by 2.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"033","title":"Illegal Logging","cost":{"money":2},"text":"Gain 8 Wood. Lose 1 Reputation.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"034","title":"Automated Sawmill","cost":{"money":4,"asphalt":1},"text":"Increase your Wood production by 1.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"035","title":"Tropical Imports","cost":{"money":3},"text":"Gain 6 Wood.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"036","title":"Timber Monopoly","cost":{"money":8},"text":"Whenever another player gains Wood, gain 1 Money.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"037","title":"Emergency Lumber","cost":{"population":1},"text":"Gain 10 Wood.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"038","title":"Recycled Housing","cost":{"population":2},"text":"Gain 5 Wood.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"039","title":"Arctic Wood Route","cost":{"money":4},"text":"Gain 3 Wood and 3 Money.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"040","title":"Forest Expansion","cost":{"money":8,"population":2},"text":"Increase your Wood production by 3.","projectType":"wood","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"041","title":"Highway Contractors","cost":{"money":5},"text":"Gain 6 Asphalt.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"042","title":"Industrial Refinery","cost":{"money":5,"population":1},"text":"Increase your Asphalt production by 1.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":false,"gen7":false}},{"cardNo":"043","title":"Mega Refinery","cost":{"money":10,"population":2},"text":"Increase your Asphalt production by 3.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"044","title":"Cheap Concrete","cost":{"money":2},"text":"Gain 8 Asphalt.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"045","title":"Construction Boom","cost":{"money":6},"text":"Gain Asphalt equal to your Asphalt production ×2.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"046","title":"Road Engineers","cost":{"money":4,"asphalt":1},"text":"Whenever you build a Road, gain 2 Money.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"047","title":"Military Asphalt Reserve","cost":{"population":3},"text":"Gain 12 Asphalt.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"048","title":"Oil Crisis","cost":{},"text":"All players lose 2 Asphalt. Gain 5 Money.","projectType":"chaos","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"049","title":"Desert Quarry","cost":{"money":3},"text":"Gain 5 Asphalt and 1 Wood.","projectType":"asphalt","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"050","title":"Recruitment Drive","cost":{"money":4},"text":"Gain 3 Population.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"051","title":"Family Incentives","cost":{"money":5},"text":"Increase your Population production by 1.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":false,"gen7":false}},{"cardNo":"052","title":"Cryosleep Colonists","cost":{"money":8,"asphalt":1},"text":"Gain 8 Population during Phase 2.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":false,"gen4":false,"gen5":false,"gen6":false,"gen7":false}},{"cardNo":"053","title":"University Grants","cost":{"money":6,"population":1},"text":"Increase Population production by 2.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":false}},{"cardNo":"054","title":"Celebrity Campaign","cost":{"money":4},"text":"Gain 2 Population and 5 Money.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"055","title":"Cloning Program","cost":{"money":10,"population":2},"text":"Gain Population equal to half your current Population.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"056","title":"Workforce Robots","cost":{"money":6,"asphalt":3},"text":"Your Roads cost 1 less Population to build.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"057","title":"Colonist Lottery","cost":{"money":2},"text":"Roll a die: 1–2 gain 1 Population, 3–4 gain 3, 5–6 gain 6.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"058","title":"Survival Training","cost":{"money":3,"population":1},"text":"Your Population cannot be reduced this generation.","projectType":"population","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"059","title":"Cargo Rockets","cost":{"money":4,"asphalt":1},"text":"Send up to 5 resources to Mars.","projectType":"transport","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"060","title":"Heavy Launch System","cost":{"money":8,"asphalt":3},"text":"Send double your Wood this generation.","projectType":"transport","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"061","title":"Space Tug Fleet","cost":{"money":6,"asphalt":2},"text":"Future transport projects cost 3 less Money.","projectType":"transport","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"062","title":"Nuclear Engines","cost":{"money":10,"asphalt":3},"text":"Your transport projects send +2 extra resources.","projectType":"transport","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"063","title":"Emergency Supply Pods","cost":{"money":2},"text":"Gain 3 Wood and send it to Mars.","projectType":"transport","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"064","title":"Martian Freight Alliance","cost":{"money":5},"text":"Whenever you send resources to Mars, gain 2 Money.","projectType":"transport","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"065","title":"Deep Space Logistics","cost":{"money":7,"population":2},"text":"All your transport cards cost 2 less Money.","projectType":"transport","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"066","title":"Dust Storm Prediction","cost":{"money":3},"text":"Prevent one disaster effect.","projectType":"science","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"067","title":"Experimental Materials","cost":{"money":4,"asphalt":2},"text":"Roads cost 2 less Asphalt this generation.","projectType":"science","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"068","title":"Synthetic Timber","cost":{"money":7},"text":"You may use Asphalt as Wood this generation.","projectType":"science","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"069","title":"AI Economists","cost":{"money":9},"text":"Increase any production by 1.","projectType":"science","endGame":"+1 Terraform Rating","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"070","title":"Quantum Trading","cost":{"money":6},"text":"Gain Money equal to the highest production among all players.","projectType":"science","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"071","title":"Corruption Scandal","cost":{"money":2},"text":"Choose a player. They lose 5 Money.","projectType":"chaos","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"072","title":"Workers Strike","cost":{"money":3},"text":"Choose a player. Reduce their Asphalt production by 1.","projectType":"chaos","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"073","title":"Rocket Explosion","cost":{"money":4},"text":"Choose a player. They lose 3 transported resources.","projectType":"chaos","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"074","title":"Supply Chain Collapse","cost":{"money":5},"text":"All players lose 2 Wood.","projectType":"chaos","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"075","title":"Fuel Shortage","cost":{"money":3},"text":"Transport costs are doubled this generation.","projectType":"chaos","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"076","title":"Inflation","cost":{"money":4},"text":"All projects cost 2 extra Money this generation.","projectType":"chaos","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"077","title":"Cyber Attack","cost":{"money":5},"text":"Choose a player. They lose 5 Money.","projectType":"chaos","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}},{"cardNo":"078","title":"Martian Virus","cost":{"money":6},"text":"Choose a player. They lose 3 Population.","projectType":"chaos","endGame":"","generations":{"gen1":true,"gen2":true,"gen3":true,"gen4":true,"gen5":true,"gen6":true,"gen7":true}}]};
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+ALL_CARDS = DATA.cards;
+buildLegend();
+render();
+
+['searchInput','typeFilter','genFilter','endgameFilter'].forEach(id =>
+  document.getElementById(id).addEventListener('input', render)
+);
+</script>
+</body>
+</html>
