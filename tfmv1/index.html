@@ -689,6 +689,10 @@ function buildCard(card) {
     <div class="card-header">
       <div class="card-no">#${card.cardNo}</div>
       <div class="card-title">${card.title}</div>
+      <div class="card-cost">
+        <span class="cost-label">Cijena:</span>
+        ${renderCost(card.cost)}
+      </div>
     </div>
     <div class="card-art">
       <span class="art-icon">${meta.emoji}</span>
@@ -696,10 +700,6 @@ function buildCard(card) {
     </div>
     <div class="card-divider"></div>
     <div class="card-body">
-      <div class="card-cost">
-        <span class="cost-label">Cijena:</span>
-        ${renderCost(card.cost)}
-      </div>
       <div class="card-text">${evaluateIcons(card.text)}</div>
       ${endgameHtml}
     </div>
