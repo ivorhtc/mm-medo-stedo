@@ -633,7 +633,7 @@ const COST_COLORS = {
 function renderCost(cost) {
   const entries = Object.entries(cost || {});
   if (entries.length === 0) {
-    return `<span class="cost-free">Besplatno</span>`;
+    return `<span class="cost-free">Automatic</span>`;
   }
   return entries.map(([res, val]) => {
     const col = COST_COLORS[res] || '#fff';
@@ -641,7 +641,7 @@ function renderCost(cost) {
     const iconHtml = icon
       ? `<img src="${icon.folder}" alt="${res}" onerror="this.style.display='none'">`
       : `<span class="icon-fallback">${res[0].toUpperCase()}</span>`;
-    return `<span class="cost-item" style="--cost-color:${col}">${iconHtml} ${val}</span>`;
+    return `<span class="cost-item" style="--cost-color:${col}">${val} ${iconHtml}</span>`;
   }).join('');
 }
 
